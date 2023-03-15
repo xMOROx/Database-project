@@ -7,6 +7,6 @@ Repository for database 2 Course at AGH UST for project purpose.
  - Daniel Bielaszka
 
 ## Technology 
- - Backend: Java, Hibernate 
+ - Backend: Java, Spring 
  - Frontend: Angular 
  - Database: MS SQL 
