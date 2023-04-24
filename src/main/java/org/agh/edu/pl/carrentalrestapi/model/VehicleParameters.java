@@ -46,7 +46,7 @@ public class VehicleParameters implements Serializable {
     private String gearbox;
 
     @JsonProperty("frontWheelDrive")
-    @Column(name = "FrontWheelDrive", columnDefinition = "BOOLEAN NOT NULL default true")
+    @Column(name = "FrontWheelDrive", columnDefinition = "tinyint NOT NULL default 1")
     private Boolean frontWheelDrive;
 
     @JsonProperty("doorsNumber")
@@ -65,7 +65,7 @@ public class VehicleParameters implements Serializable {
     private String color;
 
     @JsonProperty("metalic")
-    @Column(name = "Metalic", columnDefinition = "BOOLEAN NOT NULL default false")
+    @Column(name = "Metalic", columnDefinition = "tinyint NOT NULL default 0")
     private Boolean metalic;
 
     @JsonProperty("description")

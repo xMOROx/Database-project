@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ChangesBookings")
@@ -25,9 +26,9 @@ public class ChangesBooking implements Serializable {
 
     @JsonProperty("changeDate")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "changeDate", columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP NOT NULL")
+    @Column(name = "changeDate", columnDefinition = "DATETIME default CURRENT_TIMESTAMP NOT NULL")
     @NotBlank(message = "Change date is required")
-    private String changeDate;
+    private LocalDateTime changeDate;
     @JsonProperty("who")
     @Column(name = "who", columnDefinition = "VARCHAR(100) NOT NULL")
     @NotBlank(message = "Who is required")
@@ -41,7 +42,7 @@ public class ChangesBooking implements Serializable {
     public ChangesBooking(Long id,
                           Booking booking,
                           String who,
-                          String changeDate) {
+                          LocalDateTime changeDate) {
         super();
         this.id = id;
         this.booking = booking;
@@ -65,11 +66,11 @@ public class ChangesBooking implements Serializable {
         this.who = who;
     }
 
-    public String getChangeDate() {
+    public LocalDateTime getChangeDate() {
         return changeDate;
     }
 
-    public void setChangeDate(String changeDate) {
+    public void setChangeDate(LocalDateTime changeDate) {
         this.changeDate = changeDate;
     }
 

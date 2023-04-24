@@ -9,6 +9,7 @@ import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -46,16 +47,16 @@ public class Booking implements Serializable {
 
     @JsonProperty("receiptDate")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "receiptDate", columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP NOT NULL")
+    @Column(name = "receiptDate", columnDefinition = "DATETIME default CURRENT_TIMESTAMP NOT NULL")
     @PastOrPresent(message = "Receipt date must be in the past or present")
-    private Timestamp receiptDate;
+    private LocalDateTime receiptDate;
 
     @JsonProperty("returnDate")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "returnDate", columnDefinition = "TIMESTAMP NOT NULL")
+    @Column(name = "returnDate", columnDefinition = "DATETIME NOT NULL")
     @NotBlank(message = "Return date is required")
     @Future(message = "Return date must be in the future")
-    private Timestamp returnDate;
+    private LocalDateTime returnDate;
 
     @JsonProperty("totalCost")
     @Column(name = "totalCost", columnDefinition = "DECIMAL(15,2) NOT NULL")
@@ -73,8 +74,8 @@ public class Booking implements Serializable {
                    Location location,
                    BookingStateCode bookingStateCode,
                    List<ChangesBooking> changesBooking,
-                   Timestamp receiptDate,
-                   Timestamp returnDate,
+                   LocalDateTime receiptDate,
+                   LocalDateTime returnDate,
                    BigDecimal totalCost) {
         super();
         this.id = id;
@@ -96,19 +97,19 @@ public class Booking implements Serializable {
         this.id = id;
     }
 
-    public Timestamp getReceiptDate() {
+    public LocalDateTime getReceiptDate() {
         return receiptDate;
     }
 
-    public void setReceiptDate(Timestamp receiptDate) {
+    public void setReceiptDate(LocalDateTime receiptDate) {
         this.receiptDate = receiptDate;
     }
 
-    public Timestamp getReturnDate() {
+    public LocalDateTime getReturnDate() {
         return returnDate;
     }
 
-    public void setReturnDate(Timestamp returnDate) {
+    public void setReturnDate(LocalDateTime returnDate) {
         this.returnDate = returnDate;
     }
 

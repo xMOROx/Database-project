@@ -5,12 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Users")
-public class UserRole {
+@Table(name = "UserRoles")
+public class UserRole implements Serializable {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Column(name = "ID")

@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Comments")
@@ -27,15 +28,15 @@ public class Comment implements Serializable {
 
     @JsonProperty("creationDate")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @Column(name = "CreationDate", columnDefinition = "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "CreationDate", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
     @NotBlank(message = "Creation date is required")
-    private String creationDate;
+    private LocalDateTime creationDate;
 
     @JsonProperty("modificationDate")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @Column(name = "modificationDate", columnDefinition = "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "modificationDate", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
     @NotBlank(message = "Modification date is required")
-    private String modificationDate;
+    private LocalDateTime modificationDate;
 
     @JsonProperty("rating")
     @Column(name = "Rating", columnDefinition = "INT NOT NULL DEFAULT 0")
@@ -59,8 +60,8 @@ public class Comment implements Serializable {
 
     public Comment(Long id,
                    String content,
-                   String creationDate,
-                   String modificationDate,
+                   LocalDateTime creationDate,
+                   LocalDateTime modificationDate,
                    int rating,
                    User user,
                    Vehicle vehicle) {
@@ -90,19 +91,19 @@ public class Comment implements Serializable {
         this.content = content;
     }
 
-    public String getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
-    public String getModificationDate() {
+    public LocalDateTime getModificationDate() {
         return modificationDate;
     }
 
-    public void setModificationDate(String modificationDate) {
+    public void setModificationDate(LocalDateTime modificationDate) {
         this.modificationDate = modificationDate;
     }
 
