@@ -3,8 +3,7 @@ package org.agh.edu.pl.carrentalrestapi.repository.impl;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-import org.agh.edu.pl.carrentalrestapi.model.UserRole;
-import org.agh.edu.pl.carrentalrestapi.repository.UserRepository;
+import org.agh.edu.pl.carrentalrestapi.entity.UserRole;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

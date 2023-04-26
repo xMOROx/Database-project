@@ -4,9 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
-import org.agh.edu.pl.carrentalrestapi.model.User;
-import org.agh.edu.pl.carrentalrestapi.repository.UserRepository;
-import org.agh.edu.pl.carrentalrestapi.repository.UserRoleRepository;
+import org.agh.edu.pl.carrentalrestapi.entity.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
