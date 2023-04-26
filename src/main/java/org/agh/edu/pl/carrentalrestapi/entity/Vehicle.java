@@ -1,8 +1,21 @@
-package org.agh.edu.pl.carrentalrestapi.model;
+package org.agh.edu.pl.carrentalrestapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -43,15 +56,20 @@ public class Vehicle implements Serializable {
     @NotBlank(message = "Daily fee is required")
     @Positive(message = "Daily fee must be positive")
     private BigDecimal dailyFee;
+    @JsonProperty("bestOffer")
+    @Column(name = "BestOffer", columnDefinition = "tinyint NOT NULL default 0")
+    private Boolean bestOffer;
     @ManyToOne
     @JoinColumn(name = "vehicleStatusID")
     @JsonIgnore
     private VehicleStatus vehicleStatus;
-
     @ManyToOne
     @JoinColumn(name = "locationID")
     @JsonIgnore
     private Location location;
+    @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
+    private VehicleParameters vehicleParameters;
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
@@ -60,10 +78,6 @@ public class Vehicle implements Serializable {
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     private List<Comment> comments;
-    @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonIgnore
-    private VehicleParameters vehicleParameters;
-
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     private List<Stars> stars;
@@ -88,6 +102,7 @@ public class Vehicle implements Serializable {
                    VehicleStatus vehicleStatus,
                    Location location,
                    VehicleParameters vehicleParameters,
+                   Boolean bestOffer,
                    List<Booking> bookings,
                    List<Comment> comments,
                    List<Stars> stars,
@@ -98,6 +113,7 @@ public class Vehicle implements Serializable {
         this.model = model;
         this.dailyFee = dailyFee;
         this.vehicleStatus = vehicleStatus;
+        this.bestOffer = bestOffer;
         this.location = location;
         this.bookings = bookings;
         this.comments = comments;
@@ -173,5 +189,29 @@ public class Vehicle implements Serializable {
     public void setDailyFee(BigDecimal dailyFee) {
         this.dailyFee = dailyFee;
     }
+
+    public Boolean getBestOffer() {
+        return bestOffer;
+    }
+
+    public void setBestOffer(Boolean bestOffer) {
+        this.bestOffer = bestOffer;
+    }
+
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "id=" + id +
+                ", registration='" + registration + '\'' +
+                ", brand='" + brand + '\'' +
+                ", model='" + model + '\'' +
+                ", dailyFee=" + dailyFee +
+                ", bestOffer=" + bestOffer +
+                ", vehicleStatusId=" + vehicleStatus.getId() +
+                ", locationId=" + location.getId() +
+                ", vehicleParametersId=" + vehicleParameters.getVehicleId() +
+                '}';
+    }
 }
+
 
