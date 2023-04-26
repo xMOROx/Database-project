@@ -1,9 +1,16 @@
-package org.agh.edu.pl.carrentalrestapi.model;
+package org.agh.edu.pl.carrentalrestapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -18,22 +25,20 @@ public class ChangesBooking implements Serializable {
     @Column(name = "ID")
     @JsonIgnore
     private Long id;
-
     @ManyToOne
     @JoinColumn(name = "bookingID")
     @JsonIgnore
     private Booking booking;
-
     @JsonProperty("changeDate")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "changeDate", columnDefinition = "DATETIME default CURRENT_TIMESTAMP NOT NULL")
+    @Column(name = "ChangeDate", columnDefinition = "DATETIME default CURRENT_TIMESTAMP NOT NULL")
     @NotBlank(message = "Change date is required")
     private LocalDateTime changeDate;
     @JsonProperty("who")
-    @Column(name = "who", columnDefinition = "VARCHAR(100) NOT NULL")
+    @Column(name = "WhoChange", columnDefinition = "VARCHAR(100) NOT NULL")
     @NotBlank(message = "Who is required")
     @Size(min = 1, max = 100, message = "Who must be between 1 and 100 characters")
-    private String who;
+    private String whoChange;
 
     public ChangesBooking() {
         super();
@@ -46,7 +51,7 @@ public class ChangesBooking implements Serializable {
         super();
         this.id = id;
         this.booking = booking;
-        this.who = who;
+        this.whoChange = who;
         this.changeDate = changeDate;
     }
 
@@ -58,12 +63,12 @@ public class ChangesBooking implements Serializable {
         this.id = id;
     }
 
-    public String getWho() {
-        return who;
+    public String getWhoChange() {
+        return whoChange;
     }
 
-    public void setWho(String who) {
-        this.who = who;
+    public void setWhoChange(String who) {
+        this.whoChange = who;
     }
 
     public LocalDateTime getChangeDate() {
@@ -83,7 +88,7 @@ public class ChangesBooking implements Serializable {
         return "ChangesBooking{" +
                 "id=" + id +
                 ", bookingID=" + booking.getId() +
-                ", who='" + who + '\'' +
+                ", whoChange='" + whoChange + '\'' +
                 ", changeDate='" + changeDate + '\'' +
                 '}';
     }

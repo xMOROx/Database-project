@@ -1,8 +1,16 @@
-package org.agh.edu.pl.carrentalrestapi.model;
+package org.agh.edu.pl.carrentalrestapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -49,6 +57,22 @@ public class Location  implements Serializable {
     @NotBlank(message = "Phone number is required")
     @Size(min = 9, max = 20, message = "Phone number must be between 9 and 20 characters long")
     private String phoneNumber;
+
+    @JsonProperty("openHours")
+    @Column(name = "OpenHours", columnDefinition = "varchar(20) not null")
+    @NotBlank(message = "Open hours is required")
+    @Size(min = 1, max = 20, message = "Open hours must be between 1 and 20 characters long")
+    private String openHours;
+    @JsonProperty("closeHours")
+    @Column(name = "CloseHours", columnDefinition = "varchar(20) not null")
+    @NotBlank(message = "Close hours is required")
+    @Size(min = 1, max = 20, message = "Close hours must be between 1 and 20 characters long")
+    private String closeHours;
+    @JsonProperty("PostalCode")
+    @Column(name = "PostalCode", columnDefinition = "varchar(15) not null")
+    @NotBlank(message = "Postal code is required")
+    @Size(min = 1, max = 15, message = "Postal code must be between 1 and 15 characters long")
+    private String postalCode;
 
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
