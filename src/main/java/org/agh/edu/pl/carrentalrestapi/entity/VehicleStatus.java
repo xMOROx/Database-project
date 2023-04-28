@@ -16,13 +16,20 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "VehicleStatuses")
+@Table(name = "VehicleStatus")
 public class VehicleStatus implements Serializable {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Column(name = "ID")
     @JsonIgnore
     private Long id;
+
+    @JsonProperty("Type")
+    @Column(name = "Type", columnDefinition = "VARCHAR(3) NOT NULL")
+    @NotBlank(message = "Type is mandatory")
+    @Size(min = 3, max = 3, message = "Type must be 3 characters long")
+    private String type;
+
     @JsonProperty("Description")
     @Column(name = "Description", columnDefinition = "VARCHAR(50) NOT NULL")
     @NotBlank(message = "Description is mandatory")
@@ -63,6 +70,18 @@ public class VehicleStatus implements Serializable {
         this.description = description;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setVehicles(List<Vehicle> vehicles) {
+        this.vehicles = vehicles;
+    }
+
     public List<Vehicle> getVehicles() {
         return vehicles;
     }
@@ -71,6 +90,7 @@ public class VehicleStatus implements Serializable {
     public String toString() {
         return "VehicleStatus{" +
                 "id=" + id +
+                ", type='" + type + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

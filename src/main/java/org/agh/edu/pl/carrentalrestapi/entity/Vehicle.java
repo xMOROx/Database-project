@@ -198,6 +198,34 @@ public class Vehicle implements Serializable {
         this.bestOffer = bestOffer;
     }
 
+    public void setVehicleStatus(VehicleStatus vehicleStatus) {
+        this.vehicleStatus = vehicleStatus;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public void setVehicleParameters(VehicleParameters vehicleParameters) {
+        this.vehicleParameters = vehicleParameters;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void setStars(List<Stars> stars) {
+        this.stars = stars;
+    }
+
+    public void setEquipment(Set<Equipment> equipment) {
+        this.equipment = equipment;
+    }
+
     @Override
     public String toString() {
         return "Vehicle{" +

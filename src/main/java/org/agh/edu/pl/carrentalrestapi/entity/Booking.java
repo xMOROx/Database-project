@@ -152,6 +152,26 @@ public class Booking implements Serializable {
         return changesBooking;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public void setBookingStateCode(BookingStateCode bookingStateCode) {
+        this.bookingStateCode = bookingStateCode;
+    }
+
+    public void setChangesBooking(List<ChangesBooking> changesBooking) {
+        this.changesBooking = changesBooking;
+    }
+
     @Override
     public String toString() {
         return "Booking{" +
