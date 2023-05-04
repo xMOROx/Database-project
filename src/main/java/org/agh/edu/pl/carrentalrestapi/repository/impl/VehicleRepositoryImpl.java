@@ -16,7 +16,7 @@ public class VehicleRepositoryImpl {
         this.entityManager = entityManager;
     }
 
-    public List<Vehicle> getAvailableVehicleListForLocation(Long cityId) {
+    public List<Vehicle> findAvailableVehicleListForLocation(Long cityId) {
         String query = "SELECT DISTINCT v FROM Vehicle v " +
                 "JOIN Location l ON(v.location.id=l.id) " +
                 "LEFT JOIN FETCH v.equipment  " +
@@ -29,27 +29,27 @@ public class VehicleRepositoryImpl {
                 .getResultList();
     }
 
-    public List<String> getBrandList() {
+    public List<String> findBrandList() {
         return entityManager
                 .createQuery("SELECT DISTINCT v.brand FROM Vehicle v", String.class)
                 .getResultList();
     }
 
-    public List<String> getModelListForBrand(String brand) {
+    public List<String> findModelListForBrand(String brand) {
         return entityManager
                 .createQuery("SELECT DISTINCT v.model FROM Vehicle v WHERE v.brand = :brand", String.class)
                 .setParameter("brand", brand)
                 .getResultList();
     }
 
-    public List<String> getBodyTypeList() {
+    public List<String> findBodyTypeList() {
         TypedQuery<String> query = entityManager
                 .createQuery("SELECT DISTINCT vp.bodyType FROM Vehicle v JOIN VehicleParameters vp on vp.id = v.id", String.class);
         return query
                 .getResultList();
     }
 
-    public List<String> getColorList() {
+    public List<String> findColorList() {
         TypedQuery<String> query = entityManager
                 .createQuery("SELECT DISTINCT vp.color FROM Vehicle v JOIN VehicleParameters vp on vp.id = v.id", String.class);
         return query
@@ -57,11 +57,11 @@ public class VehicleRepositoryImpl {
     }
 
     public void addEquipmentByVehicleId(Equipment equipment, Long vehicleId) {
-
+        // TODO implement here
     }
 
     public void removeEquipmentById(Long id, String eqpCode) {
-
+        // TODO implement here
     }
 }
 

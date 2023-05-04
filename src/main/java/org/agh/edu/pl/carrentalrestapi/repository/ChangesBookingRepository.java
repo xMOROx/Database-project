@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository("changesBookingRepository")
 public interface ChangesBookingRepository extends JpaRepository<ChangesBooking, Long> {
     @Query(value = "SELECT cb FROM ChangesBooking cb", countQuery = "SELECT COUNT(cb) FROM ChangesBooking cb")
-    Page<ChangesBooking> getChangesBookingsForPage(Pageable pageable);
+    Page<ChangesBooking> findChangesBookingsForPage(Pageable pageable);
 }

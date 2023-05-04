@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository("locationRepository")
 public interface LocationRepository extends JpaRepository<Location, Long> {
-    List<String> getCityList();
-
+    List<String> findCityList();
 }

@@ -13,7 +13,7 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query(value="SELECT c FROM Comment c WHERE c.vehicle.id=:vehicleId ORDER BY c.creationDate DESC",
             countQuery="SELECT COUNT(c) FROM Comment c WHERE c.vehicle.id=:vehicleId")
-    Page<Comment> getCommentsByVehicleId(@Param("vehicleId") Long vehicleId, Pageable pageable);
+    Page<Comment> findCommentsByVehicleId(@Param("vehicleId") Long vehicleId, Pageable pageable);
     @Query("SELECT c FROM Comment c WHERE c.vehicle.id=:vehicleId ORDER BY c.creationDate DESC")
-    List<Comment> getAllCommentsByVehicleId(@Param("vehicleId") Long vehicleId);
+    List<Comment> findAllCommentsByVehicleId(@Param("vehicleId") Long vehicleId);
 }

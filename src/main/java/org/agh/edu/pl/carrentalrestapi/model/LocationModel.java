@@ -23,8 +23,8 @@ public class LocationModel extends RepresentationModel<LocationModel> {
     private String address;
     private String email;
     private String phoneNumber;
-    private String openHours;
-    private String closeHours;
+    private String openingHours;
+    private String closingHours;
     private String postalCode;
 
 }

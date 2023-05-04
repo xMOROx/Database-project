@@ -16,17 +16,17 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     @Transactional
     @Query(value="SELECT DISTINCT v FROM Vehicle v LEFT JOIN FETCH v.equipment WHERE v.bestOffer = true ORDER BY v.brand ASC, v.model ASC",
             countQuery = "SELECT COUNT(v) FROM Vehicle v WHERE v.bestOffer = true")
-    Page<Vehicle> getBestOfferCars(Pageable pageable);
+    Page<Vehicle> findBestOfferCars(Pageable pageable);
 
-    List<Vehicle> getAvailableVehicleListForLocation(Long cityId);
+    List<Vehicle> findAvailableVehicleListForLocation(Long cityId);
 
-    List<String> getBrandList();
+    List<String> findBrandList();
 
-    List<String> getModelListForBrand(String brand);
+    List<String> findModelListForBrand(String brand);
 
-    List<String> getBodyTypeList();
+    List<String> findBodyTypeList();
 
-    List<String> getColorList();
+    List<String> findColorList();
 
     void addEquipmentByVehicleId(Equipment equipment, Long vehicleId);
 

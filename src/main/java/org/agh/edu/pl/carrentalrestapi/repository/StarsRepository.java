@@ -12,9 +12,9 @@ import java.util.List;
 public interface StarsRepository extends JpaRepository<Stars, Long> {
 
     @Query("SELECT s FROM Stars s WHERE s.vehicle.id=:vehicleId")
-    List<Stars> getStarsByVehicleId(@Param("vehicleId") Long vehicleId);
+    List<Stars> findStarsByVehicleId(@Param("vehicleId") Long vehicleId);
 
     @Query("SELECT AVG(s.stars) FROM Stars s WHERE s.vehicle.id=:vehicleId")
-    Double getAvgStarsByVehicleId(@Param("vehicleId") Long vehicleId);
+    Double findAverageStarsByVehicleId(@Param("vehicleId") Long vehicleId);
 
 }

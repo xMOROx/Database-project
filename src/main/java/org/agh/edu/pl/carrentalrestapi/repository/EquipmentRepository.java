@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository("equipmentRepository")
 public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
     @Query("SELECT e FROM Equipment e WHERE e.equipmentCode=:equipmentCode")
-    Optional<Equipment> getEquipmentByCode(@Param("equipmentCode") String equipmentCode);
+    Optional<Equipment> findByCode(@Param("equipmentCode") String equipmentCode);
 
-    List<Equipment> getUnExistingDistinctEquipmentListForVehicle(Long id);
+    List<Equipment> findUnExistingDistinctEquipmentListForVehicle(Long id);
 }

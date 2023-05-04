@@ -13,7 +13,7 @@ public class LocationRepositoryImpl {
         this.entityManager = entityManager;
     }
 
-    public List<String> getCityList() {
+    public List<String> findCityList() {
         return entityManager
                 .createQuery("SELECT DISTINCT l.city FROM Location l", String.class)
                 .getResultList();

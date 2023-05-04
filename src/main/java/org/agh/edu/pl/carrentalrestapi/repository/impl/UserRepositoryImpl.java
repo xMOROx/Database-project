@@ -24,7 +24,7 @@ public class UserRepositoryImpl {
         this.passwordEncoder = passwordEncoder;
     }
     @Transactional
-    public Optional<User> getUserByLogin(String login) {
+    public Optional<User> findUserByLogin(String login) {
         TypedQuery<User> query = entityManager
                 .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.userRoles WHERE u.login = :login", User.class);
 
@@ -36,7 +36,7 @@ public class UserRepositoryImpl {
         return Optional.ofNullable(user);
     }
     @Transactional
-    public Optional<User> getUserByEmail(String email) {
+    public Optional<User> findUserByEmail(String email) {
         TypedQuery<User> query = entityManager
                 .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.userRoles WHERE u.email = :email", User.class);
 

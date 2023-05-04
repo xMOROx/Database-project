@@ -59,15 +59,15 @@ public class Location  implements Serializable {
     private String phoneNumber;
 
     @JsonProperty("openHours")
-    @Column(name = "OpenHours", columnDefinition = "varchar(20) not null")
-    @NotBlank(message = "Open hours is required")
-    @Size(min = 1, max = 20, message = "Open hours must be between 1 and 20 characters long")
-    private String openHours;
-    @JsonProperty("closeHours")
-    @Column(name = "CloseHours", columnDefinition = "varchar(20) not null")
-    @NotBlank(message = "Close hours is required")
-    @Size(min = 1, max = 20, message = "Close hours must be between 1 and 20 characters long")
-    private String closeHours;
+    @Column(name = "OpeningHours", columnDefinition = "varchar(20) not null")
+    @NotBlank(message = "Opening hours is required")
+    @Size(min = 1, max = 20, message = "Opening hours must be between 1 and 20 characters long")
+    private String openingHours;
+    @JsonProperty("closingHours")
+    @Column(name = "ClosingHours", columnDefinition = "varchar(20) not null")
+    @NotBlank(message = "Closing hours is required")
+    @Size(min = 1, max = 20, message = "Closing hours must be between 1 and 20 characters long")
+    private String closingHours;
     @JsonProperty("PostalCode")
     @Column(name = "PostalCode", columnDefinition = "varchar(15) not null")
     @NotBlank(message = "Postal code is required")
@@ -92,15 +92,20 @@ public class Location  implements Serializable {
                     String address,
                     String email,
                     String phoneNumber,
+                    String openingHours,
+                    String closingHours,
+                    String postalCode,
                     List<Booking> bookings,
                     List<Vehicle> vehicles) {
-        super();
         this.id = id;
         this.country = country;
         this.city = city;
         this.address = address;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.openingHours = openingHours;
+        this.closingHours = closingHours;
+        this.postalCode = postalCode;
         this.bookings = bookings;
         this.vehicles = vehicles;
     }
@@ -161,6 +166,38 @@ public class Location  implements Serializable {
         return vehicles;
     }
 
+    public String getOpeningHours() {
+        return openingHours;
+    }
+
+    public void setOpeningHours(String openHours) {
+        this.openingHours = openHours;
+    }
+
+    public String getClosingHours() {
+        return closingHours;
+    }
+
+    public void setClosingHours(String closeHours) {
+        this.closingHours = closeHours;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+    public void setVehicles(List<Vehicle> vehicles) {
+        this.vehicles = vehicles;
+    }
+
     @Override
     public String toString() {
         return "Location{" +
@@ -170,6 +207,9 @@ public class Location  implements Serializable {
                 ", address='" + address + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", openingHours='" + openingHours + '\'' +
+                ", closingHours='" + closingHours + '\'' +
+                ", postalCode='" + postalCode + '\'' +
                 '}';
     }
 }

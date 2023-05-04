@@ -8,6 +8,8 @@ import org.agh.edu.pl.carrentalrestapi.entity.VehicleStatus;
 import org.agh.edu.pl.carrentalrestapi.exception.BookingUnavailableVehicleException;
 import org.agh.edu.pl.carrentalrestapi.utils.BookingStatusCode;
 import org.agh.edu.pl.carrentalrestapi.utils.VehicleStatuses;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,4 +76,5 @@ public class BookingRepositoryImpl {
         entityManager.persist(vehicle);
         entityManager.persist(booking);
     }
+
 }

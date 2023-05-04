@@ -21,7 +21,7 @@ public class UserRoleRepositoryImpl {
     }
 
     @Transactional
-    public List<UserRole> getUnExistingDistinctUserRolesForUser(Long id) {
+    public List<UserRole> findUnExistingDistinctUserRolesForUser(Long id) {
         TypedQuery<UserRole> query = entityManager.createQuery("SELECT ur FROM UserRole ur WHERE ur.id NOT IN " +
                 "(SELECT ur.id FROM UserRole ur JOIN ur.users u WHERE u.id = :id)", UserRole.class);
         TypedQuery<UserRole> typedQuery = query.setParameter("id", id);
