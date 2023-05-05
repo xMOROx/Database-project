@@ -35,13 +35,13 @@ public class Comment implements Serializable {
 
     @JsonProperty("creationDate")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @Column(name = "CreationDate", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "Creation_Date", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
     @NotBlank(message = "Creation date is required")
     private LocalDateTime creationDate;
 
     @JsonProperty("modificationDate")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @Column(name = "modificationDate", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "Modification_Date", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
     @NotBlank(message = "Modification date is required")
     private LocalDateTime modificationDate;
 

@@ -36,7 +36,7 @@ public class Vehicle implements Serializable {
     private Long id;
 
     @JsonProperty("registration")
-    @Column(name = "Registration", columnDefinition = "VARCHAR(30) NOT NULL")
+    @Column(name = "Registration", columnDefinition = "VARCHAR(30) NOT NULL UNIQUE")
     @NotBlank(message = "Registration is required")
     @Size(min = 1, max = 30, message = "Registration must be between 1 and 30 characters long")
     private String registration;
@@ -52,15 +52,15 @@ public class Vehicle implements Serializable {
     private String model;
 
     @JsonProperty("dailyFee")
-    @Column(name = "DailyFee", columnDefinition = "DECIMAL(15,2) NOT NULL")
+    @Column(name = "Daily_Fee", columnDefinition = "DECIMAL(15,2) NOT NULL")
     @NotBlank(message = "Daily fee is required")
     @Positive(message = "Daily fee must be positive")
     private BigDecimal dailyFee;
     @JsonProperty("bestOffer")
-    @Column(name = "BestOffer", columnDefinition = "tinyint NOT NULL default 0")
+    @Column(name = "Best_Offer", columnDefinition = "tinyint NOT NULL default 0")
     private Boolean bestOffer;
     @ManyToOne
-    @JoinColumn(name = "vehicleStatusID")
+    @JoinColumn(name = "vehicle_StatusID")
     @JsonIgnore
     private VehicleStatus vehicleStatus;
     @ManyToOne
@@ -84,7 +84,7 @@ public class Vehicle implements Serializable {
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
-        name = "EquipmentSet",
+        name = "Equipment_Set",
         joinColumns = { @JoinColumn(name = "vehicleID") },
         inverseJoinColumns = { @JoinColumn(name = "equipmentID") }
     )

@@ -2,11 +2,16 @@ package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Equipment;
 import org.agh.edu.pl.carrentalrestapi.exception.EquipmentNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.EquipmentWithGivenCodeExistsException;
 import org.agh.edu.pl.carrentalrestapi.repository.EquipmentRepository;
 import org.agh.edu.pl.carrentalrestapi.service.EquipmentService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Service("equipmentService")
+@Transactional
 public class EquipmentServiceImpl implements EquipmentService {
 
     private final EquipmentRepository equipmentRepository;
@@ -21,12 +26,17 @@ public class EquipmentServiceImpl implements EquipmentService {
     }
 
     @Override
-    public List<Equipment> getUnExistingDistinctEquipmentListForVehicle(Long id) {
-        return equipmentRepository.findUnExistingDistinctEquipmentListForVehicle(id);
+    public List<Equipment> getUnExistingDistinctEquipmentsForVehicle(Long id) {
+        return equipmentRepository.findUnExistingDistinctEquipmentsForVehicle(id);
     }
 
     @Override
-    public Long addEquipment(Equipment equipment) {
+    public Long addEquipment(Equipment equipment) throws EquipmentWithGivenCodeExistsException {
+        String code = equipment.getEquipmentCode();
+
+        if (equipmentRepository.findByCode(code).isPresent())
+            throw new EquipmentWithGivenCodeExistsException(code);
+
         Equipment saved = equipmentRepository.save(equipment);
         return saved.getId();
     }
@@ -52,14 +62,22 @@ public class EquipmentServiceImpl implements EquipmentService {
     }
 
     @Override
-    public Long fullUpdateEquipment(Long id, Equipment equipment) {
+    public Long fullUpdateEquipment(Long id, Equipment equipment) throws EquipmentWithGivenCodeExistsException {
         Equipment toUpdate;
+
         try {
             toUpdate = getEquipmentById(id);
         } catch (EquipmentNotFoundException e) {
-            toUpdate = equipmentRepository.save(equipment);
+            return addEquipment(equipment);
         }
-        toUpdate.setEquipmentCode(equipment.getEquipmentCode());
+
+        String equipmentCode = equipment.getEquipmentCode();
+
+        if (equipmentRepository.findByCode(equipmentCode).isPresent())
+            throw new EquipmentWithGivenCodeExistsException(equipmentCode);
+
+
+        toUpdate.setEquipmentCode(equipmentCode);
         toUpdate.setDescription(equipment.getDescription());
 
         Equipment saved = equipmentRepository.save(toUpdate);
@@ -68,11 +86,18 @@ public class EquipmentServiceImpl implements EquipmentService {
     }
 
     @Override
-    public Long partialUpdateEquipment(Long id, Equipment equipment) throws EquipmentNotFoundException {
+    public Long partialUpdateEquipment(Long id, Equipment equipment) throws EquipmentNotFoundException, EquipmentWithGivenCodeExistsException {
+
         Equipment toUpdate = getEquipmentById(id);
 
-        if (equipment.getEquipmentCode() != null)
-            toUpdate.setEquipmentCode(equipment.getEquipmentCode());
+        String equipmentCode = equipment.getEquipmentCode();
+        if (equipmentCode != null) {
+
+            if (equipmentRepository.findByCode(equipmentCode).isPresent())
+                throw new EquipmentWithGivenCodeExistsException(equipmentCode);
+
+            toUpdate.setEquipmentCode(equipmentCode);
+        }
 
         if (equipment.getDescription() != null)
             toUpdate.setDescription(equipment.getDescription());

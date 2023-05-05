@@ -7,7 +7,7 @@ import java.util.List;
 public interface EquipmentService {
 
     List<Equipment> getAllEquipment();
-    List<Equipment> getUnExistingDistinctEquipmentListForVehicle(Long id);
+    List<Equipment> getUnExistingDistinctEquipmentsForVehicle(Long id);
     Long addEquipment(Equipment equipment);
     Equipment getEquipmentById(Long id);
     Equipment getEquipmentByCode(String code);

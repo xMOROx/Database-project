@@ -2,13 +2,18 @@ package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Location;
 import org.agh.edu.pl.carrentalrestapi.exception.LocationNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.LocationWithGivenEmailExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.LocationWithGivenPhoneNumberExistsException;
 import org.agh.edu.pl.carrentalrestapi.repository.LocationRepository;
 import org.agh.edu.pl.carrentalrestapi.service.LocationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Service("locationService")
+@Transactional
 public class LocationServiceImpl implements LocationService {
 
     private final LocationRepository locationRepository;
@@ -18,7 +23,13 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Long addLocation(Location location) {
+    public Long addLocation(Location location) throws LocationWithGivenEmailExistsException, LocationWithGivenPhoneNumberExistsException {
+        if (locationRepository.findByEmail(location.getEmail()).isPresent())
+            throw new LocationWithGivenEmailExistsException(location.getEmail());
+
+        if (locationRepository.findByPhoneNumber(location.getPhoneNumber()).isPresent())
+            throw new LocationWithGivenPhoneNumberExistsException(location.getPhoneNumber());
+
         Location saved = locationRepository.save(location);
         return saved.getId();
     }
@@ -37,18 +48,25 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Long fullUpdateLocation(Long id, Location location) {
+    public Long fullUpdateLocation(Long id, Location location) throws LocationWithGivenEmailExistsException, LocationWithGivenPhoneNumberExistsException {
+
+        if (locationRepository.findByEmail(location.getEmail()).isPresent())
+            throw new LocationWithGivenEmailExistsException(location.getEmail());
+
+        if (locationRepository.findByPhoneNumber(location.getPhoneNumber()).isPresent())
+            throw new LocationWithGivenPhoneNumberExistsException(location.getPhoneNumber());
+
         Location toUpdate;
+
         try {
             toUpdate = getLocationById(id);
         } catch (LocationNotFoundException e) {
-            toUpdate = locationRepository.save(location);
+            return addLocation(location);
         }
 
         toUpdate.setAddress(location.getAddress());
         toUpdate.setCity(location.getCity());
         toUpdate.setCountry(location.getCountry());
-        toUpdate.setPostalCode(location.getPostalCode());
         toUpdate.setPhoneNumber(location.getPhoneNumber());
         toUpdate.setEmail(location.getEmail());
         toUpdate.setPostalCode(location.getPostalCode());
@@ -61,7 +79,13 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Long partialUpdateLocation(Long id, Location location) throws LocationNotFoundException {
+    public Long partialUpdateLocation(Long id, Location location) throws LocationNotFoundException, LocationWithGivenEmailExistsException, LocationWithGivenPhoneNumberExistsException {
+        if (locationRepository.findByEmail(location.getEmail()).isPresent())
+            throw new LocationWithGivenEmailExistsException(location.getEmail());
+
+        if (locationRepository.findByPhoneNumber(location.getPhoneNumber()).isPresent())
+            throw new LocationWithGivenPhoneNumberExistsException(location.getPhoneNumber());
+
         Location toUpdate = getLocationById(id);
         if (location.getAddress() != null)
             toUpdate.setAddress(location.getAddress());
@@ -101,7 +125,11 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Page<Location> getAllLocationsPaginated(Pageable pageable) {
+    public Page<Location> getAllLocations(Pageable pageable) {
         return locationRepository.findAll(pageable);
+    }
+    @Override
+    public List<String> getCities() {
+        return locationRepository.findAllCities();
     }
 }

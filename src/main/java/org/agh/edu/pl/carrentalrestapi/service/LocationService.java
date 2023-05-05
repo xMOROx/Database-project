@@ -13,5 +13,7 @@ public interface LocationService {
     Long fullUpdateLocation(Long id, Location location);
     Long partialUpdateLocation(Long id, Location location);
     List<Location> getAllLocations();
-    Page<Location> getAllLocationsPaginated(Pageable pageable);
+    Page<Location> getAllLocations(Pageable pageable);
+    List<String> getCities();
+
 }

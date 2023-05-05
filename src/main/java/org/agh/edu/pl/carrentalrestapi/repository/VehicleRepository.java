@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
@@ -18,17 +19,19 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
             countQuery = "SELECT COUNT(v) FROM Vehicle v WHERE v.bestOffer = true")
     Page<Vehicle> findBestOfferCars(Pageable pageable);
 
-    List<Vehicle> findAvailableVehicleListForLocation(Long cityId);
+    List<Vehicle> findAvailableVehiclesForLocation(Long cityId);
+    Optional<Vehicle> findByRegistration(String plateNumber);
 
-    List<String> findBrandList();
+    List<String> findBrands();
 
-    List<String> findModelListForBrand(String brand);
+    List<String> findModelsForBrand(String brand);
 
-    List<String> findBodyTypeList();
+    List<String> findBodyTypes();
 
-    List<String> findColorList();
+    List<String> findColors();
 
     void addEquipmentByVehicleId(Equipment equipment, Long vehicleId);
 
     void removeEquipmentById(Long id, String eqpCode);
+
 }

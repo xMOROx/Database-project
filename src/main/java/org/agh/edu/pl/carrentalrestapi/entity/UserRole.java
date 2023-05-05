@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "UserRoles")
+@Table(name = "User_Roles")
 public class UserRole implements Serializable {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class UserRole implements Serializable {
     @JsonIgnore
     private Long id;
     @JsonProperty("type")
-    @Column(name = "Type", columnDefinition = "varchar(30) default 'Customer'")
+    @Column(name = "Type", columnDefinition = "varchar(30) default 'Customer' UNIQUE")
     @Size(min = 1, max = 30, message = "Type must be between 1 and 30 characters long")
     private String type;
 

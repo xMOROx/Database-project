@@ -14,5 +14,6 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
     @Query("SELECT e FROM Equipment e WHERE e.equipmentCode=:equipmentCode")
     Optional<Equipment> findByCode(@Param("equipmentCode") String equipmentCode);
 
-    List<Equipment> findUnExistingDistinctEquipmentListForVehicle(Long id);
+    List<Equipment> findUnExistingDistinctEquipmentsForVehicle(Long id);
+
 }

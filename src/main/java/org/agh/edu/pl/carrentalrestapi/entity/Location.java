@@ -10,7 +10,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.SecondaryTable;
+import jakarta.persistence.SecondaryTables;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -20,6 +24,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "Locations")
+@SecondaryTables({
+        @SecondaryTable(name = "Countries", pkJoinColumns = @PrimaryKeyJoinColumn(name = "ID"), uniqueConstraints = @UniqueConstraint(columnNames = {"Country"})),
+        @SecondaryTable(name = "Cities", pkJoinColumns = @PrimaryKeyJoinColumn(name = "ID"), uniqueConstraints = @UniqueConstraint(columnNames = {"City"})),
+        @SecondaryTable(name = "Addresses", pkJoinColumns = @PrimaryKeyJoinColumn(name = "ID"), uniqueConstraints = @UniqueConstraint(columnNames = {"Address"}))}
+)
 public class Location  implements Serializable {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
@@ -28,48 +37,48 @@ public class Location  implements Serializable {
     private Long id;
 
     @JsonProperty("country")
-    @Column(name = "Country", columnDefinition = "varchar(100) not null")
+    @Column(name = "Country", columnDefinition = "varchar(100) not null", table = "Countries")
     @NotBlank(message = "Country is required")
     @Size(min = 1, max = 100, message = "Country must be between 1 and 100 characters long")
     private String country;
 
     @JsonProperty("city")
-    @Column(name = "City", columnDefinition = "varchar(100) not null")
+    @Column(name = "City", columnDefinition = "varchar(100) not null", table = "Cities")
     @NotBlank(message = "City is required")
     @Size(min = 1, max = 100, message = "City must be between 1 and 100 characters long")
     private String city;
 
     @JsonProperty("address")
-    @Column(name = "Address", columnDefinition = "varchar(100) not null")
+    @Column(name = "Address", columnDefinition = "varchar(100) not null", table = "Addresses")
     @NotBlank(message = "Address is required")
     @Size(min = 1, max = 100, message = "Address must be between 1 and 100 characters long")
     private String address;
 
     @JsonProperty("email")
-    @Column(name = "Email", columnDefinition = "varchar(255) not null")
+    @Column(name = "Email", columnDefinition = "varchar(255) not null unique")
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")
     @Size(min = 1, max = 255, message = "Email must be between 1 and 255 characters long")
     private String email;
 
     @JsonProperty("phoneNumber")
-    @Column(name = "PhoneNumber", columnDefinition = "varchar(20) not null")
+    @Column(name = "phone_number", columnDefinition = "varchar(20) not null unique")
     @NotBlank(message = "Phone number is required")
     @Size(min = 9, max = 20, message = "Phone number must be between 9 and 20 characters long")
     private String phoneNumber;
 
     @JsonProperty("openHours")
-    @Column(name = "OpeningHours", columnDefinition = "varchar(20) not null")
+    @Column(name = "opening_hours", columnDefinition = "varchar(20) not null")
     @NotBlank(message = "Opening hours is required")
     @Size(min = 1, max = 20, message = "Opening hours must be between 1 and 20 characters long")
     private String openingHours;
     @JsonProperty("closingHours")
-    @Column(name = "ClosingHours", columnDefinition = "varchar(20) not null")
+    @Column(name = "closing_hours", columnDefinition = "varchar(20) not null")
     @NotBlank(message = "Closing hours is required")
     @Size(min = 1, max = 20, message = "Closing hours must be between 1 and 20 characters long")
     private String closingHours;
     @JsonProperty("PostalCode")
-    @Column(name = "PostalCode", columnDefinition = "varchar(15) not null")
+    @Column(name = "postal_code", columnDefinition = "varchar(15) not null", table = "Addresses")
     @NotBlank(message = "Postal code is required")
     @Size(min = 1, max = 15, message = "Postal code must be between 1 and 15 characters long")
     private String postalCode;

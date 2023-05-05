@@ -25,7 +25,7 @@ public class Equipment implements Serializable {
     @JsonIgnore
     private Long id;
     @JsonProperty("equipmentCode")
-    @Column(name = "EquipmentCode")
+    @Column(name = "Equipment_Code", columnDefinition = "VARCHAR(3) NOT NULL UNIQUE")
     @NotBlank(message = "Equipment code is mandatory")
     @Size(min = 1, max = 3, message = "Equipment code must be between 1 and 3 characters long")
     private String equipmentCode;

@@ -17,7 +17,7 @@ public class EquipmentRepositoryImpl {
         this.entityManager = entityManager;
     }
     @Transactional
-    public List<Equipment> findUnExistingDistinctEquipmentListForVehicle(Long id) {
+    public List<Equipment> findUnExistingDistinctEquipmentsForVehicle(Long id) {
 
         TypedQuery<Equipment> query = entityManager
                 .createQuery("SELECT e FROM Equipment e WHERE e.id NOT IN (SELECT e.id FROM Equipment e JOIN e.vehicles v WHERE v.id=:id)", Equipment.class);
