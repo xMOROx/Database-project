@@ -5,7 +5,6 @@ import org.agh.edu.pl.carrentalrestapi.entity.Equipment;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.exception.VehicleNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.exception.VehicleWithRegistrationExistsException;
-import org.agh.edu.pl.carrentalrestapi.repository.LocationRepository;
 import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
 import org.agh.edu.pl.carrentalrestapi.utils.SearchRequest;
@@ -38,8 +37,8 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Page<Vehicle> getBestOfferCars(Pageable pageable) {
-        return vehicleRepository.findBestOfferCars(pageable);
+    public Page<Vehicle> getBestOffer(Pageable pageable) {
+        return vehicleRepository.findBestOffer(pageable);
     }
 
     @Override
@@ -56,7 +55,7 @@ public class VehicleServiceImpl implements VehicleService {
     public Long addVehicle(Vehicle vehicle) throws VehicleWithRegistrationExistsException {
         String registration = vehicle.getRegistration();
 
-        if( vehicleRepository.findByRegistration(registration).isPresent())
+        if (vehicleRepository.findByRegistration(registration).isPresent())
             throw new VehicleWithRegistrationExistsException(registration);
 
         Vehicle saved = vehicleRepository.save(vehicle);
@@ -66,7 +65,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public void deleteVehicle(Long id) throws VehicleNotFoundException {
-        if(!vehicleRepository.existsById(id))
+        if (!vehicleRepository.existsById(id))
             throw new VehicleNotFoundException(id);
 
         vehicleRepository.deleteById(id);
@@ -83,7 +82,7 @@ public class VehicleServiceImpl implements VehicleService {
         }
 
         String registration = vehicle.getRegistration();
-        if( vehicleRepository.findByRegistration(registration).isPresent() && !toUpdate.getRegistration().equals(registration))
+        if (vehicleRepository.findByRegistration(registration).isPresent() && !toUpdate.getRegistration().equals(registration))
             throw new VehicleWithRegistrationExistsException(registration);
 
         toUpdate.setRegistration(registration);
@@ -104,7 +103,7 @@ public class VehicleServiceImpl implements VehicleService {
         if (vehicle.getRegistration() != null) {
             String registration = vehicle.getRegistration();
 
-            if( vehicleRepository.findByRegistration(registration).isPresent() && !toUpdate.getRegistration().equals(registration))
+            if (vehicleRepository.findByRegistration(registration).isPresent() && !toUpdate.getRegistration().equals(registration))
                 throw new VehicleWithRegistrationExistsException(registration);
             toUpdate.setRegistration(registration);
         }
@@ -153,6 +152,7 @@ public class VehicleServiceImpl implements VehicleService {
     public List<String> getColors() {
         return vehicleRepository.findColors();
     }
+
     //TODO: implement
     @Override
     public Long addEquipment(Long vehicleId, Equipment equipment) {

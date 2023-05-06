@@ -18,7 +18,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
     @Transactional
     @Query(value="SELECT DISTINCT v FROM Vehicle v LEFT JOIN FETCH v.equipment WHERE v.bestOffer = true ORDER BY v.brand ASC, v.model ASC",
             countQuery = "SELECT COUNT(v) FROM Vehicle v WHERE v.bestOffer = true")
-    Page<Vehicle> findBestOfferCars(Pageable pageable);
+    Page<Vehicle> findBestOffer(Pageable pageable);
 
     List<Vehicle> findAvailableVehiclesForLocation(Long cityId);
     Optional<Vehicle> findByRegistration(String plateNumber);

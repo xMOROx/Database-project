@@ -28,7 +28,7 @@ public class VehicleParameters implements Serializable {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Column(name = "VehicleID")
     @JsonIgnore
-    private Long vehicleId;
+    private Long id;
 
     @JsonProperty("bodyType")
     @Column(name = "Body_Type", columnDefinition = "VARCHAR(100) NOT NULL")
@@ -114,7 +114,7 @@ public class VehicleParameters implements Serializable {
                              String description,
                              String photoURL,
                              Vehicle vehicle) {
-        this.vehicleId = vehicleId;
+        this.id = vehicleId;
         this.bodyType = bodyType;
         this.productionYear = productionYear;
         this.fuelType = fullType;
@@ -130,12 +130,12 @@ public class VehicleParameters implements Serializable {
         this.vehicle = vehicle;
     }
 
-    public Long getVehicleId() {
-        return vehicleId;
+    public Long getId() {
+        return id;
     }
 
-    public void setVehicleId(Long vehicleId) {
-        this.vehicleId = vehicleId;
+    public void setId(Long vehicleId) {
+        this.id = vehicleId;
     }
 
     public String getBodyType() {
@@ -241,7 +241,7 @@ public class VehicleParameters implements Serializable {
     @Override
     public String toString() {
         return "VehicleParameters{" +
-                "vehicleId=" + vehicleId +
+                "vehicleId=" + id +
                 ", bodyType='" + bodyType + '\'' +
                 ", productionYear=" + productionYear +
                 ", fullType='" + fuelType + '\'' +

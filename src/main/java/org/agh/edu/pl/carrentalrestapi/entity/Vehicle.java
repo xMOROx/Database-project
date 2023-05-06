@@ -242,7 +242,7 @@ public class Vehicle implements Serializable {
                 ", bestOffer=" + bestOffer +
                 ", vehicleStatusId=" + vehicleStatus.getId() +
                 ", locationId=" + location.getId() +
-                ", vehicleParametersId=" + vehicleParameters.getVehicleId() +
+                ", vehicleParametersId=" + vehicleParameters.getId() +
                 '}';
     }
 }

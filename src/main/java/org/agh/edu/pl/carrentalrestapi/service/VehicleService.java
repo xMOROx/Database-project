@@ -13,7 +13,7 @@ public interface VehicleService {
 
     Page<Vehicle> getAll(Pageable pageable);
 
-    Page<Vehicle> getBestOfferCars(Pageable pageable);
+    Page<Vehicle> getBestOffer(Pageable pageable);
 
     List<Vehicle> getAvailableVehiclesForLocation(Long locationId);
 
