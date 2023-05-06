@@ -2,6 +2,7 @@ package org.agh.edu.pl.carrentalrestapi.service;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Equipment;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
+import org.agh.edu.pl.carrentalrestapi.utils.SearchRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,7 +26,8 @@ public interface VehicleService {
     Long fullUpdate(Vehicle vehicle);
 
     Long partialUpdate(Vehicle vehicle);
-    //TODO: implement filters per page
+
+    Page<Vehicle> searchVehicle(SearchRequest searchRequest);
 
     List<String> getBrands();
 
