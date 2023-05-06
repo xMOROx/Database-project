@@ -1,4 +1,4 @@
-package org.agh.edu.pl.carrentalrestapi.utils.assembler;
+package org.agh.edu.pl.carrentalrestapi.model.assembler;
 
 import org.agh.edu.pl.carrentalrestapi.controller.BestOfferController;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
@@ -46,7 +46,7 @@ public class VehicleBestOfferModelAssembler extends RepresentationModelAssembler
     @Override
     public CollectionModel<VehicleModel> toCollectionModel(Iterable<? extends Vehicle> entities) {
         CollectionModel<VehicleModel> vehicleModels = super.toCollectionModel(entities);
-        vehicleModels.add(linkTo(methodOn(BestOfferController.class).getBestOffer(0, 1)).withSelfRel());
+        vehicleModels.add(linkTo(methodOn(BestOfferController.class).getBestOffer(null)).withSelfRel());
         return vehicleModels;
     }
 

@@ -1,6 +1,7 @@
-package org.agh.edu.pl.carrentalrestapi.utils.assembler;
+package org.agh.edu.pl.carrentalrestapi.model.assembler;
 
 import org.agh.edu.pl.carrentalrestapi.controller.VehicleParametersController;
+import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleParametersModel;
 import org.springframework.hateoas.CollectionModel;
@@ -21,7 +22,8 @@ public class VehicleParametersModelAssembler extends RepresentationModelAssemble
     }
 
     public static VehicleParametersModel toVehicleParametersModel(VehicleParameters vehicleParameters) {
-        Long vehicleId = vehicleParameters.getVehicle() == null ? null : vehicleParameters.getVehicle().getId();
+        Vehicle vehicle = vehicleParameters.getVehicle();
+        Long vehicleId = vehicle == null ? null : vehicleParameters.getVehicle().getId();
 
         return VehicleParametersModel.builder()
                 .id(vehicleParameters.getId())
@@ -41,7 +43,7 @@ public class VehicleParametersModelAssembler extends RepresentationModelAssemble
                 .build();
     }
 
-    public static List<VehicleParametersModel> toVehicleModel(List<VehicleParameters> vehicleParameters) {
+    public static List<VehicleParametersModel> toVehicleParametersModel(List<VehicleParameters> vehicleParameters) {
         if (vehicleParameters == null) {
             return Collections.emptyList();
         }
@@ -54,7 +56,7 @@ public class VehicleParametersModelAssembler extends RepresentationModelAssemble
     @Override
     public CollectionModel<VehicleParametersModel> toCollectionModel(Iterable<? extends VehicleParameters> entities) {
         CollectionModel<VehicleParametersModel> vehicleParametersModels = super.toCollectionModel(entities);
-        vehicleParametersModels.add(linkTo(methodOn(VehicleParametersController.class).getAllVehicleParameters(null, null)).withSelfRel());
+        vehicleParametersModels.add(linkTo(methodOn(VehicleParametersController.class).getAllVehicleParameters(null)).withSelfRel());
         return vehicleParametersModels;
     }
 

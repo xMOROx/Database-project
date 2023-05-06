@@ -5,7 +5,8 @@ import org.agh.edu.pl.carrentalrestapi.exception.VehicleParametersNotFoundExcept
 import org.agh.edu.pl.carrentalrestapi.model.VehicleParametersModel;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleParametersService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
-import org.agh.edu.pl.carrentalrestapi.utils.assembler.VehicleParametersModelAssembler;
+import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleParametersModelAssembler;
+import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
@@ -29,26 +30,28 @@ public class VehicleParametersController {
         this.vehicleParametersService = vehicleParametersService;
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(path = "/{id}")
     public @ResponseBody ResponseEntity<VehicleParametersModel> getVehicleParametersById(@PathVariable Long id) throws VehicleParametersNotFoundException {
         VehicleParameters vehicleParameters = vehicleParametersService.getVehicleParametersById(id);
 
-        return Stream.of(vehicleParameters).map(vehicleParametersModelAssembler::toModel).map(ResponseEntity::ok).findFirst().orElse(ResponseEntity.notFound().build());
+        return Stream.of(vehicleParameters)
+                .map(vehicleParametersModelAssembler::toModel)
+                .map(ResponseEntity::ok)
+                .findFirst()
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping(value = "", params = {"page", "size"})
-    public @ResponseBody ResponseEntity<CollectionModel<VehicleParametersModel>> getAllVehicleParameters(@RequestParam(value = "page") Integer page, @RequestParam(value = "size") Integer size) {
-        Integer parsedPage = Objects.requireNonNullElse(page, 0);
-        Integer parsedSize = Objects.requireNonNullElse(size, 100);
+    @GetMapping(path = "")
+    public @ResponseBody ResponseEntity<CollectionModel<VehicleParametersModel>> getAllVehicleParameters(@RequestBody PageableRequest pageableRequest) {
 
-        Pageable pageable = Pageable.ofSize(parsedSize).withPage(parsedPage);
+        Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
         Page<VehicleParameters> vehicleParametersModels = vehicleParametersService.getVehicleParameters(pageable);
 
         return new ResponseEntity<>(vehicleParametersModelAssembler.toCollectionModel(vehicleParametersModels), HttpStatus.OK);
     }
 
-    @PostMapping(value = "")
+    @PostMapping(path = "")
     public ResponseEntity<Long> addVehicleParameters(@RequestBody VehicleParameters vehicleParameters) {
         Long savedId = vehicleParametersService.saveVehicleParameters(vehicleParameters);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedId).toUri();
@@ -56,7 +59,7 @@ public class VehicleParametersController {
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(path = "/{id}")
     public ResponseEntity<Long> updateVehicleParameters(@PathVariable Long id, @RequestBody VehicleParameters vehicleParameters) {
         Long updatedId = vehicleParametersService.fullUpdateVehicleParameters(id, vehicleParameters);
 
@@ -69,14 +72,14 @@ public class VehicleParametersController {
         return ResponseEntity.created(location).build();
     }
 
-    @PatchMapping(value = "/{id}")
+    @PatchMapping(path = "/{id}")
     public ResponseEntity<Long> patchVehicleParameters(@PathVariable Long id, @RequestBody VehicleParameters vehicleParameters) throws VehicleParametersNotFoundException {
         Long updatedId = vehicleParametersService.partialUpdateVehicleParameters(id, vehicleParameters);
 
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(path = "/{id}")
     public ResponseEntity<Long> deleteVehicleParameters(@PathVariable Long id) throws VehicleParametersNotFoundException {
         vehicleParametersService.deleteVehicleParameters(id);
         return ResponseEntity.noContent().build();
