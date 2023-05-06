@@ -42,7 +42,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<Vehicle> getAvailableVehiclesForLocation(Long locationId) {
+    public Page<Vehicle> getAvailableVehiclesForLocation(Long locationId) {
         return vehicleRepository.findAvailableVehiclesForLocation(locationId);
     }
 
@@ -134,33 +134,32 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<String> getBrands() {
+    public Page<String> getBrands() {
         return vehicleRepository.findBrands();
     }
 
     @Override
-    public List<String> getModelsForBrand(String brand) {
+    public Page<String> getModelsForBrand(String brand) {
         return vehicleRepository.findModelsForBrand(brand);
     }
 
     @Override
-    public List<String> getBodyTypes() {
+    public Page<String> getBodyTypes() {
         return vehicleRepository.findBodyTypes();
     }
 
     @Override
-    public List<String> getColors() {
+    public Page<String> getColors() {
         return vehicleRepository.findColors();
     }
 
-    //TODO: implement
     @Override
-    public Long addEquipment(Long vehicleId, Equipment equipment) {
-        return null;
+    public void addEquipment(Long id, Long equipmentId) {
+        vehicleRepository.addEquipmentToVehicle(id, equipmentId);
     }
 
     @Override
-    public void deleteEquipment(Long vehicleId, String equipmentCode) {
-
+    public void deleteEquipment(Long id, Long equipmentId) {
+        vehicleRepository.removeEquipmentFromVehicle(id, equipmentId);
     }
 }

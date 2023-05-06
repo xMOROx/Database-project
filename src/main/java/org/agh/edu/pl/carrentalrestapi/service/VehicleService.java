@@ -1,6 +1,5 @@
 package org.agh.edu.pl.carrentalrestapi.service;
 
-import org.agh.edu.pl.carrentalrestapi.entity.Equipment;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.utils.SearchRequest;
 import org.springframework.data.domain.Page;
@@ -15,7 +14,7 @@ public interface VehicleService {
 
     Page<Vehicle> getBestOffer(Pageable pageable);
 
-    List<Vehicle> getAvailableVehiclesForLocation(Long locationId);
+    Page<Vehicle> getAvailableVehiclesForLocation(Long locationId);
 
     Vehicle getById(Long id);
 
@@ -29,15 +28,15 @@ public interface VehicleService {
 
     Page<Vehicle> searchVehicle(SearchRequest searchRequest);
 
-    List<String> getBrands();
+    Page<String> getBrands();
 
-    List<String> getModelsForBrand(String brand);
+    Page<String> getModelsForBrand(String brand);
 
-    List<String> getBodyTypes();
+    Page<String> getBodyTypes();
 
-    List<String> getColors();
+    Page<String> getColors();
 
-    Long addEquipment(Long vehicleId, Equipment equipment);
+    void addEquipment(Long id, Long equipmentId);
 
-    void deleteEquipment(Long vehicleId, String equipmentCode);
+    void deleteEquipment(Long id, Long equipmentId);
 }

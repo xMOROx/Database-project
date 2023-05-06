@@ -5,6 +5,9 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.agh.edu.pl.carrentalrestapi.entity.User;
+import org.agh.edu.pl.carrentalrestapi.entity.UserRole;
+import org.agh.edu.pl.carrentalrestapi.exception.UserNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.UserRoleNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +51,18 @@ public class UserRepositoryImpl {
     }
 
     @Transactional
-    public void addRoleToUser(Long userId, Long roleId) {
-        //TODO: implement
+    public void addRoleToUser(Long userId, Long roleId) throws UserNotFoundException, UserRoleNotFoundException {
+        User user = entityManager.find(User.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException(userId);
+        }
+        UserRole userRole = entityManager.find(UserRole.class, roleId);
+
+        if (userRole == null) {
+            throw new UserRoleNotFoundException(roleId);
+        }
+
+        user.getUserRoles().add(userRole);
+        entityManager.merge(user);
     }
 }
