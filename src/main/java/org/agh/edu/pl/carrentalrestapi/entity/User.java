@@ -1,7 +1,10 @@
 package org.agh.edu.pl.carrentalrestapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,6 +29,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Users")
+@JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,13 +39,13 @@ public class User implements Serializable {
     private Long id;
 
     @JsonProperty("firstName")
-    @Column(name = "FirstName", columnDefinition = "varchar(70) NOT NULL")
+    @Column(name = "First_Name", columnDefinition = "varchar(70) NOT NULL")
     @NotBlank(message = "First name is required")
     @Size(min = 1, max = 70, message = "First name must be between 1 and 70 characters long")
     private String firstName;
 
     @JsonProperty("surName")
-    @Column(name = "SurName", columnDefinition = "varchar(70) NOT NULL")
+    @Column(name = "Sur_Name", columnDefinition = "varchar(70) NOT NULL")
     @NotBlank(message = "Surname is required")
     @Size(min = 1, max = 70, message = "Surname must be between 1 and 70 characters long")
     private String surName;
@@ -64,7 +69,7 @@ public class User implements Serializable {
     @Size(min = 8, max = 255, message = "Password must be between 8 and 255 characters long")
     private String password;
 
-    @Column(name = "PhoneNumber", columnDefinition = "varchar(20) NOT NULL")
+    @Column(name = "Phone_Number", columnDefinition = "varchar(20) NOT NULL")
     @JsonProperty("phoneNumber")
     @NotBlank(message = "Phone number is required")
     @Size(min = 9, max = 20, message = "Phone number must be between 9 and 20 characters long")
@@ -85,7 +90,7 @@ public class User implements Serializable {
     private List<Comment> comments;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "AppUsersRoles", joinColumns = @JoinColumn(name = "userID"), inverseJoinColumns = @JoinColumn(name = "userRoleID"))
+    @JoinTable(name = "App_Users_Roles", joinColumns = @JoinColumn(name = "userID"), inverseJoinColumns = @JoinColumn(name = "user_RoleID"))
     @JsonIgnore
     private Set<UserRole> userRoles = new HashSet<>();
 

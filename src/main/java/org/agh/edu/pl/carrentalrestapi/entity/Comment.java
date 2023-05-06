@@ -2,7 +2,10 @@ package org.agh.edu.pl.carrentalrestapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,6 +24,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Comments")
+@JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)

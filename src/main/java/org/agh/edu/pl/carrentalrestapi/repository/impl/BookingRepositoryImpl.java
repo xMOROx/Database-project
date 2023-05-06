@@ -6,10 +6,8 @@ import org.agh.edu.pl.carrentalrestapi.entity.BookingStateCode;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleStatus;
 import org.agh.edu.pl.carrentalrestapi.exception.BookingUnavailableVehicleException;
-import org.agh.edu.pl.carrentalrestapi.utils.BookingStatusCode;
-import org.agh.edu.pl.carrentalrestapi.utils.VehicleStatuses;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.agh.edu.pl.carrentalrestapi.utils.enums.BookingStateCodeConstants;
+import org.agh.edu.pl.carrentalrestapi.utils.enums.VehicleStatuses;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +44,7 @@ public class BookingRepositoryImpl {
         Vehicle vehicle = entityManager.find(Vehicle.class, booking.getVehicle().getId());
 
         VehicleStatus availableStatus = entityManager.find(VehicleStatus.class, VehicleStatuses.AVI.toString());
-        BookingStateCode bookingStatusCancel = entityManager.find(BookingStateCode.class, BookingStatusCode.CAN.toString());
+        BookingStateCode bookingStatusCancel = entityManager.find(BookingStateCode.class, BookingStateCodeConstants.CAN.toString());
         vehicle.setVehicleStatus(availableStatus);
         booking.setBookingStateCode(bookingStatusCancel);
 
@@ -55,9 +53,9 @@ public class BookingRepositoryImpl {
     }
 
     @Transactional
-    public void bookingRented(Long bookingId) {
+    public void bookingRent(Long bookingId) {
         Booking booking = entityManager.find(Booking.class, bookingId);
-        BookingStateCode bookingStatusRented = entityManager.find(BookingStateCode.class, BookingStatusCode.REN.toString());
+        BookingStateCode bookingStatusRented = entityManager.find(BookingStateCode.class, BookingStateCodeConstants.REN.toString());
         booking.setBookingStateCode(bookingStatusRented);
         entityManager.persist(booking);
     }
@@ -68,7 +66,7 @@ public class BookingRepositoryImpl {
         Vehicle vehicle = entityManager.find(Vehicle.class, booking.getVehicle().getId());
 
         VehicleStatus availableStatus = entityManager.find(VehicleStatus.class, VehicleStatuses.AVI.toString());
-        BookingStateCode bookingStatusReturn = entityManager.find(BookingStateCode.class, BookingStatusCode.RET.toString());
+        BookingStateCode bookingStatusReturn = entityManager.find(BookingStateCode.class, BookingStateCodeConstants.RET.toString());
 
         vehicle.setVehicleStatus(availableStatus);
         booking.setBookingStateCode(bookingStatusReturn);

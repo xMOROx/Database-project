@@ -2,7 +2,10 @@ package org.agh.edu.pl.carrentalrestapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,6 +28,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "Bookings")
+@JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Booking implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,7 +53,7 @@ public class Booking implements Serializable {
     private Location location;
 
     @ManyToOne
-    @JoinColumn(name = "bookingStateCodeID")
+    @JoinColumn(name = "booking_State_CodeID")
     @JsonIgnore
     private BookingStateCode bookingStateCode;
 
@@ -58,19 +63,19 @@ public class Booking implements Serializable {
 
     @JsonProperty("receiptDate")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "receiptDate", columnDefinition = "DATETIME default CURRENT_TIMESTAMP NOT NULL")
+    @Column(name = "receipt_Date", columnDefinition = "DATETIME default CURRENT_TIMESTAMP NOT NULL")
     @PastOrPresent(message = "Receipt date must be in the past or present")
     private LocalDateTime receiptDate;
 
     @JsonProperty("returnDate")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "returnDate", columnDefinition = "DATETIME NOT NULL")
+    @Column(name = "return_Date", columnDefinition = "DATETIME NOT NULL")
     @NotBlank(message = "Return date is required")
     @Future(message = "Return date must be in the future")
     private LocalDateTime returnDate;
 
     @JsonProperty("totalCost")
-    @Column(name = "totalCost", columnDefinition = "DECIMAL(15,2) NOT NULL")
+    @Column(name = "total_Cost", columnDefinition = "DECIMAL(15,2) NOT NULL")
     @NotBlank
     @Positive
     private BigDecimal totalCost;

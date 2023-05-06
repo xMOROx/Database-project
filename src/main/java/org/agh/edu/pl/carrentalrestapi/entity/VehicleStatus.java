@@ -1,7 +1,10 @@
 package org.agh.edu.pl.carrentalrestapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +19,9 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "VehicleStatus")
+@Table(name = "Vehicle_Status")
+@JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VehicleStatus implements Serializable {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)

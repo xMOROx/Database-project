@@ -1,7 +1,8 @@
-package org.agh.edu.pl.carrentalrestapi.utils;
+package org.agh.edu.pl.carrentalrestapi.utils.enums;
 
-public enum BookingStatusCode {
+public enum BookingStateCodeConstants {
     AVI,
+    RES,
     RET,
     REN,
     CAN,

@@ -1,7 +1,10 @@
 package org.agh.edu.pl.carrentalrestapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +20,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "User_Roles")
+@JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRole implements Serializable {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)

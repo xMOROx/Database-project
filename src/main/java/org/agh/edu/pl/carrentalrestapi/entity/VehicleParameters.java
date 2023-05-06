@@ -1,7 +1,10 @@
 package org.agh.edu.pl.carrentalrestapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +20,9 @@ import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "VehicleParameters")
+@Table(name = "Vehicle_Parameters")
+@JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VehicleParameters implements Serializable {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
@@ -26,18 +31,18 @@ public class VehicleParameters implements Serializable {
     private Long vehicleId;
 
     @JsonProperty("bodyType")
-    @Column(name = "BodyType", columnDefinition = "VARCHAR(100) NOT NULL")
+    @Column(name = "Body_Type", columnDefinition = "VARCHAR(100) NOT NULL")
     @NotBlank(message = "Body type is required")
     @Size(min = 1, max = 100, message = "Body type must be between 1 and 100 characters long")
     private String bodyType;
 
     @JsonProperty("productionYear")
-    @Column(name = "ProductionYear", columnDefinition = "INT NOT NULL")
+    @Column(name = "Production_Year", columnDefinition = "INT NOT NULL")
     @NotBlank(message = "Production year is required")
     private Integer productionYear;
 
     @JsonProperty("fuelType")
-    @Column(name = "FuelType", columnDefinition = "VARCHAR(30) NOT NULL")
+    @Column(name = "Fuel_Type", columnDefinition = "VARCHAR(30) NOT NULL")
     @NotBlank(message = "Fuel type is required")
     @Size(min = 1, max = 30, message = "Fuel type must be between 1 and 30 characters long")
     private String fuelType;
@@ -54,16 +59,16 @@ public class VehicleParameters implements Serializable {
     private String gearbox;
 
     @JsonProperty("frontWheelDrive")
-    @Column(name = "FrontWheelDrive", columnDefinition = "tinyint NOT NULL default 1")
+    @Column(name = "Front_Wheel_Drive", columnDefinition = "tinyint NOT NULL default 1")
     private Boolean frontWheelDrive;
 
     @JsonProperty("doorsNumber")
-    @Column(name = "DoorsNumber", columnDefinition = "INT NOT NULL")
+    @Column(name = "Doors_Number", columnDefinition = "INT NOT NULL")
     @NotBlank(message = "Doors number is required")
     private Integer doorsNumber;
 
     @JsonProperty("seatsNumber")
-    @Column(name = "SeatsNumber", columnDefinition = "INT NOT NULL default 5")
+    @Column(name = "Seats_Number", columnDefinition = "INT NOT NULL default 5")
     private Integer seatsNumber;
 
     @JsonProperty("color")
