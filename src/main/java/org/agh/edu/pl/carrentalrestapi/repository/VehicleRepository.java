@@ -21,23 +21,23 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
     @Query(value = "SELECT DISTINCT v FROM Vehicle v " + "JOIN Location l ON(v.location.id=l.id) " + "WHERE l.id=?1 AND v.vehicleStatus='AVI'",
 
             countQuery = "SELECT COUNT(v) FROM Vehicle v " + "JOIN Location l ON(v.location.id=l.id) " + "WHERE l.id=?1 AND v.vehicleStatus='AVI'")
-    Page<Vehicle> findAvailableVehiclesForLocation(Long cityId);
+    Page<Vehicle> findAvailableVehiclesForLocation(Long cityId, Pageable pageable);
 
     @Transactional
     @Query(value = "SELECT DISTINCT v.brand FROM Vehicle v", countQuery = "SELECT COUNT(DISTINCT v.brand) FROM Vehicle v")
-    Page<String> findBrands();
+    Page<String> findBrands(Pageable pageable);
 
     @Transactional
     @Query(value = "SELECT DISTINCT v.model FROM Vehicle v WHERE v.brand=?1", countQuery = "SELECT COUNT(DISTINCT v.model) FROM Vehicle v WHERE v.brand=?1")
-    Page<String> findModelsForBrand(String brand);
+    Page<String> findModelsForBrand(String brand, Pageable pageable);
 
     @Transactional
     @Query(value = "SELECT DISTINCT vp.bodyType FROM Vehicle v JOIN VehicleParameters vp on vp.id = v.id", countQuery = "SELECT COUNT(DISTINCT vp.bodyType) FROM Vehicle v JOIN VehicleParameters vp on vp.id = v.id")
-    Page<String> findBodyTypes();
+    Page<String> findBodyTypes(Pageable pageable);
 
     @Transactional
     @Query(value = "SELECT DISTINCT vp.color FROM Vehicle v JOIN VehicleParameters vp on vp.id = v.id", countQuery = "SELECT COUNT(DISTINCT vp.color) FROM Vehicle v JOIN VehicleParameters vp on vp.id = v.id")
-    Page<String> findColors();
+    Page<String> findColors(Pageable pageable);
 
     void addEquipmentToVehicle(Long id, Long equipmentId);
 

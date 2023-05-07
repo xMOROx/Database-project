@@ -42,8 +42,8 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Page<Vehicle> getAvailableVehiclesForLocation(Long locationId) {
-        return vehicleRepository.findAvailableVehiclesForLocation(locationId);
+    public Page<Vehicle> getAvailableVehiclesForLocation(Long locationId, Pageable pageable) {
+        return vehicleRepository.findAvailableVehiclesForLocation(locationId, pageable);
     }
 
     @Override
@@ -134,23 +134,23 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Page<String> getBrands() {
-        return vehicleRepository.findBrands();
+    public Page<String> getBrands(Pageable pageable) {
+        return vehicleRepository.findBrands(pageable);
     }
 
     @Override
-    public Page<String> getModelsForBrand(String brand) {
-        return vehicleRepository.findModelsForBrand(brand);
+    public Page<String> getModelsForBrand(String brand, Pageable pageable) {
+        return vehicleRepository.findModelsForBrand(brand, pageable);
     }
 
     @Override
-    public Page<String> getBodyTypes() {
-        return vehicleRepository.findBodyTypes();
+    public Page<String> getBodyTypes(Pageable pageable) {
+        return vehicleRepository.findBodyTypes(pageable);
     }
 
     @Override
-    public Page<String> getColors() {
-        return vehicleRepository.findColors();
+    public Page<String> getColors(Pageable pageable) {
+        return vehicleRepository.findColors(pageable);
     }
 
     @Override

@@ -14,7 +14,7 @@ public interface VehicleService {
 
     Page<Vehicle> getBestOffer(Pageable pageable);
 
-    Page<Vehicle> getAvailableVehiclesForLocation(Long locationId);
+    Page<Vehicle> getAvailableVehiclesForLocation(Long locationId, Pageable pageable);
 
     Vehicle getById(Long id);
 
@@ -28,13 +28,13 @@ public interface VehicleService {
 
     Page<Vehicle> searchVehicle(SearchRequest searchRequest);
 
-    Page<String> getBrands();
+    Page<String> getBrands(Pageable pageable);
 
-    Page<String> getModelsForBrand(String brand);
+    Page<String> getModelsForBrand(String brand, Pageable pageable);
 
-    Page<String> getBodyTypes();
+    Page<String> getBodyTypes(Pageable pageable);
 
-    Page<String> getColors();
+    Page<String> getColors(Pageable pageable);
 
     void addEquipment(Long id, Long equipmentId);
 
