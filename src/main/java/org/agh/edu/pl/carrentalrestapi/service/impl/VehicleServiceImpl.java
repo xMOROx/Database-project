@@ -126,7 +126,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Page<Vehicle> searchVehicle(SearchRequest searchRequest) {
+    public Page<Vehicle> search(SearchRequest searchRequest) {
         SearchSpecification<Vehicle> searchSpecification = new SearchSpecification<>(searchRequest);
         Pageable pageable = SearchSpecification.getPageable(searchRequest.getPage(), searchRequest.getSize());
 

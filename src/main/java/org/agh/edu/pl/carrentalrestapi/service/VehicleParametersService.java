@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface VehicleParametersService {
-    Long getVehicleParametersIdByVehicleId(Long vehicleId);
+    VehicleParameters getVehicleParametersByVehicleId(Long vehicleId);
     VehicleParameters getVehicleParametersById(Long id);
     Long saveVehicleParameters(VehicleParameters vehicleParameters);
     Page<VehicleParameters> getVehicleParameters(Pageable pageable);

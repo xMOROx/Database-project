@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VehicleParametersRepository extends JpaRepository<VehicleParameters, Long> {
-    @Query("SELECT vp.id FROM VehicleParameters vp WHERE vp.vehicle.id = ?1")
-    Long findVehicleParametersIdByVehicleId(Long vehicleId);
+    @Query("SELECT vp FROM VehicleParameters vp WHERE vp.vehicle.id = ?1")
+    VehicleParameters findVehicleParametersByVehicleId(Long vehicleId);
 }
 

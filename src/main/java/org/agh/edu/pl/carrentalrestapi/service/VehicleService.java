@@ -13,7 +13,7 @@ public interface VehicleService {
     Page<Vehicle> getAll(Pageable pageable);
 
     Page<Vehicle> getBestOffer(Pageable pageable);
-
+    // TODO: implement to location repository
     Page<Vehicle> getAvailableVehiclesForLocation(Long locationId, Pageable pageable);
 
     Vehicle getById(Long id);
@@ -26,7 +26,7 @@ public interface VehicleService {
 
     Long partialUpdate(Vehicle vehicle);
 
-    Page<Vehicle> searchVehicle(SearchRequest searchRequest);
+    Page<Vehicle> search(SearchRequest searchRequest);
 
     Page<String> getBrands(Pageable pageable);
 

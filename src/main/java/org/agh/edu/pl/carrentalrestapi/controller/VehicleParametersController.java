@@ -12,7 +12,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -32,7 +41,8 @@ public class VehicleParametersController {
 
     @GetMapping(path = "/{id}")
     public @ResponseBody ResponseEntity<VehicleParametersModel> getVehicleParametersById(@PathVariable Long id) throws VehicleParametersNotFoundException {
-        VehicleParameters vehicleParameters = vehicleParametersService.getVehicleParametersById(id);
+        VehicleParameters vehicleParameters = vehicleParametersService
+                .getVehicleParametersById(id);
 
         return Stream.of(vehicleParameters)
                 .map(vehicleParametersModelAssembler::toModel)
@@ -46,35 +56,50 @@ public class VehicleParametersController {
 
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
-        Page<VehicleParameters> vehicleParametersModels = vehicleParametersService.getVehicleParameters(pageable);
+        Page<VehicleParameters> vehicleParametersModels = vehicleParametersService
+                .getVehicleParameters(pageable);
 
         return new ResponseEntity<>(vehicleParametersModelAssembler.toCollectionModel(vehicleParametersModels), HttpStatus.OK);
     }
 
     @PostMapping(path = "")
     public ResponseEntity<Long> addVehicleParameters(@RequestBody VehicleParameters vehicleParameters) {
-        Long savedId = vehicleParametersService.saveVehicleParameters(vehicleParameters);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedId).toUri();
+        Long savedId = vehicleParametersService
+                .saveVehicleParameters(vehicleParameters);
 
-        return ResponseEntity.created(location).build();
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedId)
+                .toUri();
+
+        return ResponseEntity
+                .created(location)
+                .build();
     }
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<Long> updateVehicleParameters(@PathVariable Long id, @RequestBody VehicleParameters vehicleParameters) {
-        Long updatedId = vehicleParametersService.fullUpdateVehicleParameters(id, vehicleParameters);
+        Long updatedId = vehicleParametersService
+                .fullUpdateVehicleParameters(id, vehicleParameters);
 
         if (Objects.equals(updatedId, id)) {
             return ResponseEntity.noContent().build();
         }
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(updatedId).toUri();
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(updatedId)
+                .toUri();
 
         return ResponseEntity.created(location).build();
     }
 
     @PatchMapping(path = "/{id}")
     public ResponseEntity<Long> patchVehicleParameters(@PathVariable Long id, @RequestBody VehicleParameters vehicleParameters) throws VehicleParametersNotFoundException {
-        Long updatedId = vehicleParametersService.partialUpdateVehicleParameters(id, vehicleParameters);
+        Long updatedId = vehicleParametersService
+                .partialUpdateVehicleParameters(id, vehicleParameters);
 
         return ResponseEntity.noContent().build();
     }
