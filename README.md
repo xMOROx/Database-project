@@ -10,6 +10,6 @@ Aplikacja do wypożyczania samochodów
  - Daniel Bielaszka
 
 ## Technologies
- - Backend: Java, Spring 
+ - Backend: Java, Spring, Spring Boot, Spring MVC, Spring Security, Spring Data 
  - Frontend: Angular 
  - Database: MS SQL 
