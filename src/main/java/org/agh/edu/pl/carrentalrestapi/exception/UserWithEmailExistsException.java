@@ -7,6 +7,6 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 @ResponseStatus(reason = "User with this email already exists", value = CONFLICT, code = CONFLICT)
 public class UserWithEmailExistsException extends RuntimeException {
     public UserWithEmailExistsException(String email) {
-        super("Vehicle with registration: " + email + " already exists");
+        super("User with email: " + email + " already exists");
     }
 }

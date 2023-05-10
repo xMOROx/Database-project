@@ -30,12 +30,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Long id) throws VehicleNotFoundException {
-        return userRepository.findById(id).orElseThrow(() -> new VehicleNotFoundException(id));
+    public User getById(Long id) throws UserNotFoundException {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @Override
-    public Long addUser(User user){
+    public Long addUser(User user) throws UserWithEmailExistsException, UserWithLoginExistsException{
         String login = user.getLogin();
         String email = user.getEmail();
 

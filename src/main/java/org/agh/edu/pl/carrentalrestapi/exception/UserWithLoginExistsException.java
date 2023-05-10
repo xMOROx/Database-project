@@ -7,6 +7,6 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 @ResponseStatus(reason = "User with this login already exists", value = CONFLICT, code = CONFLICT)
 public class UserWithLoginExistsException extends RuntimeException {
     public UserWithLoginExistsException(String login) {
-        super("Vehicle with registration: " + login + " already exists");
+        super("User with login: " + login + " already exists");
     }
 }
