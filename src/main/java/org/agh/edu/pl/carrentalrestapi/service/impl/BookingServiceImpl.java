@@ -1,9 +1,9 @@
 package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Booking;
-import org.agh.edu.pl.carrentalrestapi.exception.BookingNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.BookingUnavailableVehicleException;
-import org.agh.edu.pl.carrentalrestapi.exception.UserNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.BookingNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.BookingUnavailableVehicleException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.repository.BookingRepository;
 import org.agh.edu.pl.carrentalrestapi.repository.UserRepository;
 import org.agh.edu.pl.carrentalrestapi.service.BookingService;

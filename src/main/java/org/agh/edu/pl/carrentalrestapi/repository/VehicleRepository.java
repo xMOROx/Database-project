@@ -38,11 +38,9 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
     @Transactional
     @Query(value = "SELECT DISTINCT vp.color FROM Vehicle v JOIN VehicleParameters vp on vp.id = v.id", countQuery = "SELECT COUNT(DISTINCT vp.color) FROM Vehicle v JOIN VehicleParameters vp on vp.id = v.id")
     Page<String> findColors(Pageable pageable);
-
     void addEquipmentToVehicle(Long id, Long equipmentId);
-
     void removeEquipmentFromVehicle(Long id, Long equipmentId);
-
     Optional<Vehicle> findByRegistration(String plateNumber);
-
+    void addVehicleParameters(Long vehicleId, Long parametersId);
+    void removeVehicleParameters(Long vehicleId);
 }

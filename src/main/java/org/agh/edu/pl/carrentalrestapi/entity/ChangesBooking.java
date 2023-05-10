@@ -6,14 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -34,12 +28,12 @@ public class ChangesBooking implements Serializable {
     @JoinColumn(name = "bookingID")
     @JsonIgnore
     private Booking booking;
-    @JsonProperty("changeDate")
+    @JsonProperty
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "Change_Date", columnDefinition = "DATETIME default CURRENT_TIMESTAMP NOT NULL")
-    @NotBlank(message = "Change date is required")
+    @FutureOrPresent(message = "Change date must be in the past or in the present")
     private LocalDateTime changeDate;
-    @JsonProperty("who")
+    @JsonProperty
     @Column(name = "Who_Change", columnDefinition = "VARCHAR(100) NOT NULL")
     @NotBlank(message = "Who is required")
     @Size(min = 1, max = 100, message = "Who must be between 1 and 100 characters")

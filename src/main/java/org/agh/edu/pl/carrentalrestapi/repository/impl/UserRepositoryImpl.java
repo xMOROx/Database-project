@@ -6,9 +6,9 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.agh.edu.pl.carrentalrestapi.entity.User;
 import org.agh.edu.pl.carrentalrestapi.entity.UserRole;
-import org.agh.edu.pl.carrentalrestapi.exception.UserNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.UserRoleNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserRoleNotFoundException;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -19,7 +19,7 @@ public class UserRepositoryImpl {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private PasswordEncoder passwordEncoder;
+//    private PasswordEncoder passwordEncoder;
 
 //    public UserRepositoryImpl(EntityManager entityManager,
 //                              PasswordEncoder passwordEncoder) {

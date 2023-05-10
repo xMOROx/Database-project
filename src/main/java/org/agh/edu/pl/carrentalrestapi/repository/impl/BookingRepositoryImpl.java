@@ -5,7 +5,7 @@ import org.agh.edu.pl.carrentalrestapi.entity.Booking;
 import org.agh.edu.pl.carrentalrestapi.entity.BookingStateCode;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleStatus;
-import org.agh.edu.pl.carrentalrestapi.exception.BookingUnavailableVehicleException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.BookingUnavailableVehicleException;
 import org.agh.edu.pl.carrentalrestapi.utils.enums.BookingStateCodeConstants;
 import org.agh.edu.pl.carrentalrestapi.utils.enums.VehicleStatuses;
 import org.springframework.stereotype.Component;

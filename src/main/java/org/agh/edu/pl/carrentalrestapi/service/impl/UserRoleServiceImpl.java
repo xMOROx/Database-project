@@ -1,9 +1,9 @@
 package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.UserRole;
-import org.agh.edu.pl.carrentalrestapi.exception.UserNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.UserRoleNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.UserRoleWithGivenTypeExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserRoleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserRoleWithGivenTypeExistsException;
 import org.agh.edu.pl.carrentalrestapi.repository.UserRepository;
 import org.agh.edu.pl.carrentalrestapi.repository.UserRoleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.UserRoleService;

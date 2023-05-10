@@ -1,8 +1,8 @@
 package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Equipment;
-import org.agh.edu.pl.carrentalrestapi.exception.EquipmentNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.EquipmentWithGivenCodeExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.EquipmentNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.EquipmentWithGivenCodeExistsException;
 import org.agh.edu.pl.carrentalrestapi.repository.EquipmentRepository;
 import org.agh.edu.pl.carrentalrestapi.service.EquipmentService;
 import org.springframework.stereotype.Service;

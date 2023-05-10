@@ -29,7 +29,7 @@ public class Stars  implements Serializable {
     @JsonIgnore
     private Long id;
 
-    @JsonProperty("stars")
+    @JsonProperty
     @Column(name = "stars", columnDefinition = "INTEGER NOT NULL")
     @Min(value = 1, message = "Stars must be between 1 and 5")
     @Max(value = 5, message = "Stars must be between 1 and 5")

@@ -1,7 +1,7 @@
 package org.agh.edu.pl.carrentalrestapi.repository;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Booking;
-import org.agh.edu.pl.carrentalrestapi.exception.BookingUnavailableVehicleException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.BookingUnavailableVehicleException;
 import org.agh.edu.pl.carrentalrestapi.utils.enums.BookingStateCodeConstants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

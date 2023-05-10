@@ -15,9 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -33,24 +31,24 @@ public class Comment implements Serializable {
     @JsonIgnore
     private Long id;
 
-    @JsonProperty("content")
+    @JsonProperty()
     @Column(name = "Content", columnDefinition = "TEXT NOT NULL")
     @NotBlank(message = "Content is required")
     private String content;
 
-    @JsonProperty("creationDate")
+    @JsonProperty()
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @Column(name = "Creation_Date", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
-    @NotBlank(message = "Creation date is required")
+    @PastOrPresent(message = "Creation date must be in the past or in the present")
     private LocalDateTime creationDate;
 
-    @JsonProperty("modificationDate")
+    @JsonProperty()
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @Column(name = "Modification_Date", columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
-    @NotBlank(message = "Modification date is required")
+    @FutureOrPresent(message = "Modification date must be in the past or in the present")
     private LocalDateTime modificationDate;
 
-    @JsonProperty("rating")
+    @JsonProperty
     @Column(name = "Rating", columnDefinition = "INT NOT NULL DEFAULT 0")
     @Min(value = 1, message = "Rating must be between 1 and 10")
     @Max(value = 10, message = "Rating must be between 1 and 10")

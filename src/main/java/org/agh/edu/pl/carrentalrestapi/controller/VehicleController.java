@@ -3,8 +3,9 @@ package org.agh.edu.pl.carrentalrestapi.controller;
 import jakarta.validation.Valid;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
-import org.agh.edu.pl.carrentalrestapi.exception.VehicleNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.VehicleWithRegistrationExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleParametersNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleWithRegistrationExistsException;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleParametersModel;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleModelAssembler;
@@ -113,7 +114,6 @@ public class VehicleController {
     }
 
     @PostMapping(path = "/{id}/equipment")
-    @ResponseBody
     public ResponseEntity<Void> addEquipment(@PathVariable("id") Long id, @RequestBody Long equipmentId) {
         vehicleService.addEquipment(id, equipmentId);
         return ResponseEntity
@@ -122,13 +122,32 @@ public class VehicleController {
     }
 
     @DeleteMapping(path = "/{id}/equipment")
-    @ResponseBody
     public ResponseEntity<Void> removeEquipment(@PathVariable("id") Long id, @RequestBody Long equipmentId) {
         vehicleService.deleteEquipment(id, equipmentId);
         return ResponseEntity
                 .noContent()
                 .build();
     }
+
+    @PostMapping("/{vehicleId}/parameters/{parametersId}")
+    @ResponseBody
+    public ResponseEntity<Void> addVehicleParameters(@PathVariable("vehicleId") Long vehicleId,
+                                                     @PathVariable("parametersId") Long parametersId) throws VehicleNotFoundException, VehicleParametersNotFoundException {
+        vehicleService.addVehicleParameters(vehicleId, parametersId);
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    @DeleteMapping("/{vehicleId}/parameters")
+    @ResponseBody
+    public ResponseEntity<Void> removeVehicleParameters(@PathVariable("vehicleId") Long vehicleId) throws VehicleNotFoundException {
+        vehicleService.removeVehicleParameters(vehicleId);
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
 }
 
 

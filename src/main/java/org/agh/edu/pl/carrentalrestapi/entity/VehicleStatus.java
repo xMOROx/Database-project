@@ -29,13 +29,13 @@ public class VehicleStatus implements Serializable {
     @JsonIgnore
     private Long id;
 
-    @JsonProperty("Type")
+    @JsonProperty
     @Column(name = "Type", columnDefinition = "VARCHAR(3) NOT NULL")
     @NotBlank(message = "Type is mandatory")
     @Size(min = 3, max = 3, message = "Type must be 3 characters long")
     private String type;
 
-    @JsonProperty("Description")
+    @JsonProperty
     @Column(name = "Description", columnDefinition = "VARCHAR(50) NOT NULL")
     @NotBlank(message = "Description is mandatory")
     @Size(min = 3, max = 50, message = "Description must be between 3 and 50 characters long")

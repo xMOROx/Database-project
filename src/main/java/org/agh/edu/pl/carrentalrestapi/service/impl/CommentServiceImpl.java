@@ -1,7 +1,7 @@
 package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Comment;
-import org.agh.edu.pl.carrentalrestapi.exception.CommentNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.CommentNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.repository.CommentRepository;
 import org.agh.edu.pl.carrentalrestapi.service.CommentService;
 import org.springframework.data.domain.Page;

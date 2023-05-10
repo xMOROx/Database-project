@@ -28,7 +28,7 @@ public class UserRole implements Serializable {
     @Column(name = "ID")
     @JsonIgnore
     private Long id;
-    @JsonProperty("type")
+    @JsonProperty
     @Column(name = "Type", columnDefinition = "varchar(30) default 'Customer' UNIQUE")
     @Size(min = 1, max = 30, message = "Type must be between 1 and 30 characters long")
     private String type;

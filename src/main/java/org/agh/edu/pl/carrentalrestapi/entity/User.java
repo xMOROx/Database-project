@@ -38,44 +38,42 @@ public class User implements Serializable {
     @JsonIgnore
     private Long id;
 
-    @JsonProperty("firstName")
+    @JsonProperty
     @Column(name = "First_Name", columnDefinition = "varchar(70) NOT NULL")
     @NotBlank(message = "First name is required")
     @Size(min = 1, max = 70, message = "First name must be between 1 and 70 characters long")
     private String firstName;
 
-    @JsonProperty("surName")
+    @JsonProperty
     @Column(name = "Sur_Name", columnDefinition = "varchar(70) NOT NULL")
     @NotBlank(message = "Surname is required")
     @Size(min = 1, max = 70, message = "Surname must be between 1 and 70 characters long")
     private String surName;
 
-    @JsonProperty("email")
+    @JsonProperty
     @Column(name = "Email", columnDefinition = "varchar(255) NOT NULL")
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
     @Size(min = 5, max = 255, message = "Email must be between 5 and 255 characters long")
     private String email;
 
-    @JsonProperty("login")
+    @JsonProperty
     @Column(name = "Login", columnDefinition = "varchar(60) NOT NULL")
     @NotBlank(message = "Login is required")
     @Size(min = 5, max = 60, message = "Login must be between 5 and 60 characters long")
     private String login;
-
+    @JsonProperty
     @Column(name = "Password", columnDefinition = "varchar(255) NOT NULL")
-    @JsonProperty("password")
     @NotBlank(message = "Password is required")
     @Size(min = 8, max = 255, message = "Password must be between 8 and 255 characters long")
     private String password;
-
+    @JsonProperty
     @Column(name = "Phone_Number", columnDefinition = "varchar(20) NOT NULL")
-    @JsonProperty("phoneNumber")
     @NotBlank(message = "Phone number is required")
     @Size(min = 9, max = 20, message = "Phone number must be between 9 and 20 characters long")
     private String phoneNumber;
 
-    @JsonProperty("pesel")
+    @JsonProperty
     @Column(name = "Pesel", columnDefinition = "varchar(11) NOT NULL")
     @NotBlank(message = "Pesel is required")
     @Size(min = 11, max = 11, message = "Pesel must be 11 characters long")

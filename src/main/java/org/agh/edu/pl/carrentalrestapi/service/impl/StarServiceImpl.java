@@ -1,7 +1,7 @@
 package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Stars;
-import org.agh.edu.pl.carrentalrestapi.exception.VehicleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.repository.StarsRepository;
 import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.StarsService;
