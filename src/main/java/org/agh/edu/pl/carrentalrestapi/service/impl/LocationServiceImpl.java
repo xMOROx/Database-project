@@ -1,9 +1,9 @@
 package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Location;
-import org.agh.edu.pl.carrentalrestapi.exception.LocationNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.LocationWithGivenEmailExistsException;
-import org.agh.edu.pl.carrentalrestapi.exception.LocationWithGivenPhoneNumberExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.LocationNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.LocationWithGivenEmailExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.LocationWithGivenPhoneNumberExistsException;
 import org.agh.edu.pl.carrentalrestapi.repository.LocationRepository;
 import org.agh.edu.pl.carrentalrestapi.service.LocationService;
 import org.springframework.data.domain.Page;
@@ -120,16 +120,11 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<Location> getAllLocations() {
-        return locationRepository.findAll();
-    }
-
-    @Override
     public Page<Location> getAllLocations(Pageable pageable) {
         return locationRepository.findAll(pageable);
     }
     @Override
-    public List<String> getCities() {
-        return locationRepository.findAllCities();
+    public Page<String> getCities(Pageable pageable) {
+        return locationRepository.findAllCities(pageable);
     }
 }

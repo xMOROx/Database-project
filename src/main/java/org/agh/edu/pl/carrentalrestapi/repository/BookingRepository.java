@@ -1,7 +1,7 @@
 package org.agh.edu.pl.carrentalrestapi.repository;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Booking;
-import org.agh.edu.pl.carrentalrestapi.exception.BookingUnavailableVehicleException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.BookingUnavailableVehicleException;
 import org.agh.edu.pl.carrentalrestapi.utils.enums.BookingStateCodeConstants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,5 +30,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     Page<Booking> findByUserIdAndBookingStateCode(Long userId, BookingStateCodeConstants bookingStateCode,  Pageable pageable);
     @Query(value = "SELECT b FROM Booking b WHERE b.user.id=:userId",
             countQuery = "SELECT count(b) FROM Booking b WHERE b.user.id=:userId")
-    Page<Booking> findByUserId(Long userId, PageRequest pageRequest);
+    Page<Booking> findByUserId(Long userId, Pageable pageRequest);
 }

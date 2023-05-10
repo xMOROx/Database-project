@@ -1,12 +1,14 @@
 package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.UserRole;
-import org.agh.edu.pl.carrentalrestapi.exception.UserNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.UserRoleNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.UserRoleWithGivenTypeExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserRoleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserRoleWithGivenTypeExistsException;
 import org.agh.edu.pl.carrentalrestapi.repository.UserRepository;
 import org.agh.edu.pl.carrentalrestapi.repository.UserRoleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.UserRoleService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,16 +28,16 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public List<UserRole> getAllAvailableRoles() {
-        return userRoleRepository.findAll();
+    public Page<UserRole> getAllAvailableRoles(Pageable pageable) {
+        return userRoleRepository.findAll(pageable);
     }
 
     @Override
-    public List<UserRole> getUnExistingDistinctUserRolesForUser(Long id) throws UserNotFoundException {
+    public Page<UserRole> getUnExistingDistinctUserRolesForUser(Long id, Pageable pageable) throws UserNotFoundException {
         if(userRepository.findById(id).isEmpty())
             throw new UserNotFoundException(id);
 
-        return userRoleRepository.findUnExistingDistinctUserRolesForUser(id);
+        return userRoleRepository.findUnExistingDistinctUserRolesForUser(id, pageable);
     }
 
     @Override

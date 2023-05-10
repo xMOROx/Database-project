@@ -5,17 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 import java.io.Serializable;
 
@@ -26,73 +17,75 @@ import java.io.Serializable;
 public class VehicleParameters implements Serializable {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column(name = "VehicleID")
+    @Column(name = "ID")
     @JsonIgnore
     private Long id;
 
-    @JsonProperty("bodyType")
+    @JsonProperty()
     @Column(name = "Body_Type", columnDefinition = "VARCHAR(100) NOT NULL")
     @NotBlank(message = "Body type is required")
     @Size(min = 1, max = 100, message = "Body type must be between 1 and 100 characters long")
     private String bodyType;
 
-    @JsonProperty("productionYear")
+    @JsonProperty()
     @Column(name = "Production_Year", columnDefinition = "INT NOT NULL")
-    @NotBlank(message = "Production year is required")
+    @Min(value = 1900, message = "Production year must be greater than 1900")
     private Integer productionYear;
 
-    @JsonProperty("fuelType")
+    @JsonProperty()
     @Column(name = "Fuel_Type", columnDefinition = "VARCHAR(30) NOT NULL")
     @NotBlank(message = "Fuel type is required")
     @Size(min = 1, max = 30, message = "Fuel type must be between 1 and 30 characters long")
     private String fuelType;
 
-    @JsonProperty("power")
+    @JsonProperty()
     @Column(name = "Power", columnDefinition = "INT NOT NULL")
-    @NotBlank(message = "Power is required")
+    @Positive(message = "Power must be greater than 0")
     private Integer power;
 
-    @JsonProperty("gearbox")
+    @JsonProperty()
     @Column(name = "Gearbox", columnDefinition = "VARCHAR(50) NOT NULL")
     @NotBlank(message = "Gearbox is required")
     @Size(min = 1, max = 50, message = "Gearbox must be between 1 and 50 characters long")
     private String gearbox;
 
-    @JsonProperty("frontWheelDrive")
+    @JsonProperty()
     @Column(name = "Front_Wheel_Drive", columnDefinition = "tinyint NOT NULL default 1")
     private Boolean frontWheelDrive;
 
-    @JsonProperty("doorsNumber")
+    @JsonProperty()
     @Column(name = "Doors_Number", columnDefinition = "INT NOT NULL")
-    @NotBlank(message = "Doors number is required")
+    @Min(value = 3, message = "Doors number must be between 1 and 5")
+    @Max(value = 5, message = "Doors number must be between 1 and 5")
     private Integer doorsNumber;
 
-    @JsonProperty("seatsNumber")
+    @JsonProperty()
     @Column(name = "Seats_Number", columnDefinition = "INT NOT NULL default 5")
+    @Min(value = 2, message = "Seats number must be between 2 and 9")
+    @Max(value = 9, message = "Seats number must be between 2 and 9")
     private Integer seatsNumber;
 
-    @JsonProperty("color")
+    @JsonProperty()
     @Column(name = "Color", columnDefinition = "VARCHAR(50) NOT NULL")
     @NotBlank(message = "Color is required")
     @Size(min = 1, max = 50, message = "Color must be between 1 and 50 characters long")
     private String color;
 
-    @JsonProperty("metalic")
+    @JsonProperty()
     @Column(name = "Metalic", columnDefinition = "tinyint NOT NULL default 0")
     private Boolean metalic;
 
-    @JsonProperty("description")
+    @JsonProperty()
     @Column(name = "Description", columnDefinition = "TEXT")
     @NotBlank(message = "Description is required")
     private String description;
 
-    @JsonProperty("photoURL")
+    @JsonProperty()
     @Column(name = "PhotoURL", columnDefinition = "VARCHAR(255) NULL")
     private String photoURL;
 
-    @OneToOne
-    @JoinColumn(name = "vehicleID")
-    @MapsId
+    @OneToOne( cascade = {CascadeType.PERSIST}, optional = true)
+    @JoinColumn(name = "vehicleID", referencedColumnName = "ID", nullable = true)
     @JsonIgnore
     private Vehicle vehicle;
 
@@ -236,6 +229,9 @@ public class VehicleParameters implements Serializable {
 
     public Vehicle getVehicle() {
         return vehicle;
+    }
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
     }
 
     @Override

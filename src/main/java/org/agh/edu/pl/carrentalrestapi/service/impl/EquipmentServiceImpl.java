@@ -1,10 +1,12 @@
 package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Equipment;
-import org.agh.edu.pl.carrentalrestapi.exception.EquipmentNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.EquipmentWithGivenCodeExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.EquipmentNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.EquipmentWithGivenCodeExistsException;
 import org.agh.edu.pl.carrentalrestapi.repository.EquipmentRepository;
 import org.agh.edu.pl.carrentalrestapi.service.EquipmentService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +23,13 @@ public class EquipmentServiceImpl implements EquipmentService {
     }
 
     @Override
-    public List<Equipment> getAllEquipment() {
-        return equipmentRepository.findAll();
+    public Page<Equipment> getAllEquipment(Pageable pageable) {
+        return equipmentRepository.findAll(pageable);
     }
 
     @Override
-    public List<Equipment> getUnExistingDistinctEquipmentsForVehicle(Long id) {
-        return equipmentRepository.findUnExistingDistinctEquipmentsForVehicle(id);
+    public Page<Equipment> getUnExistingDistinctEquipmentsForVehicle(Long id , Pageable pageable) {
+        return equipmentRepository.findUnExistingDistinctEquipmentsForVehicle(id, pageable);
     }
 
     @Override

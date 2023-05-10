@@ -4,6 +4,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.agh.edu.pl.carrentalrestapi.entity.UserRole;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +24,15 @@ public class UserRoleRepositoryImpl {
     }
 
     @Transactional
-    public List<UserRole> findUnExistingDistinctUserRolesForUser(Long id) {
+    public Page<UserRole> findUnExistingDistinctUserRolesForUser(Long id, Pageable pageable) {
         TypedQuery<UserRole> query = entityManager.createQuery("SELECT ur FROM UserRole ur WHERE ur.id NOT IN " +
                 "(SELECT ur.id FROM UserRole ur JOIN ur.users u WHERE u.id = :id)", UserRole.class);
         TypedQuery<UserRole> typedQuery = query.setParameter("id", id);
 
-        return typedQuery
-                .getResultList();
+        TypedQuery<Long> countQuery = entityManager.createQuery("SELECT COUNT(ur) FROM UserRole ur WHERE ur.id NOT IN " +
+                "(SELECT ur.id FROM UserRole ur JOIN ur.users u WHERE u.id = :id)", Long.class);
+
+        return new PageImpl<>(typedQuery.getResultList(), pageable, countQuery.getSingleResult());
     }
 
 }

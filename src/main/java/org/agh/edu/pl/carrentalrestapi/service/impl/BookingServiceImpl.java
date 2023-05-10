@@ -1,9 +1,9 @@
 package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Booking;
-import org.agh.edu.pl.carrentalrestapi.exception.BookingNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.BookingUnavailableVehicleException;
-import org.agh.edu.pl.carrentalrestapi.exception.UserNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.BookingNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.BookingUnavailableVehicleException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.repository.BookingRepository;
 import org.agh.edu.pl.carrentalrestapi.repository.UserRepository;
 import org.agh.edu.pl.carrentalrestapi.service.BookingService;
@@ -36,17 +36,20 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void cancelBooking(Long bookingId) {
+    public void cancelBooking(Long bookingId) throws BookingNotFoundException {
+        checkIfBookingExists(bookingId);
         bookingRepository.cancelBooking(bookingId);
     }
 
     @Override
-    public void bookingRent(Long bookingId) {
+    public void bookingRent(Long bookingId) throws BookingNotFoundException {
+        checkIfBookingExists(bookingId);
         bookingRepository.bookingRent(bookingId);
     }
 
     @Override
-    public void bookingReturn(Long bookingId) {
+    public void bookingReturn(Long bookingId) throws BookingNotFoundException {
+        checkIfBookingExists(bookingId);
         bookingRepository.bookingReturn(bookingId);
     }
 
@@ -87,32 +90,38 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllBookings() {
-        return bookingRepository.findAll();
+    public Page<Booking> getAllBookings(Pageable pageable) {
+        return bookingRepository.findAll(pageable);
     }
 
     @Override
-    public Page<Booking> getUserBookings(PageRequest pageRequest, Long userId) throws UserNotFoundException {
+    public Page<Booking> getUserBookings(Long userId, Pageable pageable) throws UserNotFoundException {
         checkIfUserExists(userId);
-        return bookingRepository.findByUserId(userId, pageRequest);
+        return bookingRepository.findByUserId(userId, pageable);
     }
 
     @Override
-    public Page<Booking> getUserBookingsReserved(PageRequest pageRequest, Long userId) throws UserNotFoundException {
-        checkIfUserExists(userId);
-        return bookingRepository
-                .findByUserIdAndBookingStateCode(userId, BookingStateCodeConstants.RES, pageRequest);
-    }
-
-    @Override
-    public Page<Booking> getUserBookingsRented(PageRequest pageRequest, Long userId) throws UserNotFoundException {
+    public Page<Booking> getUserBookingsReserved(Long userId, Pageable pageable) throws UserNotFoundException {
         checkIfUserExists(userId);
         return bookingRepository
-                .findByUserIdAndBookingStateCode(userId, BookingStateCodeConstants.REN, pageRequest);
+                .findByUserIdAndBookingStateCode(userId, BookingStateCodeConstants.RES, pageable);
+    }
+
+    @Override
+    public Page<Booking> getUserBookingsRented(Long userId, Pageable pageable) throws UserNotFoundException {
+        checkIfUserExists(userId);
+        return bookingRepository
+                .findByUserIdAndBookingStateCode(userId, BookingStateCodeConstants.REN, pageable);
     }
     private void checkIfUserExists(Long userId) throws UserNotFoundException {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException(userId);
+        }
+    }
+
+    private void checkIfBookingExists(Long bookingId) throws BookingNotFoundException {
+        if (!bookingRepository.existsById(bookingId)) {
+            throw new BookingNotFoundException(bookingId);
         }
     }
 }

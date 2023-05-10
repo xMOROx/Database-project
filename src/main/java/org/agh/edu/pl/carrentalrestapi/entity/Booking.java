@@ -61,23 +61,21 @@ public class Booking implements Serializable {
     @JsonIgnore
     private List<ChangesBooking> changesBooking;
 
-    @JsonProperty("receiptDate")
+    @JsonProperty()
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "receipt_Date", columnDefinition = "DATETIME default CURRENT_TIMESTAMP NOT NULL")
     @PastOrPresent(message = "Receipt date must be in the past or present")
     private LocalDateTime receiptDate;
 
-    @JsonProperty("returnDate")
+    @JsonProperty()
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "return_Date", columnDefinition = "DATETIME NOT NULL")
-    @NotBlank(message = "Return date is required")
     @Future(message = "Return date must be in the future")
     private LocalDateTime returnDate;
 
-    @JsonProperty("totalCost")
+    @JsonProperty()
     @Column(name = "total_Cost", columnDefinition = "DECIMAL(15,2) NOT NULL")
-    @NotBlank
-    @Positive
+    @Positive(message = "Total cost must be positive")
     private BigDecimal totalCost;
 
     public Booking() {

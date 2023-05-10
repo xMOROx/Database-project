@@ -29,13 +29,13 @@ public class Equipment implements Serializable {
     @Column(name = "ID")
     @JsonIgnore
     private Long id;
-    @JsonProperty("equipmentCode")
+    @JsonProperty
     @Column(name = "Equipment_Code", columnDefinition = "VARCHAR(3) NOT NULL UNIQUE")
     @NotBlank(message = "Equipment code is mandatory")
     @Size(min = 1, max = 3, message = "Equipment code must be between 1 and 3 characters long")
     private String equipmentCode;
 
-    @JsonProperty("Description")
+    @JsonProperty
     @Column(name = "Description", columnDefinition = "VARCHAR(50) NOT NULL")
     @NotBlank(message = "Description is mandatory")
     @Size(min = 1, max = 50, message = "Description must be between 1 and 50 characters long")

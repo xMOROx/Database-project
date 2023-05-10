@@ -4,8 +4,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.agh.edu.pl.carrentalrestapi.entity.Equipment;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
-import org.agh.edu.pl.carrentalrestapi.exception.EquipmentNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.VehicleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
+import org.agh.edu.pl.carrentalrestapi.exception.types.EquipmentNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleParametersNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,6 +68,40 @@ public class VehicleRepositoryImpl {
         vehicle.getEquipment().remove(equipment);
 
         entityManager.persist(vehicle);
+    }
+    @Transactional
+    public void addVehicleParameters(Long vehicleId, Long parametersId) throws VehicleNotFoundException, VehicleParametersNotFoundException {
+        Vehicle vehicle = entityManager.find(Vehicle.class, vehicleId);
+
+        if (vehicle == null) {
+            throw new VehicleNotFoundException(vehicleId);
+        }
+
+        VehicleParameters vehicleParameters = entityManager.find(VehicleParameters.class, parametersId);
+
+        if (vehicleParameters == null) {
+            throw new VehicleParametersNotFoundException(parametersId);
+        }
+
+        vehicle.setVehicleParameters(vehicleParameters);
+        vehicleParameters.setVehicle(vehicle);
+
+        entityManager.persist(vehicle);
+        entityManager.persist(vehicleParameters);
+
+    }
+    @Transactional
+    public void removeVehicleParameters(Long vehicleId) throws VehicleNotFoundException {
+        Vehicle vehicle = entityManager.find(Vehicle.class, vehicleId);
+
+        if (vehicle == null) {
+            throw new VehicleNotFoundException(vehicleId);
+        }
+        VehicleParameters vehicleParameters = vehicle.getVehicleParameters();
+        vehicle.setVehicleParameters(null);
+        vehicleParameters.setVehicle(null);
+        entityManager.persist(vehicle);
+        entityManager.persist(vehicleParameters);
     }
 }
 

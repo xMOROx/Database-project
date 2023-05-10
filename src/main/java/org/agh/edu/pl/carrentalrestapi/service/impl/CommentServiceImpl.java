@@ -1,7 +1,7 @@
 package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Comment;
-import org.agh.edu.pl.carrentalrestapi.exception.CommentNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.CommentNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.repository.CommentRepository;
 import org.agh.edu.pl.carrentalrestapi.service.CommentService;
 import org.springframework.data.domain.Page;
@@ -33,8 +33,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getAllForVehicle(Long id) {
-        return commentRepository.findAllCommentsByVehicleId(id);
+    public Page<Comment> getAllForVehicle(Long id, Pageable pageable) {
+        return commentRepository.findAllCommentsByVehicleId(id, pageable);
     }
 
     @Override

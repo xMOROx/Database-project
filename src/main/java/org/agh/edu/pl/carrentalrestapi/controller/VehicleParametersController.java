@@ -1,7 +1,8 @@
 package org.agh.edu.pl.carrentalrestapi.controller;
 
+import jakarta.validation.Valid;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
-import org.agh.edu.pl.carrentalrestapi.exception.VehicleParametersNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleParametersNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleParametersModel;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleParametersModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleParametersService;
@@ -56,9 +57,9 @@ public class VehicleParametersController {
     }
 
     @PostMapping(path = "")
-    public ResponseEntity<Long> addVehicleParameters(@RequestBody VehicleParameters vehicleParameters) {
+    public ResponseEntity<Long> addVehicleParameters(@Valid @RequestBody VehicleParameters vehicleParameters) {
         Long savedId = vehicleParametersService
-                .saveVehicleParameters(vehicleParameters);
+                .addVehicleParameters(vehicleParameters);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

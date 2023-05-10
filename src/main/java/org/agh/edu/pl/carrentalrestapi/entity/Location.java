@@ -41,48 +41,48 @@ public class Location  implements Serializable {
     @JsonIgnore
     private Long id;
 
-    @JsonProperty("country")
+    @JsonProperty
     @Column(name = "Country", columnDefinition = "varchar(100) not null", table = "Countries")
     @NotBlank(message = "Country is required")
     @Size(min = 1, max = 100, message = "Country must be between 1 and 100 characters long")
     private String country;
 
-    @JsonProperty("city")
+    @JsonProperty
     @Column(name = "City", columnDefinition = "varchar(100) not null", table = "Cities")
     @NotBlank(message = "City is required")
     @Size(min = 1, max = 100, message = "City must be between 1 and 100 characters long")
     private String city;
 
-    @JsonProperty("address")
+    @JsonProperty
     @Column(name = "Address", columnDefinition = "varchar(100) not null", table = "Addresses")
     @NotBlank(message = "Address is required")
     @Size(min = 1, max = 100, message = "Address must be between 1 and 100 characters long")
     private String address;
 
-    @JsonProperty("email")
+    @JsonProperty
     @Column(name = "Email", columnDefinition = "varchar(255) not null unique")
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")
     @Size(min = 1, max = 255, message = "Email must be between 1 and 255 characters long")
     private String email;
 
-    @JsonProperty("phoneNumber")
+    @JsonProperty
     @Column(name = "phone_number", columnDefinition = "varchar(20) not null unique")
     @NotBlank(message = "Phone number is required")
     @Size(min = 9, max = 20, message = "Phone number must be between 9 and 20 characters long")
     private String phoneNumber;
 
-    @JsonProperty("openHours")
+    @JsonProperty
     @Column(name = "opening_hours", columnDefinition = "varchar(20) not null")
     @NotBlank(message = "Opening hours is required")
     @Size(min = 1, max = 20, message = "Opening hours must be between 1 and 20 characters long")
     private String openingHours;
-    @JsonProperty("closingHours")
+    @JsonProperty
     @Column(name = "closing_hours", columnDefinition = "varchar(20) not null")
     @NotBlank(message = "Closing hours is required")
     @Size(min = 1, max = 20, message = "Closing hours must be between 1 and 20 characters long")
     private String closingHours;
-    @JsonProperty("PostalCode")
+    @JsonProperty
     @Column(name = "postal_code", columnDefinition = "varchar(15) not null", table = "Addresses")
     @NotBlank(message = "Postal code is required")
     @Size(min = 1, max = 15, message = "Postal code must be between 1 and 15 characters long")

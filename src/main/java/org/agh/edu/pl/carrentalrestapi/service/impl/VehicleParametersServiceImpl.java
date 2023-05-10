@@ -1,8 +1,8 @@
 package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
-import org.agh.edu.pl.carrentalrestapi.exception.VehicleNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.VehicleParametersNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleParametersNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.repository.VehicleParametersRepository;
 import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleParametersService;
@@ -37,7 +37,7 @@ public class VehicleParametersServiceImpl implements VehicleParametersService {
     }
 
     @Override
-    public Long saveVehicleParameters(VehicleParameters vehicleParameters) {
+    public Long addVehicleParameters(VehicleParameters vehicleParameters) {
         VehicleParameters saved = this.vehicleParametersRepository.save(vehicleParameters);
         return saved.getId();
     }

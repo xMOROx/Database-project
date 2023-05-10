@@ -1,5 +1,6 @@
 package org.agh.edu.pl.carrentalrestapi.controller;
 
+import jakarta.validation.Valid;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleModelAssembler;
@@ -19,17 +20,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = API_PATH.root + API_PATH.vehicleSearch)
 public class VehicleSearchController {
     private final VehicleService vehicleService;
-    private final VehicleModelAssembler vehicleModelAssembler;
 
-    public VehicleSearchController(VehicleService vehicleService,
-                                   VehicleModelAssembler vehicleModelAssembler) {
+    public VehicleSearchController(VehicleService vehicleService
+                                   ) {
         this.vehicleService = vehicleService;
-        this.vehicleModelAssembler = vehicleModelAssembler;
     }
 
     @PostMapping(path = "")
     @ResponseBody
-    public ResponseEntity<PagedModel<VehicleModel>> searchVehicles(@RequestBody SearchRequest searchRequest) {
+    public ResponseEntity<PagedModel<VehicleModel>> searchVehicles(@RequestBody @Valid SearchRequest searchRequest) {
         Page<Vehicle> vehicles = vehicleService.search(searchRequest);
 
         return new ResponseEntity<>(

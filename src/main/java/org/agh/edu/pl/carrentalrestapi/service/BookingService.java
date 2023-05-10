@@ -1,21 +1,20 @@
 package org.agh.edu.pl.carrentalrestapi.service;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Booking;
-import org.agh.edu.pl.carrentalrestapi.exception.BookingUnavailableVehicleException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.BookingNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.BookingUnavailableVehicleException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface BookingService {
     Long addBooking(Booking booking) throws BookingUnavailableVehicleException;
 
-    void cancelBooking(Long bookingId);
+    void cancelBooking(Long bookingId) throws BookingNotFoundException;
 
-    void bookingRent(Long bookingId);
+    void bookingRent(Long bookingId) throws BookingNotFoundException;
 
-    void bookingReturn(Long bookingId);
+    void bookingReturn(Long bookingId) throws BookingNotFoundException;
 
     Page<Booking> getBookings(Pageable pageable);
 
@@ -27,14 +26,14 @@ public interface BookingService {
 
     Page<Booking> getBookingsReturned(Pageable pageable);
 
-    Booking getBookingsById(Long bookingId);
+    Booking getBookingsById(Long bookingId) throws BookingNotFoundException;
 
-    List<Booking> getAllBookings();
+    Page<Booking> getAllBookings(Pageable pageable);
 
-    Page<Booking> getUserBookings(PageRequest pageRequest, Long userId);
+    Page<Booking> getUserBookings(Long userId, Pageable pageable) throws UserNotFoundException;
 
-    Page<Booking> getUserBookingsReserved(PageRequest pageRequest, Long userId);
+    Page<Booking> getUserBookingsReserved(Long userId, Pageable pageable) throws UserNotFoundException;
 
-    Page<Booking> getUserBookingsRented(PageRequest pageRequest, Long userId);
+    Page<Booking> getUserBookingsRented(Long userId, Pageable pageable) throws UserNotFoundException;
 
 }
