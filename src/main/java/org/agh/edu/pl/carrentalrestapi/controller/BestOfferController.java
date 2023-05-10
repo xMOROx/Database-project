@@ -2,38 +2,40 @@ package org.agh.edu.pl.carrentalrestapi.controller;
 
 import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleBestOfferModelAssembler;
+import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = API_PATH.root + API_PATH.bestOffer)
 public class BestOfferController {
 
     private final VehicleService vehicleService;
-    private final VehicleBestOfferModelAssembler vehicleBestOfferModelAssembler;
 
-    public BestOfferController(VehicleService vehicleService,
-                               VehicleBestOfferModelAssembler vehicleBestOfferModelAssembler) {
+    public BestOfferController(VehicleService vehicleService
+                               ) {
         this.vehicleService = vehicleService;
-        this.vehicleBestOfferModelAssembler = vehicleBestOfferModelAssembler;
     }
 
     @GetMapping(path = "")
-    public @ResponseBody ResponseEntity<CollectionModel<VehicleModel>> getBestOffer(@RequestBody PageableRequest pageableRequest) {
+    public @ResponseBody ResponseEntity<PagedModel<VehicleModel>> getBestOffer(@RequestParam(value = "page", required = false) Integer page,
+                                                                               @RequestParam(value = "size", required = false) Integer size) {
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
-        vehicleBestOfferModelAssembler
-                .toCollectionModel(vehicleService.getBestOffer(pageable));
-
-        return ResponseEntity
-                .ok(vehicleBestOfferModelAssembler
-                        .toCollectionModel(vehicleService
-                                .getBestOffer(pageable)));
-
+        return new ResponseEntity<>(
+                VehicleBestOfferModelAssembler.toVehicleModel(vehicleService.getBestOffer(pageable)),
+                org.springframework.http.HttpStatus.OK
+        );
     }
 }

@@ -13,8 +13,9 @@ import org.agh.edu.pl.carrentalrestapi.service.VehicleParametersService;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,12 +55,14 @@ public class VehicleController {
 
     @GetMapping(path = "")
     @ResponseBody
-    public ResponseEntity<CollectionModel<VehicleModel>> getAllVehicles(@RequestBody PageableRequest pageableRequest) {
+    public ResponseEntity<PagedModel<VehicleModel>> getAllVehicles(@RequestParam(value = "page", required = false) Integer page,
+                                                                   @RequestParam(value = "size", required = false) Integer size) {
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
+        Page<Vehicle> vehicles = vehicleService.getAll(pageable);
 
-        return new ResponseEntity<>(
-                vehicleModelAssembler.toCollectionModel(vehicleService.getAll(pageable)),
-                HttpStatus.OK);
+        return new ResponseEntity<>(VehicleModelAssembler.toVehicleModel(vehicles), HttpStatus.OK);
+
     }
 
     @PostMapping(path = "")
@@ -80,7 +83,7 @@ public class VehicleController {
 
     @PutMapping(path = "/{id}")
     @ResponseBody
-    public ResponseEntity<Long> updateOrCreateVehicle(@PathVariable("id") Long id, @Valid @RequestBody Vehicle vehicle) {
+    public ResponseEntity<Long> updateVehicle(@PathVariable("id") Long id, @Valid @RequestBody Vehicle vehicle) {
         vehicle.setId(id);
         return new ResponseEntity<>(
                 vehicleService.fullUpdate(vehicle),
@@ -89,7 +92,7 @@ public class VehicleController {
 
     @PatchMapping(path = "/{id}")
     @ResponseBody
-    public ResponseEntity<Long> updateVehicle(@PathVariable("id") Long id, @Valid @RequestBody Vehicle vehicle) {
+    public ResponseEntity<Long> partiallyUpdateVehicle(@PathVariable("id") Long id, @Valid @RequestBody Vehicle vehicle) {
         vehicle.setId(id);
         return new ResponseEntity<>(
                 vehicleService.partialUpdate(vehicle),

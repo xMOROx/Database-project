@@ -1,5 +1,6 @@
 package org.agh.edu.pl.carrentalrestapi.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 @JsonRootName(value = "Bookings")
 @EqualsAndHashCode(callSuper = false)
 @Relation(collectionRelation = "Bookings")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookingModel extends RepresentationModel<BookingModel> {
     private Long id;
     private Long userID;

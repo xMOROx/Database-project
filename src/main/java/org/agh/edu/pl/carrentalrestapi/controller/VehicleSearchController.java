@@ -9,7 +9,7 @@ import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
 import org.agh.edu.pl.carrentalrestapi.utils.SearchRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,20 +27,22 @@ public class VehicleSearchController {
         this.vehicleModelAssembler = vehicleModelAssembler;
     }
 
-    @GetMapping(path = "")
+    @PostMapping(path = "")
     @ResponseBody
-    public ResponseEntity<CollectionModel<VehicleModel>> searchVehicles(@RequestBody SearchRequest searchRequest) {
+    public ResponseEntity<PagedModel<VehicleModel>> searchVehicles(@RequestBody SearchRequest searchRequest) {
         Page<Vehicle> vehicles = vehicleService.search(searchRequest);
 
         return new ResponseEntity<>(
-                vehicleModelAssembler.toCollectionModel(vehicles),
+                VehicleModelAssembler.toVehicleModel(vehicles),
                 HttpStatus.OK
         );
     }
 
     @GetMapping(path = "/brands")
     @ResponseBody
-    public ResponseEntity<Page<String>> getBrands(@RequestBody PageableRequest pageableRequest) {
+    public ResponseEntity<Page<String>> getBrands(@RequestParam(value = "page", required = false) Integer page,
+                                                  @RequestParam(value = "size", required = false) Integer size) {
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
         Page<String> brands = vehicleService.getBrands(pageable);
@@ -53,7 +55,9 @@ public class VehicleSearchController {
 
     @GetMapping(path = "/models", params = {"brand"})
     @ResponseBody
-    public ResponseEntity<Page<String>> getModelsForBrand(@RequestParam("brand") String brand, @RequestBody PageableRequest pageableRequest) {
+    public ResponseEntity<Page<String>> getModelsForBrand(@RequestParam("brand") String brand, @RequestParam(value = "page", required = false) Integer page,
+                                                          @RequestParam(value = "size", required = false) Integer size) {
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
         Page<String> models = vehicleService.getModelsForBrand(brand, pageable);
@@ -64,9 +68,11 @@ public class VehicleSearchController {
         );
     }
 
-    @GetMapping(path = "/body-types")
+    @GetMapping(path = "/body-types") //TODO: modife page to other model
     @ResponseBody
-    public ResponseEntity<Page<String>> getBodyTypes(@RequestBody PageableRequest pageableRequest) {
+    public ResponseEntity<Page<String>> getBodyTypes(@RequestParam(value = "page", required = false) Integer page,
+                                                     @RequestParam(value = "size", required = false) Integer size) {
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
         Page<String> bodyTypes = vehicleService.getBodyTypes(pageable);
@@ -79,7 +85,9 @@ public class VehicleSearchController {
 
     @GetMapping(path = "/colors")
     @ResponseBody
-    public ResponseEntity<Page<String>> getColors(@RequestBody PageableRequest pageableRequest) {
+    public ResponseEntity<Page<String>> getColors(@RequestParam(value = "page", required = false) Integer page,
+                                                  @RequestParam(value = "size", required = false) Integer size) {
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
         Page<String> colors = vehicleService.getColors(pageable);

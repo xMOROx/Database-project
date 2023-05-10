@@ -21,10 +21,14 @@ public class UserRepositoryImpl {
 
     private PasswordEncoder passwordEncoder;
 
-    public UserRepositoryImpl(EntityManager entityManager,
-                              PasswordEncoder passwordEncoder) {
+//    public UserRepositoryImpl(EntityManager entityManager,
+//                              PasswordEncoder passwordEncoder) {
+//        this.entityManager = entityManager;
+//        this.passwordEncoder = passwordEncoder;
+//    }
+
+    public UserRepositoryImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
-        this.passwordEncoder = passwordEncoder;
     }
     @Transactional
     public Optional<User> findUserByLogin(String login) {
