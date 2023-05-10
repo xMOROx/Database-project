@@ -3,7 +3,10 @@ package org.agh.edu.pl.carrentalrestapi.model.assembler;
 import org.agh.edu.pl.carrentalrestapi.controller.BestOfferController;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
+import org.springframework.core.ResolvableType;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -33,21 +36,21 @@ public class VehicleBestOfferModelAssembler extends RepresentationModelAssembler
                 .build();
     }
 
-    public static List<VehicleModel> toVehicleModel(List<Vehicle> vehicles) {
+    public static PagedModel<VehicleModel> toVehicleModel(Page<Vehicle> vehicles) {
         if (vehicles.isEmpty()) {
-            return Collections.emptyList();
+            return PagedModel.empty();
         }
 
-        return vehicles.stream()
-                .map(VehicleBestOfferModelAssembler::toVehicleModel)
-                .collect(Collectors.toList());
-    }
+        int page = vehicles.getNumber();
+        int size = vehicles.getSize();
+        long totalElements = vehicles.getTotalElements();
+        long totalPages = vehicles.getTotalPages();
+        return PagedModel.of(
+                vehicles.stream().map(VehicleBestOfferModelAssembler::toVehicleModel).collect(Collectors.toList()),
+                new PagedModel.PageMetadata(size, page, totalElements, totalPages),
+                linkTo(methodOn(BestOfferController.class).getBestOffer(page, size)).withSelfRel()
 
-    @Override
-    public CollectionModel<VehicleModel> toCollectionModel(Iterable<? extends Vehicle> entities) {
-        CollectionModel<VehicleModel> vehicleModels = super.toCollectionModel(entities);
-        vehicleModels.add(linkTo(methodOn(BestOfferController.class).getBestOffer(null)).withSelfRel());
-        return vehicleModels;
+        );
     }
 
     @Override

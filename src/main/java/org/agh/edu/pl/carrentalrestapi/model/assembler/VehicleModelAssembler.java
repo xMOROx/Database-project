@@ -5,12 +5,11 @@ import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleStatus;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
-import org.springframework.hateoas.CollectionModel;
+import org.springframework.data.domain.Page;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -41,21 +40,22 @@ public class VehicleModelAssembler extends RepresentationModelAssemblerSupport<V
                 .build();
     }
 
-    public static List<VehicleModel> toVehicleModel(List<Vehicle> vehicle) {
-        if(vehicle.isEmpty())
-            return Collections.emptyList();
+    public static PagedModel<VehicleModel> toVehicleModel(Page<Vehicle> vehicle) {
+        if (vehicle.isEmpty())
+            return PagedModel.empty();
 
-        return vehicle.stream()
-                .map(VehicleModelAssembler::toVehicleModel)
-                .collect(Collectors.toList());
+        int size = vehicle.getSize();
+        int page = vehicle.getNumber();
+        long totalElements = vehicle.getTotalElements();
+        long totalPages = vehicle.getTotalPages();
+
+        return PagedModel.of(
+                vehicle.stream().map(VehicleModelAssembler::toVehicleModel).collect(Collectors.toList()),
+                new PagedModel.PageMetadata(size, page, totalElements, totalPages),
+                linkTo(methodOn(VehicleController.class).getAllVehicles(page, size)).withSelfRel()
+        );
     }
 
-    @Override
-    public CollectionModel<VehicleModel> toCollectionModel(Iterable<? extends Vehicle> entities) {
-        CollectionModel<VehicleModel> vehicleModels = super.toCollectionModel(entities);
-        vehicleModels.add(linkTo(methodOn(VehicleController.class).getAllVehicles(null)).withSelfRel());
-        return vehicleModels;
-    }
 
     @Override
     public VehicleModel toModel(Vehicle entity) {

@@ -3,25 +3,16 @@ package org.agh.edu.pl.carrentalrestapi.controller;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
 import org.agh.edu.pl.carrentalrestapi.exception.VehicleParametersNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleParametersModel;
+import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleParametersModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleParametersService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
-import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleParametersModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -52,14 +43,16 @@ public class VehicleParametersController {
     }
 
     @GetMapping(path = "")
-    public @ResponseBody ResponseEntity<CollectionModel<VehicleParametersModel>> getAllVehicleParameters(@RequestBody PageableRequest pageableRequest) {
-
+    public @ResponseBody ResponseEntity<PagedModel<VehicleParametersModel>> getAllVehicleParameters(@RequestParam(value = "page", required = false) Integer page,
+                                                                                                    @RequestParam(value = "size", required = false) Integer size) {
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
         Page<VehicleParameters> vehicleParametersModels = vehicleParametersService
                 .getVehicleParameters(pageable);
 
-        return new ResponseEntity<>(vehicleParametersModelAssembler.toCollectionModel(vehicleParametersModels), HttpStatus.OK);
+        return new ResponseEntity<>(
+                VehicleParametersModelAssembler.toVehicleParametersModel(vehicleParametersModels), HttpStatus.OK);
     }
 
     @PostMapping(path = "")
@@ -97,7 +90,7 @@ public class VehicleParametersController {
     }
 
     @PatchMapping(path = "/{id}")
-    public ResponseEntity<Long> patchVehicleParameters(@PathVariable Long id, @RequestBody VehicleParameters vehicleParameters) throws VehicleParametersNotFoundException {
+    public ResponseEntity<Long> partiallyUpdateVehicleParameters(@PathVariable Long id, @RequestBody VehicleParameters vehicleParameters) throws VehicleParametersNotFoundException {
         Long updatedId = vehicleParametersService
                 .partialUpdateVehicleParameters(id, vehicleParameters);
 

@@ -1,5 +1,6 @@
 package org.agh.edu.pl.carrentalrestapi.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,7 @@ import org.springframework.hateoas.server.core.Relation;
 @JsonRootName(value = "UserRoles")
 @EqualsAndHashCode(callSuper = false)
 @Relation(collectionRelation = "UserRoles")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserRoleModel extends RepresentationModel<UserRoleModel> {
     private Long id;
     private String type;

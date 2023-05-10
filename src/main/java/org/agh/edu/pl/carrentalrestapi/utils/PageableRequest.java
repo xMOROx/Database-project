@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -25,7 +26,7 @@ public class PageableRequest implements Serializable {
     private Integer page;
 
     private Integer size;
-    
+    //TODO: add sorting
     public static Pageable toPageable(PageableRequest pageableRequest) {
         if (Objects.isNull(pageableRequest)) {
             return Pageable.unpaged();
@@ -35,5 +36,12 @@ public class PageableRequest implements Serializable {
                 Objects.requireNonNullElse(pageableRequest.getPage(),0),
                 Objects.requireNonNullElse(pageableRequest.getSize(), 100)
         );
+    }
+
+    public static PageableRequest of(Integer page, Integer size) {
+        return PageableRequest.builder()
+                .page(page)
+                .size(size)
+                .build();
     }
 }
