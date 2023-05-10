@@ -1,13 +1,16 @@
 package org.agh.edu.pl.carrentalrestapi.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.agh.edu.pl.carrentalrestapi.entity.User;
-import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.exception.*;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.repository.UserRepository;
-import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 @Service("userService")
@@ -46,6 +49,62 @@ public class UserServiceImpl implements UserService {
 
         User saved = userRepository.save(user);
 
+        return saved.getId();
+    }
+
+    @Override
+    public Long fullUpdate(User user) throws UserWithEmailExistsException {
+        User toUpdate;
+        try {
+            toUpdate = getById(user.getId());
+        } catch (UserNotFoundException e) {
+            return addUser(user);
+        }
+
+        String email = user.getEmail();
+        if (userRepository.findUserByEmail(email).isPresent() && !toUpdate.getEmail().equals(email)) {
+            throw new UserWithEmailExistsException(email);
+        }
+        toUpdate.setEmail(email);
+        toUpdate.setFirstName(user.getFirstName());
+        toUpdate.setSurName(user.getSurName());
+        toUpdate.setLogin(user.getLogin());
+        toUpdate.setPesel(user.getPesel());
+        toUpdate.setPhoneNumber(user.getPhoneNumber());
+        User saved = userRepository.save(toUpdate);
+
+        return saved.getId();
+    }
+
+    @Override
+    public Long partialUpdate(User user) throws UserNotFoundException {
+        User toUpdate = getById(user.getId());
+        if (user.getEmail() != null) {
+            String email = user.getEmail();
+
+            if (userRepository.findUserByEmail(email).isPresent() && !toUpdate.getEmail().equals(email)) {
+                throw new UserWithEmailExistsException(email);
+            }
+            toUpdate.setEmail(email);
+        }
+
+        if (user.getLogin() != null) {
+            toUpdate.setLogin(user.getLogin());
+        }
+        if (user.getFirstName() != null) {
+            toUpdate.setFirstName(user.getFirstName());
+        }
+        if (user.getSurName() != null) {
+            toUpdate.setSurName(user.getSurName());
+        }
+        if (user.getPesel() != null) {
+            toUpdate.setPesel(user.getPesel());
+        }
+        if (user.getPhoneNumber() != null) {
+            toUpdate.setPhoneNumber(user.getPhoneNumber());
+        }
+
+        User saved = userRepository.save(toUpdate);
         return saved.getId();
     }
 
