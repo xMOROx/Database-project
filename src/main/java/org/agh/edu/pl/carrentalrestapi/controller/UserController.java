@@ -7,6 +7,7 @@ import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.model.UserModel;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.UserModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.service.UserService;
+import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.stream.Stream;
 
 @RestController
-//@RequestMapping(path = API_PATH.root + API_PATH.u)
+@RequestMapping(path = API_PATH.root + API_PATH.users)
 public class UserController {
+
     private final UserService userService;
     private final UserModelAssembler userModelAssembler;
 
