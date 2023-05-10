@@ -5,13 +5,10 @@ import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleParametersModel;
 import org.springframework.data.domain.Page;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;

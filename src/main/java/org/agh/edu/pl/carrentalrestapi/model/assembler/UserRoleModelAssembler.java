@@ -4,7 +4,6 @@ import org.agh.edu.pl.carrentalrestapi.controller.UserRoleController;
 import org.agh.edu.pl.carrentalrestapi.entity.UserRole;
 import org.agh.edu.pl.carrentalrestapi.model.UserRoleModel;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 

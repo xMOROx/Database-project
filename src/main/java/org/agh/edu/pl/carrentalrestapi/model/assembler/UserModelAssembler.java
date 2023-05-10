@@ -2,16 +2,19 @@ package org.agh.edu.pl.carrentalrestapi.model.assembler;
 
 import org.agh.edu.pl.carrentalrestapi.controller.UserController;
 import org.agh.edu.pl.carrentalrestapi.entity.User;
-import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.model.UserModel;
-import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
-import org.springframework.hateoas.CollectionModel;
+import org.springframework.data.domain.Page;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
+
 import java.util.stream.Collectors;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+@Component
 public class UserModelAssembler extends RepresentationModelAssemblerSupport<User, UserModel> {
     public UserModelAssembler() {
         super(UserController.class, UserModel.class);
@@ -28,24 +31,25 @@ public class UserModelAssembler extends RepresentationModelAssemblerSupport<User
                 .pesel(user.getPesel()).build();
     }
 
-    public static List<UserModel> toUserModel(List<User> users) {
+    public static PagedModel<UserModel> toUserModel(Page<User> users) {
         if (users.isEmpty()) {
-            return Collections.emptyList();
+            return PagedModel.empty();
         }
 
-        return users.stream()
-                .map(UserModelAssembler::toUserModel)
-                .collect(Collectors.toList());
-    }
-    @Override
-    public CollectionModel<UserModel> toCollectionModel(Iterable<? extends User> entities) {
-        CollectionModel<UserModel> userModels = super.toCollectionModel(entities);
-//        userModels.add(linkTo(methodOn(UserController.class)))
-        return userModels;
+        int page = users.getNumber();
+        int size = users.getSize();
+        long totalElements = users.getTotalElements();
+        long totalPages = users.getTotalPages();
+        return PagedModel.of(users.stream().map(UserModelAssembler::toUserModel)
+                .collect(Collectors.toList()),
+                new PagedModel.PageMetadata(size, page, totalElements, totalPages),
+                linkTo(methodOn(UserController.class).getAllUsers(page, size)).withSelfRel());
     }
 
     @Override
     public UserModel toModel(User entity) {
-        return UserModelAssembler.toUserModel(entity);
+        UserModel userModel = UserModelAssembler.toUserModel(entity);
+        userModel.add(linkTo(methodOn(UserController.class).getUserById(entity.getId())).withSelfRel());
+        return userModel;
     }
 }
