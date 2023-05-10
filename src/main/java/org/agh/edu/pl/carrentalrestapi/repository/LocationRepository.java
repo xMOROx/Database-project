@@ -1,6 +1,8 @@
 package org.agh.edu.pl.carrentalrestapi.repository;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Location;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,6 +20,6 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     @Query("SELECT l FROM Location l WHERE l.phoneNumber = ?1")
     @Transactional
     Optional<Location> findByPhoneNumber(String phoneNumber);
-    @Query("SELECT DISTINCT l.city FROM Location l ORDER BY l.city ASC")
-    List<String> findAllCities();
+    @Query(value =  "SELECT DISTINCT l.city FROM Location l ORDER BY l.city ASC", countQuery = "SELECT COUNT(DISTINCT l.city) FROM Location l")
+    Page<String> findAllCities(Pageable pageable);
 }

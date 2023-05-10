@@ -59,7 +59,7 @@ public class VehicleParametersController {
     @PostMapping(path = "")
     public ResponseEntity<Long> addVehicleParameters(@Valid @RequestBody VehicleParameters vehicleParameters) {
         Long savedId = vehicleParametersService
-                .saveVehicleParameters(vehicleParameters);
+                .addVehicleParameters(vehicleParameters);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

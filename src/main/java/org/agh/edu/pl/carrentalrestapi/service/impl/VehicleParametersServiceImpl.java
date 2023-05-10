@@ -37,9 +37,8 @@ public class VehicleParametersServiceImpl implements VehicleParametersService {
     }
 
     @Override
-    public Long saveVehicleParameters(VehicleParameters vehicleParameters) {
+    public Long addVehicleParameters(VehicleParameters vehicleParameters) {
         VehicleParameters saved = this.vehicleParametersRepository.save(vehicleParameters);
-        System.out.println(saved.getId());
         return saved.getId();
     }
 

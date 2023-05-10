@@ -33,8 +33,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getAllForVehicle(Long id) {
-        return commentRepository.findAllCommentsByVehicleId(id);
+    public Page<Comment> getAllForVehicle(Long id, Pageable pageable) {
+        return commentRepository.findAllCommentsByVehicleId(id, pageable);
     }
 
     @Override

@@ -120,16 +120,11 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<Location> getAllLocations() {
-        return locationRepository.findAll();
-    }
-
-    @Override
     public Page<Location> getAllLocations(Pageable pageable) {
         return locationRepository.findAll(pageable);
     }
     @Override
-    public List<String> getCities() {
-        return locationRepository.findAllCities();
+    public Page<String> getCities(Pageable pageable) {
+        return locationRepository.findAllCities(pageable);
     }
 }
