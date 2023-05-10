@@ -11,4 +11,6 @@ public class API_PATH {
     public static final String vehicleStatus = vehicle + "/status";
     public static final String vehicleParameters = vehicle + "/parameters";
     public static final String vehicleSearch = vehicle + "/search";
+
+    public static final String user = "/user";
 }
