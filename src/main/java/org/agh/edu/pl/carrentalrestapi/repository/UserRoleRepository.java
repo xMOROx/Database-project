@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository("userRoleRepository")
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
     Page<UserRole> findUnExistingDistinctUserRolesForUser(Long id, Pageable pageable);
+    Page<UserRole> findExistingDistinctUserRolesForUser(Long id, Pageable pageable);
     @Query("SELECT ur FROM UserRole ur WHERE ur.type = ?1")
     @Transactional
     Optional<UserRole> findByType(String type);

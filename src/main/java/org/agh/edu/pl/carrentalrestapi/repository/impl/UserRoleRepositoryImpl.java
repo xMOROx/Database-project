@@ -19,7 +19,7 @@ public class UserRoleRepositoryImpl {
     private EntityManager entityManager;
 
     public UserRoleRepositoryImpl(EntityManager entityManager
-                                 ) {
+    ) {
         this.entityManager = entityManager;
     }
 
@@ -32,6 +32,14 @@ public class UserRoleRepositoryImpl {
         TypedQuery<Long> countQuery = entityManager.createQuery("SELECT COUNT(ur) FROM UserRole ur WHERE ur.id NOT IN " +
                 "(SELECT ur.id FROM UserRole ur JOIN ur.users u WHERE u.id = :id)", Long.class);
 
+        return new PageImpl<>(typedQuery.getResultList(), pageable, countQuery.getSingleResult());
+    }
+
+    @Transactional
+    public Page<UserRole> findExistingDistinctUserRolesForUser(Long id, Pageable pageable) {
+        TypedQuery<UserRole> query = entityManager.createQuery("SELECT ur FROM UserRole ur WHERE ur.id = :id", UserRole.class);
+        TypedQuery<UserRole> typedQuery = query.setParameter("id", id);
+        TypedQuery<Long> countQuery = entityManager.createQuery("SELECT COUNT(ur) FROM UserRole ur WHERE ur.id = :id", Long.class);
         return new PageImpl<>(typedQuery.getResultList(), pageable, countQuery.getSingleResult());
     }
 

@@ -2,6 +2,7 @@ package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.agh.edu.pl.carrentalrestapi.entity.User;
+import org.agh.edu.pl.carrentalrestapi.entity.UserRole;
 import org.agh.edu.pl.carrentalrestapi.exception.*;
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.repository.UserRepository;
@@ -114,5 +115,17 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException(id);
 
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public void addRoleToUser(User user, UserRole role) {
+        user.getUserRoles().add(role);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteRoleFromUser(User user, UserRole role) {
+        user.getUserRoles().remove(role);
+        userRepository.save(user);
     }
 }
