@@ -6,12 +6,14 @@ import org.agh.edu.pl.carrentalrestapi.model.BookingModel;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Component
 public class BookingModelAssembler extends RepresentationModelAssemblerSupport<Booking, BookingModel> {
 
     public BookingModelAssembler() {
