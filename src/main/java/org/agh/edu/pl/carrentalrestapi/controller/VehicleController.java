@@ -102,7 +102,7 @@ public class VehicleController {
     @PutMapping(path = "/{id}")
     @ResponseBody
     public ResponseEntity<Long> updateVehicle(@PathVariable("id") Long id, @Valid @RequestBody Vehicle vehicle) {
-        Long savedId = vehicleService.fullUpdate(vehicle);
+        Long savedId = vehicleService.fullUpdate(id, vehicle);
 
         if(savedId.equals(id)) {
             return ResponseEntity
@@ -124,7 +124,7 @@ public class VehicleController {
     @PatchMapping(path = "/{id}")
     @ResponseBody
     public ResponseEntity<Long> partiallyUpdateVehicle(@PathVariable("id") Long id, @RequestBody Vehicle vehicle) {
-        Long savedId = vehicleService.partialUpdate(vehicle);
+        Long savedId = vehicleService.partialUpdate(id, vehicle);
 
         return ResponseEntity
                 .ok()

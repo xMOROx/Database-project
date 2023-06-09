@@ -96,7 +96,7 @@ public class UserController {
     public ResponseEntity<Long> updateUser(@PathVariable("id") Long id, @Valid @RequestBody User user)
             throws UserWithEmailExistsException {
 
-        Long userId = userService.fullUpdate(user);
+        Long userId = userService.fullUpdate(id, user);
 
         if (userId.equals(id)) {
             return ResponseEntity.ok(userId);
@@ -116,7 +116,7 @@ public class UserController {
     public ResponseEntity<Long> partiallyUpdateUser(@PathVariable("id") Long id, @RequestBody User user)
     throws UserNotFoundException, UserWithEmailExistsException {
 
-        Long userId = userService.partialUpdate(user);
+        Long userId = userService.partialUpdate(id, user);
 
         return ResponseEntity.ok(userId);
     }

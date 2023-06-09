@@ -74,10 +74,10 @@ public class VehicleServiceImpl implements VehicleService {
 
 
     @Override
-    public Long fullUpdate(Vehicle vehicle) throws VehicleWithRegistrationExistsException {
+    public Long fullUpdate(Long id, Vehicle vehicle) throws VehicleWithRegistrationExistsException {
         Vehicle toUpdate;
         try {
-            toUpdate = getById(vehicle.getId());
+            toUpdate = getById(id);
         } catch (VehicleNotFoundException e) {
             return addVehicle(vehicle);
         }
@@ -98,8 +98,8 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Long partialUpdate(Vehicle vehicle) throws VehicleNotFoundException, VehicleWithRegistrationExistsException {
-        Vehicle toUpdate = getById(vehicle.getId());
+    public Long partialUpdate(Long id, Vehicle vehicle) throws VehicleNotFoundException, VehicleWithRegistrationExistsException {
+        Vehicle toUpdate = getById(id);
 
         if (vehicle.getRegistration() != null) {
             String registration = vehicle.getRegistration();
