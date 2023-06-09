@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    void addBooking(Booking booking) throws BookingUnavailableVehicleException;
+    Long addBooking(Booking booking) throws BookingUnavailableVehicleException;
 
     void cancelBooking(Long bookingId);
 

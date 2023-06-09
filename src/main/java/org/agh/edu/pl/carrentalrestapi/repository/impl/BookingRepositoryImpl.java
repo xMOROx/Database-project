@@ -20,7 +20,7 @@ public class BookingRepositoryImpl {
     }
 
     @Transactional
-    public void addBooking(Booking booking) throws BookingUnavailableVehicleException {
+    public Long addBooking(Booking booking) throws BookingUnavailableVehicleException {
         Vehicle vehicle = entityManager.find(Vehicle.class, booking.getVehicle().getId());
 
         VehicleStatus vehicleStatus = vehicle.getVehicleStatus();
@@ -36,6 +36,8 @@ public class BookingRepositoryImpl {
 
         entityManager.persist(vehicle);
         entityManager.persist(booking);
+
+        return booking.getId();
     }
 
     @Transactional
