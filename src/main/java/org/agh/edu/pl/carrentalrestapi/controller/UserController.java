@@ -2,7 +2,7 @@ package org.agh.edu.pl.carrentalrestapi.controller;
 
 import jakarta.validation.Valid;
 import org.agh.edu.pl.carrentalrestapi.entity.User;
-import org.agh.edu.pl.carrentalrestapi.exception.UserWithEmailExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserWithEmailExistsException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.model.UserModel;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.UserModelAssembler;

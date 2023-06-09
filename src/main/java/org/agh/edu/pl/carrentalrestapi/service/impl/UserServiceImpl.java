@@ -2,8 +2,9 @@ package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.agh.edu.pl.carrentalrestapi.entity.User;
-import org.agh.edu.pl.carrentalrestapi.exception.*;
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserWithEmailExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserWithLoginExistsException;
 import org.agh.edu.pl.carrentalrestapi.repository.UserRepository;
 import org.agh.edu.pl.carrentalrestapi.service.UserService;
 import org.springframework.data.domain.Page;
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long addUser(User user) throws UserWithEmailExistsException, UserWithLoginExistsException{
+    public Long addUser(User user) throws UserWithEmailExistsException, UserWithLoginExistsException {
         String login = user.getLogin();
         String email = user.getEmail();
 
