@@ -38,7 +38,7 @@ public interface VehicleService {
 
     void addEquipment(Long id, Long equipmentId);
 
-    void deleteEquipment(Long id, Long equipmentId);
+    void removeEquipment(Long id, Long equipmentId);
 
     void addVehicleParameters(Long vehicleId, Long parametersId);
 

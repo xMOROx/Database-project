@@ -2,6 +2,7 @@ package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
+import org.agh.edu.pl.carrentalrestapi.exception.types.EquipmentNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleParametersNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleWithRegistrationExistsException;
@@ -155,24 +156,23 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public void addEquipment(Long id, Long equipmentId) {
+    public void addEquipment(Long id, Long equipmentId) throws VehicleNotFoundException, EquipmentNotFoundException {
         vehicleRepository.addEquipmentToVehicle(id, equipmentId);
     }
 
     @Override
-    public void deleteEquipment(Long id, Long equipmentId) {
+    public void removeEquipment(Long id, Long equipmentId) throws VehicleNotFoundException, EquipmentNotFoundException {
         vehicleRepository.removeEquipmentFromVehicle(id, equipmentId);
     }
 
 
     @Override
     public void addVehicleParameters(Long vehicleId, Long parametersId) throws VehicleNotFoundException, VehicleParametersNotFoundException {
-
         vehicleRepository.addVehicleParameters(vehicleId, parametersId);
     }
 
     @Override
-    public void removeVehicleParameters(Long vehicleId) {
+    public void removeVehicleParameters(Long vehicleId) throws VehicleNotFoundException {
         vehicleRepository.removeVehicleParameters(vehicleId);
     }
 }

@@ -63,5 +63,8 @@ public class BookingModelAssembler extends RepresentationModelAssemblerSupport<B
 
     @Override
     public BookingModel toModel(Booking entity) {
-        return BookingModelAssembler.toBookingModel(entity);
+        BookingModel bookingModel = BookingModelAssembler.toBookingModel(entity);
+        bookingModel.add(linkTo(methodOn(BookingController.class).getBookingById(entity.getId())).withSelfRel());
+        return bookingModel;
+    }
 }

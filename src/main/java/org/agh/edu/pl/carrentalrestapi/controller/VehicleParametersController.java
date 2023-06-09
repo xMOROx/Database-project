@@ -32,7 +32,10 @@ public class VehicleParametersController {
     }
 
     @GetMapping(path = "/{id}")
-    public @ResponseBody ResponseEntity<VehicleParametersModel> getVehicleParametersById(@PathVariable Long id) throws VehicleParametersNotFoundException {
+    @ResponseBody
+    public ResponseEntity<VehicleParametersModel> getVehicleParametersById(@PathVariable Long id)
+            throws VehicleParametersNotFoundException {
+
         VehicleParameters vehicleParameters = vehicleParametersService
                 .getVehicleParametersById(id);
 
@@ -44,8 +47,11 @@ public class VehicleParametersController {
     }
 
     @GetMapping(path = "")
-    public @ResponseBody ResponseEntity<PagedModel<VehicleParametersModel>> getAllVehicleParameters(@RequestParam(value = "page", required = false) Integer page,
-                                                                                                    @RequestParam(value = "size", required = false) Integer size) {
+    @ResponseBody
+    public ResponseEntity<PagedModel<VehicleParametersModel>>
+    getAllVehicleParameters(@RequestParam(value = "page", required = false) Integer page,
+                            @RequestParam(value = "size", required = false) Integer size) {
+
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
@@ -57,7 +63,9 @@ public class VehicleParametersController {
     }
 
     @PostMapping(path = "")
+    @ResponseBody
     public ResponseEntity<Long> addVehicleParameters(@Valid @RequestBody VehicleParameters vehicleParameters) {
+
         Long savedId = vehicleParametersService
                 .addVehicleParameters(vehicleParameters);
 
@@ -69,16 +77,18 @@ public class VehicleParametersController {
 
         return ResponseEntity
                 .created(location)
-                .build();
+                .body(savedId);
     }
 
     @PutMapping(path = "/{id}")
+    @ResponseBody
     public ResponseEntity<Long> updateVehicleParameters(@PathVariable Long id, @RequestBody VehicleParameters vehicleParameters) {
+
         Long updatedId = vehicleParametersService
                 .fullUpdateVehicleParameters(id, vehicleParameters);
 
         if (Objects.equals(updatedId, id)) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(updatedId);
         }
 
         URI location = ServletUriComponentsBuilder
@@ -87,19 +97,23 @@ public class VehicleParametersController {
                 .buildAndExpand(updatedId)
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(updatedId);
     }
 
     @PatchMapping(path = "/{id}")
-    public ResponseEntity<Long> partiallyUpdateVehicleParameters(@PathVariable Long id, @RequestBody VehicleParameters vehicleParameters) throws VehicleParametersNotFoundException {
+    @ResponseBody
+    public ResponseEntity<Long> partiallyUpdateVehicleParameters(@PathVariable Long id, @RequestBody VehicleParameters vehicleParameters)
+            throws VehicleParametersNotFoundException {
+
         Long updatedId = vehicleParametersService
                 .partialUpdateVehicleParameters(id, vehicleParameters);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(updatedId);
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Long> deleteVehicleParameters(@PathVariable Long id) throws VehicleParametersNotFoundException {
+    @ResponseBody
+    public ResponseEntity<Void> deleteVehicleParameters(@PathVariable Long id) throws VehicleParametersNotFoundException {
         vehicleParametersService.deleteVehicleParameters(id);
         return ResponseEntity.noContent().build();
     }

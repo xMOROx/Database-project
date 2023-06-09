@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long partialUpdate(User user) throws UserNotFoundException {
+    public Long partialUpdate(User user) throws UserNotFoundException, UserWithEmailExistsException {
         User toUpdate = getById(user.getId());
         if (user.getEmail() != null) {
             String email = user.getEmail();

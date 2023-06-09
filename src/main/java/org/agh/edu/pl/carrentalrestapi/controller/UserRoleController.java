@@ -9,6 +9,9 @@ import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping(path = API_PATH.root + API_PATH.roles)
@@ -21,18 +24,26 @@ public class UserRoleController {
 
     @PostMapping(path = "")
     @ResponseBody
-    public ResponseEntity<Long> addRole(@Valid @RequestBody UserRole role) throws UserRoleWithGivenTypeExistsException {
-        return new ResponseEntity<>(
-                userRoleService.addUserRole(role),
-                HttpStatus.CREATED);
+    public ResponseEntity<Long> addRole(@Valid @RequestBody UserRole role)
+            throws UserRoleWithGivenTypeExistsException {
+
+        Long savedUserRoleId = userRoleService.addUserRole(role);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(savedUserRoleId).toUri();
+
+        return ResponseEntity.created(location).body(savedUserRoleId);
     }
 
-    @PutMapping(path = "/{id}")
+    @PatchMapping(path = "/{id}")
     @ResponseBody
-    public ResponseEntity<Long> updateRole(@PathVariable("id") Long id, @Valid @RequestBody UserRole role) throws UserRoleNotFoundException {
+    public ResponseEntity<Long> updateRole(@PathVariable("id") Long id, @Valid @RequestBody UserRole role)
+            throws UserRoleNotFoundException {
+
         role.setId(id);
-        return new ResponseEntity<>(userRoleService.updateUserRole(id, role),
-                HttpStatus.OK);
+        Long userRoleId = userRoleService.updateUserRole(id, role);
+
+        return ResponseEntity.ok(userRoleId);
     }
 
     @DeleteMapping(path = "")

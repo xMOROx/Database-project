@@ -41,6 +41,7 @@ public class VehicleSearchController {
     @ResponseBody
     public ResponseEntity<Page<String>> getBrands(@RequestParam(value = "page", required = false) Integer page,
                                                   @RequestParam(value = "size", required = false) Integer size) {
+
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
@@ -54,8 +55,10 @@ public class VehicleSearchController {
 
     @GetMapping(path = "/models", params = {"brand"})
     @ResponseBody
-    public ResponseEntity<Page<String>> getModelsForBrand(@RequestParam("brand") String brand, @RequestParam(value = "page", required = false) Integer page,
+    public ResponseEntity<Page<String>>
+    getModelsForBrand(@RequestParam("brand") String brand, @RequestParam(value = "page", required = false) Integer page,
                                                           @RequestParam(value = "size", required = false) Integer size) {
+
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
@@ -67,10 +70,11 @@ public class VehicleSearchController {
         );
     }
 
-    @GetMapping(path = "/body-types") //TODO: modife page to other model
+    @GetMapping(path = "/body-types")
     @ResponseBody
     public ResponseEntity<Page<String>> getBodyTypes(@RequestParam(value = "page", required = false) Integer page,
                                                      @RequestParam(value = "size", required = false) Integer size) {
+
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
@@ -86,6 +90,7 @@ public class VehicleSearchController {
     @ResponseBody
     public ResponseEntity<Page<String>> getColors(@RequestParam(value = "page", required = false) Integer page,
                                                   @RequestParam(value = "size", required = false) Integer size) {
+
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 

@@ -1,5 +1,6 @@
 package org.agh.edu.pl.carrentalrestapi.controller;
 
+import jakarta.validation.Valid;
 import org.agh.edu.pl.carrentalrestapi.entity.Booking;
 import org.agh.edu.pl.carrentalrestapi.exception.types.BookingNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.BookingUnavailableVehicleException;
@@ -10,18 +11,25 @@ import org.agh.edu.pl.carrentalrestapi.model.assembler.BookingModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.service.BookingService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.Map;
 
 @Controller
-@RequestMapping(path = API_PATH.root + API_PATH.booking)
+@RequestMapping(path = API_PATH.root + API_PATH.bookings)
 public class BookingController {
     private final BookingService bookingService;
 
@@ -30,21 +38,22 @@ public class BookingController {
     }
 
     @PostMapping(path = "/reserve")
-    public ResponseEntity<String> reserveVehicle(@RequestBody Booking booking) {
-        Long bookingId;
+    @ResponseBody
+    public ResponseEntity<String> reserveVehicle(@Valid @RequestBody Booking booking)
+            throws BookingUnavailableVehicleException {
 
-        try {
-            bookingId = bookingService.addBooking(booking);
-        } catch (BookingUnavailableVehicleException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        Long bookingId = bookingService.addBooking(booking);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(bookingId).toUri();
 
-        return ResponseEntity.ok(bookingId.toString());
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping(value = "/all", params = {"page", "size"})
+    @ResponseBody
     public ResponseEntity<PagedModel<BookingModel>> getAllBookings(@RequestParam(value = "page", required = false) Integer page,
                                                                    @RequestParam(value = "size", required = false) Integer size) {
+
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
@@ -54,6 +63,7 @@ public class BookingController {
     }
 
     @GetMapping(value = "/reserved", params = {"page", "size"})
+    @ResponseBody
     public ResponseEntity<PagedModel<BookingModel>> getReservedBookings(@RequestParam(value = "page", required = false) Integer page,
                                                                         @RequestParam(value = "size", required = false) Integer size) {
         PageableRequest pageableRequest = PageableRequest.of(page, size);
@@ -65,6 +75,7 @@ public class BookingController {
     }
 
     @GetMapping(value = "/rented", params = {"page", "size"})
+    @ResponseBody
     public ResponseEntity<PagedModel<BookingModel>> getRentedBookings(@RequestParam(value = "page", required = false) Integer page,
                                                                       @RequestParam(value = "size", required = false) Integer size) {
         PageableRequest pageableRequest = PageableRequest.of(page, size);
@@ -76,6 +87,7 @@ public class BookingController {
     }
 
     @GetMapping(value = "/returned", params = {"page", "size"})
+    @ResponseBody
     public ResponseEntity<PagedModel<BookingModel>> getReturnedBookings(@RequestParam(value = "page", required = false) Integer page,
                                                                         @RequestParam(value = "size", required = false) Integer size) {
         PageableRequest pageableRequest = PageableRequest.of(page, size);
@@ -87,6 +99,7 @@ public class BookingController {
     }
 
     @GetMapping(value = "/canceled", params = {"page", "size"})
+    @ResponseBody
     public ResponseEntity<PagedModel<BookingModel>> getCanceledBookings(@RequestParam(value = "page", required = false) Integer page,
                                                                         @RequestParam(value = "size", required = false) Integer size) {
         PageableRequest pageableRequest = PageableRequest.of(page, size);
@@ -98,96 +111,84 @@ public class BookingController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<BookingModel> getBookingById(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(BookingModelAssembler.toBookingModel(bookingService.getBookingById(id)));
-        } catch (BookingNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @ResponseBody
+    public ResponseEntity<BookingModel> getBookingById(@PathVariable Long id) throws BookingNotFoundException {
+        return ResponseEntity.ok(BookingModelAssembler.toBookingModel(bookingService.getBookingById(id)));
     }
 
     @GetMapping(value = "/{id}/cancel")
-    public ResponseEntity<String> cancelBooking(@PathVariable Long id) {
-        try {
-            bookingService.cancelBooking(id);
-            return ResponseEntity.ok("Booking with id: " + id + " canceled");
-        } catch (BookingNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    @ResponseBody
+    public ResponseEntity<String> cancelBooking(@PathVariable Long id) throws BookingNotFoundException {
+        bookingService.cancelBooking(id);
+        return ResponseEntity.ok("Booking with id: " + id + " canceled");
     }
 
     @GetMapping(value = "/{id}/rent")
-    public ResponseEntity<String> rentBooking(@PathVariable Long id) {
-        try {
-            bookingService.rentBooking(id);
-            return ResponseEntity.ok("Booking with id: " + id + " rented");
-        } catch (BookingNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    @ResponseBody
+    public ResponseEntity<String> rentBooking(@PathVariable Long id) throws BookingNotFoundException {
+        bookingService.rentBooking(id);
+        return ResponseEntity.ok("Booking with id: " + id + " rented");
     }
 
     @GetMapping(value = "/{id}/return")
-    public ResponseEntity<String> returnBooking(@PathVariable Long id) {
-        try {
-            bookingService.returnBooking(id);
-            return ResponseEntity.ok("Booking with id: " + id + " returned");
-        } catch (BookingNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    @ResponseBody
+    public ResponseEntity<String> returnBooking(@PathVariable Long id) throws BookingNotFoundException {
+        bookingService.returnBooking(id);
+        return ResponseEntity.ok("Booking with id: " + id + " returned");
     }
 
     @GetMapping(value = "/{userId}")
-    public ResponseEntity<PagedModel<BookingModel>> getBookingsByUserId(@PathVariable Long userId,
-                                                                        @RequestParam(value = "page", required = false) Integer page,
-                                                                        @RequestParam(value = "size", required = false) Integer size) {
+    @ResponseBody
+    public ResponseEntity<PagedModel<BookingModel>>
+    getBookingsByUserId(@PathVariable Long userId,
+                        @RequestParam(value = "page", required = false) Integer page,
+                        @RequestParam(value = "size", required = false) Integer size)
+            throws UserNotFoundException {
+
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
-        try {
-            return ResponseEntity.ok(
-                    BookingModelAssembler.toBookingModel(bookingService.getUserBookings(userId, pageable)));
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(
+                BookingModelAssembler.toBookingModel(bookingService.getUserBookings(userId, pageable)));
     }
 
     @GetMapping(value = "/{userId}/reserved")
-    public ResponseEntity<PagedModel<BookingModel>> getReservedBookingsByUserId(@PathVariable Long userId,
-                                                                                @RequestParam(value = "page", required = false) Integer page,
-                                                                                @RequestParam(value = "size", required = false) Integer size) {
+    @ResponseBody
+    public ResponseEntity<PagedModel<BookingModel>>
+    getReservedBookingsByUserId(@PathVariable Long userId,
+                                @RequestParam(value = "page", required = false) Integer page,
+                                @RequestParam(value = "size", required = false) Integer size)
+            throws UserNotFoundException {
+
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
-        try {
-            return ResponseEntity.ok(
-                    BookingModelAssembler.toBookingModel(bookingService.getUserBookingsReserved(userId, pageable)));
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(
+                BookingModelAssembler.toBookingModel(bookingService.getUserBookingsReserved(userId, pageable)));
     }
 
+
     @GetMapping(value = "/{userId}/rented")
-    public ResponseEntity<PagedModel<BookingModel>> getRentedBookingsByUserId(@PathVariable Long userId,
-                                                                              @RequestParam(value = "page", required = false) Integer page,
-                                                                              @RequestParam(value = "size", required = false) Integer size) {
+    @ResponseBody
+    public ResponseEntity<PagedModel<BookingModel>>
+    getRentedBookingsByUserId(@PathVariable Long userId,
+                              @RequestParam(value = "page", required = false) Integer page,
+                              @RequestParam(value = "size", required = false) Integer size)
+            throws UserNotFoundException {
+
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
-        try {
-            return ResponseEntity.ok(
-                    BookingModelAssembler.toBookingModel(bookingService.getUserBookingsRented(userId, pageable)));
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(
+                BookingModelAssembler.toBookingModel(bookingService.getUserBookingsRented(userId, pageable)));
     }
 
     @PostMapping(value = "/cost")
-    public ResponseEntity<Map<String, BigDecimal>> countCost(@RequestBody Booking booking) {
-        try {
-            return ResponseEntity.ok(bookingService.countCost(booking));
-        } catch (BookingNotFoundException | VehicleNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @ResponseBody
+    public ResponseEntity<Map<String, BigDecimal>> countCost(@Valid @RequestBody Booking booking)
+            throws BookingNotFoundException, VehicleNotFoundException {
+
+        return ResponseEntity.ok(bookingService.countCost(booking));
     }
 
 }
