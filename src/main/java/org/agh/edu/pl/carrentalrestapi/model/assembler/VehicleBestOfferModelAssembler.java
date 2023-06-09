@@ -42,12 +42,15 @@ public class VehicleBestOfferModelAssembler extends RepresentationModelAssembler
         long totalElements = vehicles.getTotalElements();
         long totalPages = vehicles.getTotalPages();
         return PagedModel.of(
-                vehicles.stream().map(VehicleBestOfferModelAssembler::toVehicleModel).collect(Collectors.toList()),
+                vehicles.stream()
+                        .map(VehicleBestOfferModelAssembler::toVehicleModel)
+                        .collect(Collectors.toList()),
                 new PagedModel.PageMetadata(size, page, totalElements, totalPages),
                 linkTo(methodOn(BestOfferController.class).getBestOffer(page, size)).withSelfRel()
 
         );
     }
+
 
     @Override
     public VehicleModel toModel(Vehicle entity) {

@@ -40,8 +40,10 @@ public class UserModelAssembler extends RepresentationModelAssemblerSupport<User
         int size = users.getSize();
         long totalElements = users.getTotalElements();
         long totalPages = users.getTotalPages();
-        return PagedModel.of(users.stream().map(UserModelAssembler::toUserModel)
-                .collect(Collectors.toList()),
+
+        return PagedModel.of(users.stream()
+                    .map(UserModelAssembler::toUserModel)
+                    .collect(Collectors.toList()),
                 new PagedModel.PageMetadata(size, page, totalElements, totalPages),
                 linkTo(methodOn(UserController.class).getAllUsers(page, size)).withSelfRel());
     }
