@@ -32,12 +32,12 @@ public class UserRoleController {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedUserRoleId).toUri();
 
-        return ResponseEntity.created(location).body(savedUserRoleId);
+        return ResponseEntity.created(location).build();
     }
 
     @PatchMapping(path = "/{id}")
     @ResponseBody
-    public ResponseEntity<Long> updateRole(@PathVariable("id") Long id, @Valid @RequestBody UserRole role)
+    public ResponseEntity<Long> updateRole(@PathVariable("id") Long id, @RequestBody UserRole role)
             throws UserRoleNotFoundException {
 
         role.setId(id);

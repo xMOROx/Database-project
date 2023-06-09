@@ -12,4 +12,5 @@ public class API_PATH {
     public static final String users = "/users";
     public static final String roles = "/roles";
     public static final String bookings = "/bookings";
+    public static final String equipments = "/equipments";
 }

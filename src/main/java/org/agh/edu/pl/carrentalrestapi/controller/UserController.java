@@ -113,7 +113,7 @@ public class UserController {
 
     @PatchMapping(path = "/{id}")
     @ResponseBody
-    public ResponseEntity<Long> partiallyUpdateUser(@PathVariable("id") Long id, @Valid @RequestBody User user)
+    public ResponseEntity<Long> partiallyUpdateUser(@PathVariable("id") Long id, @RequestBody User user)
     throws UserNotFoundException, UserWithEmailExistsException {
 
         Long userId = userService.partialUpdate(user);
@@ -165,7 +165,7 @@ public class UserController {
     @PostMapping(path = "/{id}/role")
     @ResponseBody
     public ResponseEntity<Void> addRoleToUser(@PathVariable("id") Long id,
-                                              @Valid @RequestBody String type)
+                                              @RequestBody String type)
             throws UserNotFoundException, UserRoleNotFoundException {
 
         User user = userService.getById(id);

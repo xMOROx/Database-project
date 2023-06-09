@@ -6,11 +6,9 @@ import org.agh.edu.pl.carrentalrestapi.exception.types.EquipmentWithGivenCodeExi
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface EquipmentService {
 
-    Page<Equipment> getAllEquipment(Pageable pageable);
+    Page<Equipment> getAllEquipments(Pageable pageable);
     Page<Equipment> getUnExistingDistinctEquipmentsForVehicle(Long id, Pageable pageable);
     Long addEquipment(Equipment equipment) throws EquipmentWithGivenCodeExistsException;
     Equipment getEquipmentById(Long id) throws EquipmentNotFoundException;

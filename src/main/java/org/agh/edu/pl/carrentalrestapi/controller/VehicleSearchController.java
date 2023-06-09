@@ -28,7 +28,8 @@ public class VehicleSearchController {
 
     @PostMapping(path = "")
     @ResponseBody
-    public ResponseEntity<PagedModel<VehicleModel>> searchVehicles(@RequestBody @Valid SearchRequest searchRequest) {
+    public ResponseEntity<PagedModel<VehicleModel>>
+    searchVehicles(@RequestBody @Valid SearchRequest searchRequest) {
         Page<Vehicle> vehicles = vehicleService.search(searchRequest);
 
         return new ResponseEntity<>(

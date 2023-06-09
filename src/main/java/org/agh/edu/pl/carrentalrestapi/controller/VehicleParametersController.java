@@ -77,12 +77,12 @@ public class VehicleParametersController {
 
         return ResponseEntity
                 .created(location)
-                .body(savedId);
+                .build();
     }
 
     @PutMapping(path = "/{id}")
     @ResponseBody
-    public ResponseEntity<Long> updateVehicleParameters(@PathVariable Long id, @RequestBody VehicleParameters vehicleParameters) {
+    public ResponseEntity<Long> updateVehicleParameters(@PathVariable Long id, @Valid @RequestBody VehicleParameters vehicleParameters) {
 
         Long updatedId = vehicleParametersService
                 .fullUpdateVehicleParameters(id, vehicleParameters);

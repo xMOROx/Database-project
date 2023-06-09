@@ -88,7 +88,7 @@ public class VehicleController {
 
         return ResponseEntity
                 .created(location)
-                .body(savedId);
+                .build();
     }
 
     @DeleteMapping(path = "/{id}")
@@ -123,7 +123,7 @@ public class VehicleController {
 
     @PatchMapping(path = "/{id}")
     @ResponseBody
-    public ResponseEntity<Long> partiallyUpdateVehicle(@PathVariable("id") Long id, @Valid @RequestBody Vehicle vehicle) {
+    public ResponseEntity<Long> partiallyUpdateVehicle(@PathVariable("id") Long id, @RequestBody Vehicle vehicle) {
         Long savedId = vehicleService.partialUpdate(vehicle);
 
         return ResponseEntity
@@ -160,7 +160,7 @@ public class VehicleController {
                 .toUri();
 
         return ResponseEntity
-                .created(location).body(id);
+                .created(location).build();
     }
 
     @DeleteMapping(path = "/{id}/equipment")
@@ -175,10 +175,10 @@ public class VehicleController {
                 .build();
     }
 
-    @PostMapping("/{vehicleId}/parameters/{parametersId}")
+    @PostMapping("/{vehicleId}/parameters")
     @ResponseBody
     public ResponseEntity<Void> addVehicleParameters(@PathVariable("vehicleId") Long vehicleId,
-                                                     @PathVariable("parametersId") Long parametersId)
+                                                     @RequestBody Long parametersId)
             throws VehicleNotFoundException, VehicleParametersNotFoundException {
 
         vehicleService.addVehicleParameters(vehicleId, parametersId);
