@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service("userRoleService")
@@ -38,6 +37,14 @@ public class UserRoleServiceImpl implements UserRoleService {
             throw new UserNotFoundException(id);
 
         return userRoleRepository.findUnExistingDistinctUserRolesForUser(id, pageable);
+    }
+
+    @Override
+    public Page<UserRole> getExistingDistinctUserRolesForUser(Long id, Pageable pageable) throws UserNotFoundException {
+        if(userRepository.findById(id).isEmpty())
+            throw new UserNotFoundException(id);
+
+        return userRoleRepository.findExistingDistinctUserRolesForUser(id, pageable);
     }
 
     @Override
@@ -72,5 +79,13 @@ public class UserRoleServiceImpl implements UserRoleService {
         UserRole saved = userRoleRepository.save(userRoleToUpdate.get());
 
         return saved.getId();
+    }
+
+    @Override
+    public UserRole findRoleByType(String type) throws UserRoleNotFoundException {
+        if (userRoleRepository.findByType(type).isEmpty()) {
+            throw new UserRoleNotFoundException(type);
+        }
+        return userRoleRepository.findByType(type).get();
     }
 }

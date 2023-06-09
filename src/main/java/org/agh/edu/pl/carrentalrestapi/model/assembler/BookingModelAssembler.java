@@ -64,5 +64,4 @@ public class BookingModelAssembler extends RepresentationModelAssemblerSupport<B
     @Override
     public BookingModel toModel(Booking entity) {
         return BookingModelAssembler.toBookingModel(entity);
-    }
 }

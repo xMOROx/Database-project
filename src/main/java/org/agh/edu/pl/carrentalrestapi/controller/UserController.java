@@ -2,10 +2,15 @@ package org.agh.edu.pl.carrentalrestapi.controller;
 
 import jakarta.validation.Valid;
 import org.agh.edu.pl.carrentalrestapi.entity.User;
+
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserWithEmailExistsException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserRoleNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.model.UserModel;
+import org.agh.edu.pl.carrentalrestapi.model.UserRoleModel;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.UserModelAssembler;
+import org.agh.edu.pl.carrentalrestapi.model.assembler.UserRoleModelAssembler;
+import org.agh.edu.pl.carrentalrestapi.service.UserRoleService;
 import org.agh.edu.pl.carrentalrestapi.service.UserService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
@@ -24,10 +29,12 @@ public class UserController {
 
     private final UserService userService;
     private final UserModelAssembler userModelAssembler;
+    private final UserRoleService userRoleService;
 
-    public UserController(UserService userService, UserModelAssembler userModelAssembler) {
+    public UserController(UserService userService, UserModelAssembler userModelAssembler, UserRoleService userRoleService) {
         this.userService = userService;
         this.userModelAssembler = userModelAssembler;
+        this.userRoleService = userRoleService;
     }
 
     @GetMapping(path = "/{id}")
@@ -83,6 +90,58 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) throws UserNotFoundException {
         userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(path = "/{id}/roles")
+    @ResponseBody
+    public ResponseEntity<PagedModel<UserRoleModel>> getRolesForUser(@PathVariable("id") Long id,
+                                                                     @RequestParam(value = "page", required = false) Integer page,
+                                                                     @RequestParam(value = "size", required = false) Integer size)
+            throws UserNotFoundException {
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
+        Pageable pageable = PageableRequest.toPageable(pageableRequest);
+        Page<UserRole> roles = userRoleService.getExistingDistinctUserRolesForUser(id, pageable);
+
+        return new ResponseEntity<>(
+                UserRoleModelAssembler.toUserRoleModel(roles, id),
+                HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{id}/available-roles")
+    @ResponseBody
+    public ResponseEntity<PagedModel<UserRoleModel>> getAvailableRolesForUser(@PathVariable("id") Long id,
+                                                                              @RequestParam(value = "page", required = false) Integer page,
+                                                                              @RequestParam(value = "size", required = false) Integer size)
+            throws UserNotFoundException {
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
+        Pageable pageable = PageableRequest.toPageable(pageableRequest);
+        Page<UserRole> roles = userRoleService.getUnExistingDistinctUserRolesForUser(id, pageable);
+
+        return new ResponseEntity<>(
+                UserRoleModelAssembler.toUserRoleModel(roles, id),
+                HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/{id}/role")
+    @ResponseBody
+    public ResponseEntity<Void> addRoleToUser(@PathVariable("id") Long id,
+                                              @Valid @RequestBody String type) throws UserNotFoundException, UserRoleNotFoundException {
+        User user = userService.getById(id);
+        UserRole role = userRoleService.findRoleByType(type);
+        userService.addRoleToUser(user, role);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping(path = "/{id}/role")
+    @ResponseBody
+    public ResponseEntity<Void> deleteRoleFromUser(@PathVariable("id") Long id,
+                                              @Valid @RequestBody String type) throws UserNotFoundException, UserRoleNotFoundException {
+        User user = userService.getById(id);
+        UserRole role = userRoleService.findRoleByType(type);
+        userService.deleteRoleFromUser(user, role);
+
         return ResponseEntity.noContent().build();
     }
 }

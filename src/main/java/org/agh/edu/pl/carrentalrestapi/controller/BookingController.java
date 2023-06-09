@@ -10,13 +10,13 @@ import org.agh.edu.pl.carrentalrestapi.model.assembler.BookingModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.service.BookingService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
 import java.util.Map;
 
