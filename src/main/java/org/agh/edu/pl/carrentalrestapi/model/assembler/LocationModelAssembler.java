@@ -54,6 +54,7 @@ public class LocationModelAssembler extends RepresentationModelAssemblerSupport<
     public LocationModel toModel(Location entity) {
         LocationModel locationModel = LocationModelAssembler.toLocationModel(entity);
         locationModel.add(linkTo(methodOn(LocationController.class).getLocationById(entity.getId())).withSelfRel());
+        locationModel.add(linkTo(methodOn(LocationController.class).getAllLocations(null, null)).withRel("all"));
         return locationModel;
     }
 }
