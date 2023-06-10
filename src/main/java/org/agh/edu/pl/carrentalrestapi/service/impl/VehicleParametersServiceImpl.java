@@ -73,7 +73,6 @@ public class VehicleParametersServiceImpl implements VehicleParametersService {
         toUpdate.setColor(vehicleParameters.getColor());
         toUpdate.setMetalic(vehicleParameters.getMetalic());
         toUpdate.setDescription(vehicleParameters.getDescription());
-        toUpdate.setPhotoURL(vehicleParameters.getPhotoURL());
 
         this.vehicleParametersRepository.save(toUpdate);
 
@@ -116,9 +115,6 @@ public class VehicleParametersServiceImpl implements VehicleParametersService {
 
         if (vehicleParameters.getDescription() != null)
             toUpdate.setDescription(vehicleParameters.getDescription());
-
-        if (vehicleParameters.getPhotoURL() != null)
-            toUpdate.setPhotoURL(vehicleParameters.getPhotoURL());
 
         VehicleParameters saved =  this.vehicleParametersRepository.save(toUpdate);
         return saved.getId();

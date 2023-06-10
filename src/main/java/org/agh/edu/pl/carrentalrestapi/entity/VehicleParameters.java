@@ -80,10 +80,6 @@ public class VehicleParameters implements Serializable {
     @NotBlank(message = "Description is required")
     private String description;
 
-    @JsonProperty()
-    @Column(name = "PhotoURL", columnDefinition = "VARCHAR(255) NULL")
-    private String photoURL;
-
     @OneToOne( cascade = {CascadeType.PERSIST}, optional = true)
     @JoinColumn(name = "vehicleID", referencedColumnName = "ID", nullable = true)
     @JsonIgnore
@@ -105,7 +101,6 @@ public class VehicleParameters implements Serializable {
                              String color,
                              Boolean metalic,
                              String description,
-                             String photoURL,
                              Vehicle vehicle) {
         this.id = vehicleId;
         this.bodyType = bodyType;
@@ -119,7 +114,6 @@ public class VehicleParameters implements Serializable {
         this.color = color;
         this.metalic = metalic;
         this.description = description;
-        this.photoURL = photoURL;
         this.vehicle = vehicle;
     }
 
@@ -219,14 +213,6 @@ public class VehicleParameters implements Serializable {
         this.description = description;
     }
 
-    public String getPhotoURL() {
-        return photoURL;
-    }
-
-    public void setPhotoURL(String photoURL) {
-        this.photoURL = photoURL;
-    }
-
     public Vehicle getVehicle() {
         return vehicle;
     }
@@ -249,7 +235,6 @@ public class VehicleParameters implements Serializable {
                 ", color='" + color + '\'' +
                 ", metalic=" + metalic +
                 ", description='" + description + '\'' +
-                ", photoURL='" + photoURL + '\'' +
                 ", vehicleID=" + vehicle.getId() +
                 '}';
     }

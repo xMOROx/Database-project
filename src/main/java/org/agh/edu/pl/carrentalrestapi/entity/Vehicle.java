@@ -57,6 +57,10 @@ public class Vehicle implements Serializable {
     @Size(min = 1, max = 255, message = "Model must be between 1 and 255 characters long")
     private String model;
 
+    @JsonProperty()
+    @Column(name = "PhotoURL", columnDefinition = "VARCHAR(255) NULL")
+    private String photoURL;
+
     @JsonProperty
     @Column(name = "Daily_Fee", columnDefinition = "DECIMAL(15,2) NOT NULL")
     @Positive(message = "Daily fee must be positive")
@@ -199,6 +203,14 @@ public class Vehicle implements Serializable {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
     }
 
     public VehicleParameters getVehicleParameters() {

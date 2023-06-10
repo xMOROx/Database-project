@@ -38,7 +38,6 @@ public class VehicleParametersModelAssembler extends RepresentationModelAssemble
                 .color(vehicleParameters.getColor())
                 .metalic(vehicleParameters.getMetalic())
                 .description(vehicleParameters.getDescription())
-                .photoURL(vehicleParameters.getPhotoURL())
                 .build();
     }
 
@@ -64,7 +63,7 @@ public class VehicleParametersModelAssembler extends RepresentationModelAssemble
         VehicleParametersModel vehicleParametersModel = VehicleParametersModelAssembler.toVehicleParametersModel(entity);
 
         vehicleParametersModel.add(linkTo(methodOn(VehicleParametersController.class).getVehicleParametersById(entity.getId())).withSelfRel());
-
+        vehicleParametersModel.add(linkTo(methodOn(VehicleParametersController.class).getAllVehicleParameters(null, null)).withRel("all"));
         return vehicleParametersModel;
     }
 }

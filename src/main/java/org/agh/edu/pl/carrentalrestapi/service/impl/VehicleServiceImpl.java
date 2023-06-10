@@ -91,6 +91,7 @@ public class VehicleServiceImpl implements VehicleService {
         toUpdate.setModel(vehicle.getModel());
         toUpdate.setBestOffer(vehicle.getBestOffer());
         toUpdate.setDailyFee(vehicle.getDailyFee());
+        toUpdate.setPhotoURL(vehicle.getPhotoURL());
 
         Vehicle saved = vehicleRepository.save(toUpdate);
 
@@ -121,6 +122,9 @@ public class VehicleServiceImpl implements VehicleService {
         if (vehicle.getDailyFee() != null)
             toUpdate.setDailyFee(vehicle.getDailyFee());
 
+        if (vehicle.getPhotoURL() != null)
+            toUpdate.setPhotoURL(vehicle.getPhotoURL());
+
         Vehicle saved = vehicleRepository.save(toUpdate);
 
         return saved.getId();
@@ -143,6 +147,10 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public Page<String> getModelsForBrand(String brand, Pageable pageable) {
         return vehicleRepository.findModelsForBrand(brand, pageable);
+    }
+    @Override
+    public Page<String> getModels(Pageable pageable) {
+        return vehicleRepository.findModels(pageable);
     }
 
     @Override

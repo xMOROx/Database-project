@@ -37,6 +37,7 @@ public class VehicleModelAssembler extends RepresentationModelAssemblerSupport<V
                 .registration(vehicle.getRegistration())
                 .vehicleParametersId(vehicleParametersId)
                 .VehicleStatusId(vehicleStatusId)
+                .photoURL(vehicle.getPhotoURL())
                 .build();
     }
 
@@ -61,6 +62,7 @@ public class VehicleModelAssembler extends RepresentationModelAssemblerSupport<V
     public VehicleModel toModel(Vehicle entity) {
         VehicleModel vehicleModel = VehicleModelAssembler.toVehicleModel(entity);
         vehicleModel.add(linkTo(methodOn(VehicleController.class).getVehicleById(entity.getId())).withSelfRel());
+        vehicleModel.add(linkTo(methodOn(VehicleController.class).getAllVehicles(null, null)).withRel("all"));
         return vehicleModel;
     }
 }

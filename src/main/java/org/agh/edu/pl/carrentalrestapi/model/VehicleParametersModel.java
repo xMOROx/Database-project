@@ -32,6 +32,5 @@ public class VehicleParametersModel extends RepresentationModel<VehicleParameter
     private String color;
     private Boolean metalic;
     private String description;
-    private String photoURL;
 
 }
