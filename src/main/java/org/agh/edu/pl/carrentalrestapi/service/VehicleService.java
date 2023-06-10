@@ -31,6 +31,7 @@ public interface VehicleService {
     Page<String> getBrands(Pageable pageable);
 
     Page<String> getModelsForBrand(String brand, Pageable pageable);
+    Page<String> getModels(Pageable pageable);
 
     Page<String> getBodyTypes(Pageable pageable);
 
