@@ -27,7 +27,7 @@ import java.net.URI;
 import java.util.stream.Stream;
 
 @RestController
-@RequestMapping(path = API_PATH.root + API_PATH.vehicle)
+@RequestMapping(path = API_PATH.root + API_PATH.vehicles)
 public class VehicleController {
     private final VehicleService vehicleService;
     private final VehicleParametersService vehicleParametersService;
@@ -67,6 +67,7 @@ public class VehicleController {
 
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
+
         Page<Vehicle> vehicles = vehicleService.getAll(pageable);
 
         return new ResponseEntity<>(VehicleModelAssembler.toVehicleModel(vehicles), HttpStatus.OK);

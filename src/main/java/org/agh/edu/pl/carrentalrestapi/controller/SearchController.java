@@ -9,6 +9,7 @@ import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
 import org.agh.edu.pl.carrentalrestapi.utils.SearchRequest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -17,16 +18,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(path = API_PATH.root + API_PATH.vehicleSearch)
-public class VehicleSearchController {
+@RequestMapping(path = API_PATH.root + API_PATH.search)
+public class SearchController {
     private final VehicleService vehicleService;
 
-    public VehicleSearchController(VehicleService vehicleService
-                                   ) {
+    public SearchController(VehicleService vehicleService
+    ) {
         this.vehicleService = vehicleService;
     }
 
-    @PostMapping(path = "")
+    @PostMapping(path = API_PATH.vehicles)
     @ResponseBody
     public ResponseEntity<PagedModel<VehicleModel>>
     searchVehicles(@RequestBody @Valid SearchRequest searchRequest) {
@@ -38,7 +39,7 @@ public class VehicleSearchController {
         );
     }
 
-    @GetMapping(path = "/brands")
+    @GetMapping(path = API_PATH.vehicles + "/brands")
     @ResponseBody
     public ResponseEntity<Page<String>> getBrands(@RequestParam(value = "page", required = false) Integer page,
                                                   @RequestParam(value = "size", required = false) Integer size) {
@@ -54,16 +55,23 @@ public class VehicleSearchController {
         );
     }
 
-    @GetMapping(path = "/models", params = {"brand"})
+    @GetMapping(path = API_PATH.vehicles + "/models", params = {"brand"})
     @ResponseBody
     public ResponseEntity<Page<String>>
-    getModelsForBrand(@RequestParam("brand") String brand, @RequestParam(value = "page", required = false) Integer page,
-                                                          @RequestParam(value = "size", required = false) Integer size) {
+    getModelsForBrand(@RequestParam(value = "brand", required = false) String brand, @RequestParam(value = "page", required = false) Integer page,
+                      @RequestParam(value = "size", required = false) Integer size) {
 
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 
-        Page<String> models = vehicleService.getModelsForBrand(brand, pageable);
+        Page<String> models = brand != null ?
+                vehicleService.getModelsForBrand(brand, pageable) : vehicleService.getModels(pageable);
+
+        var filtered = models.stream()
+                .filter(model -> !model.equals("null"))
+                .toList();
+
+        models = new PageImpl<>(filtered, pageable, filtered.size());
 
         return new ResponseEntity<>(
                 models,
@@ -71,7 +79,7 @@ public class VehicleSearchController {
         );
     }
 
-    @GetMapping(path = "/body-types")
+    @GetMapping(path = API_PATH.vehicles + "/body-types")
     @ResponseBody
     public ResponseEntity<Page<String>> getBodyTypes(@RequestParam(value = "page", required = false) Integer page,
                                                      @RequestParam(value = "size", required = false) Integer size) {
@@ -87,7 +95,7 @@ public class VehicleSearchController {
         );
     }
 
-    @GetMapping(path = "/colors")
+    @GetMapping(path = API_PATH.vehicles + "/colors")
     @ResponseBody
     public ResponseEntity<Page<String>> getColors(@RequestParam(value = "page", required = false) Integer page,
                                                   @RequestParam(value = "size", required = false) Integer size) {

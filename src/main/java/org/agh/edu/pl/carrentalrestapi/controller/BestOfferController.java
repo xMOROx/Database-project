@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = API_PATH.root + API_PATH.bestOffer)
+@RequestMapping(value = API_PATH.root + API_PATH.bestOffers)
 public class BestOfferController {
 
     private final VehicleService vehicleService;

@@ -89,7 +89,7 @@ public class LocationController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(path = "/all")
+    @GetMapping(path = "")
     @ResponseBody
     public ResponseEntity<PagedModel<LocationModel>>
     getAllLocations(@RequestParam(value = "page", required = false) Integer page,
