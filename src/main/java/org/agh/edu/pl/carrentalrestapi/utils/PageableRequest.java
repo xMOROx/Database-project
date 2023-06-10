@@ -34,7 +34,7 @@ public class PageableRequest implements Serializable {
 
         return PageRequest.of(
                 Objects.requireNonNullElse(pageableRequest.getPage(),0),
-                Objects.requireNonNullElse(pageableRequest.getSize(), 100)
+                Objects.requireNonNullElse(pageableRequest.getSize(), 20)
         );
     }
 
