@@ -28,9 +28,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll(){return userRepository.findAll();}
-
-    @Override
     public Page<User> getAll(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
@@ -56,10 +53,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long fullUpdate(User user) throws UserWithEmailExistsException {
+    public Long fullUpdate(Long id, User user) throws UserWithEmailExistsException {
         User toUpdate;
         try {
-            toUpdate = getById(user.getId());
+            toUpdate = getById(id);
         } catch (UserNotFoundException e) {
             return addUser(user);
         }
@@ -68,6 +65,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findUserByEmail(email).isPresent() && !toUpdate.getEmail().equals(email)) {
             throw new UserWithEmailExistsException(email);
         }
+
         toUpdate.setEmail(email);
         toUpdate.setFirstName(user.getFirstName());
         toUpdate.setSurName(user.getSurName());
@@ -80,8 +78,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long partialUpdate(User user) throws UserNotFoundException {
-        User toUpdate = getById(user.getId());
+    public Long partialUpdate(Long id, User user) throws UserNotFoundException, UserWithEmailExistsException {
+        User toUpdate = getById(id);
+
         if (user.getEmail() != null) {
             String email = user.getEmail();
 

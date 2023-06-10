@@ -22,9 +22,9 @@ public interface VehicleService {
 
     void deleteVehicle(Long id);
 
-    Long fullUpdate(Vehicle vehicle);
+    Long fullUpdate(Long id, Vehicle vehicle);
 
-    Long partialUpdate(Vehicle vehicle);
+    Long partialUpdate(Long id, Vehicle vehicle);
 
     Page<Vehicle> search(SearchRequest searchRequest);
 
@@ -38,7 +38,7 @@ public interface VehicleService {
 
     void addEquipment(Long id, Long equipmentId);
 
-    void deleteEquipment(Long id, Long equipmentId);
+    void removeEquipment(Long id, Long equipmentId);
 
     void addVehicleParameters(Long vehicleId, Long parametersId);
 

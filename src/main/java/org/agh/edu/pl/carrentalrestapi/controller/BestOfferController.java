@@ -23,8 +23,10 @@ public class BestOfferController {
     }
 
     @GetMapping(path = "")
-    public @ResponseBody ResponseEntity<PagedModel<VehicleModel>> getBestOffer(@RequestParam(value = "page", required = false) Integer page,
-                                                                               @RequestParam(value = "size", required = false) Integer size) {
+    public @ResponseBody ResponseEntity<PagedModel<VehicleModel>>
+    getBestOffer(@RequestParam(value = "page", required = false) Integer page,
+                 @RequestParam(value = "size", required = false) Integer size) {
+
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
 

@@ -23,7 +23,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ErrorDetails> handleAllException(Exception ex, WebRequest request) {
         Map<String, String> messages = new HashMap<>();
-        messages.put("message", ex.getMessage());
+        messages.put("message", "Internal server error");
 
         ErrorDetails errorDetails = new ErrorDetails(
                 messages,
@@ -45,6 +45,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             UserNotFoundException.class,
             LocationNotFoundException.class,
             VehicleParametersNotFoundException.class,
+            BookingNotFoundException.class,
     })
     public final ResponseEntity<ErrorDetails> handleNotFoundException(RuntimeException ex, WebRequest request) {
         Map<String, String> messages = new HashMap<>();

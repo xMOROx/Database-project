@@ -13,8 +13,8 @@ public interface LocationService {
     Long addLocation(Location location) throws LocationWithGivenEmailExistsException, LocationWithGivenPhoneNumberExistsException;
     Location getLocationById(Long id) throws LocationNotFoundException;
     void deleteLocationById(Long id) throws LocationNotFoundException;
-    Long fullUpdateLocation(Long id, Location location) throws LocationNotFoundException;
-    Long partialUpdateLocation(Long id, Location location) throws LocationNotFoundException;
+    Long fullUpdateLocation(Long id, Location location) throws LocationWithGivenEmailExistsException, LocationWithGivenPhoneNumberExistsException;
+    Long partialUpdateLocation(Long id, Location location) throws LocationNotFoundException, LocationWithGivenEmailExistsException, LocationWithGivenPhoneNumberExistsException;
     Page<Location> getAllLocations(Pageable pageable);
     Page<String> getCities(Pageable pageable);
 

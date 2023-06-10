@@ -98,8 +98,10 @@ public class VehicleRepositoryImpl {
             throw new VehicleNotFoundException(vehicleId);
         }
         VehicleParameters vehicleParameters = vehicle.getVehicleParameters();
+
         vehicle.setVehicleParameters(null);
         vehicleParameters.setVehicle(null);
+
         entityManager.persist(vehicle);
         entityManager.persist(vehicleParameters);
     }

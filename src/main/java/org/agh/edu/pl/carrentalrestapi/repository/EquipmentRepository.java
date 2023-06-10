@@ -15,7 +15,6 @@ import java.util.Optional;
 public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
     @Query("SELECT e FROM Equipment e WHERE e.equipmentCode=:equipmentCode")
     Optional<Equipment> findByCode(@Param("equipmentCode") String equipmentCode);
-
     Page<Equipment> findUnExistingDistinctEquipmentsForVehicle(Long id, Pageable pageable);
 
 }

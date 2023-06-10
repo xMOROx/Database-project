@@ -2,6 +2,9 @@ package org.agh.edu.pl.carrentalrestapi.repository;
 
 import jakarta.transaction.Transactional;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
+import org.agh.edu.pl.carrentalrestapi.exception.types.EquipmentNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleParametersNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,9 +41,9 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
     @Transactional
     @Query(value = "SELECT DISTINCT vp.color FROM Vehicle v JOIN VehicleParameters vp on vp.id = v.id", countQuery = "SELECT COUNT(DISTINCT vp.color) FROM Vehicle v JOIN VehicleParameters vp on vp.id = v.id")
     Page<String> findColors(Pageable pageable);
-    void addEquipmentToVehicle(Long id, Long equipmentId);
-    void removeEquipmentFromVehicle(Long id, Long equipmentId);
+    void addEquipmentToVehicle(Long id, Long equipmentId) throws VehicleNotFoundException, EquipmentNotFoundException;
+    void removeEquipmentFromVehicle(Long id, Long equipmentId) throws VehicleNotFoundException, EquipmentNotFoundException;
     Optional<Vehicle> findByRegistration(String plateNumber);
-    void addVehicleParameters(Long vehicleId, Long parametersId);
-    void removeVehicleParameters(Long vehicleId);
+    void addVehicleParameters(Long vehicleId, Long parametersId) throws VehicleNotFoundException, VehicleParametersNotFoundException;
+    void removeVehicleParameters(Long vehicleId) throws VehicleNotFoundException;
 }

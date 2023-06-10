@@ -59,8 +59,7 @@ public class VehicleParametersServiceImpl implements VehicleParametersService {
         try {
             toUpdate = this.vehicleParametersRepository.findById(id).orElseThrow(() -> new VehicleParametersNotFoundException(id));
         } catch (VehicleParametersNotFoundException exception) {
-            toUpdate = this.vehicleParametersRepository.save(vehicleParameters);
-            return toUpdate.getId();
+            return this.addVehicleParameters(vehicleParameters);
         }
 
         toUpdate.setBodyType(vehicleParameters.getBodyType());
