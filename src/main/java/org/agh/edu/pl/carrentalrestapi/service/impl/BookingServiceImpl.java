@@ -74,25 +74,25 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Page<Booking> getBookingsRented(Pageable pageable) {
         return bookingRepository
-                .findByBookingStateCode(BookingStateCodeConstants.REN, pageable);
+                .findByBookingStateCode(BookingStateCodeConstants.REN.toString(), pageable);
     }
 
     @Override
     public Page<Booking> getBookingsReserved(Pageable pageable) {
         return bookingRepository
-                .findByBookingStateCode(BookingStateCodeConstants.RES, pageable);
+                .findByBookingStateCode(BookingStateCodeConstants.RES.toString(), pageable);
     }
 
     @Override
     public Page<Booking> getBookingsCanceled(Pageable pageable) {
         return bookingRepository
-                .findByBookingStateCode(BookingStateCodeConstants.CAN, pageable);
+                .findByBookingStateCode(BookingStateCodeConstants.CAN.toString(), pageable);
     }
 
     @Override
     public Page<Booking> getBookingsReturned(Pageable pageable) {
         return bookingRepository
-                .findByBookingStateCode(BookingStateCodeConstants.RET, pageable);
+                .findByBookingStateCode(BookingStateCodeConstants.RET.toString(), pageable);
     }
 
     @Override
@@ -112,14 +112,14 @@ public class BookingServiceImpl implements BookingService {
     public Page<Booking> getUserBookingsReserved(Long userId, Pageable pageable) throws UserNotFoundException {
         checkIfUserExists(userId);
         return bookingRepository
-                .findByUserIdAndBookingStateCode(userId, BookingStateCodeConstants.RES, pageable);
+                .findByUserIdAndBookingStateCode(userId, BookingStateCodeConstants.RES.toString(), pageable);
     }
 
     @Override
     public Page<Booking> getUserBookingsRented(Long userId, Pageable pageable) throws UserNotFoundException {
         checkIfUserExists(userId);
         return bookingRepository
-                .findByUserIdAndBookingStateCode(userId, BookingStateCodeConstants.REN, pageable);
+                .findByUserIdAndBookingStateCode(userId, BookingStateCodeConstants.REN.toString(), pageable);
     }
 
     @Override
