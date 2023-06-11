@@ -117,4 +117,18 @@ public class LocationController {
         );
     }
 
+    @GetMapping(path = "/cities/{city}")
+    @ResponseBody
+    public ResponseEntity<PagedModel<LocationModel>>
+    getLocationsByCity(@PathVariable String city,
+           @RequestParam(value = "page", required = false) Integer page,
+           @RequestParam(value = "size", required = false) Integer size) {
+
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
+        Pageable pageable = PageableRequest.toPageable(pageableRequest);
+
+        return ResponseEntity.ok(
+                LocationModelAssembler.toLocationModel(locationService.getLocationsByCity(city, pageable))
+        );
+    }
 }

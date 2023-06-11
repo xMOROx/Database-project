@@ -1,6 +1,9 @@
 package org.agh.edu.pl.carrentalrestapi.service;
 
+import org.agh.edu.pl.carrentalrestapi.entity.Location;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
+import org.agh.edu.pl.carrentalrestapi.exception.types.LocationNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.utils.SearchRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,4 +47,8 @@ public interface VehicleService {
     void addVehicleParameters(Long vehicleId, Long parametersId);
 
     void removeVehicleParameters(Long vehicleId);
+
+    void addLocation(Long vehicleId, Long locationId) throws LocationNotFoundException, VehicleNotFoundException;
+
+    void removeLocation(Long vehicleId) throws VehicleNotFoundException;
 }

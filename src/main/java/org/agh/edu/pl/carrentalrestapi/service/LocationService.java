@@ -4,6 +4,7 @@ import org.agh.edu.pl.carrentalrestapi.entity.Location;
 import org.agh.edu.pl.carrentalrestapi.exception.types.LocationNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.LocationWithGivenEmailExistsException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.LocationWithGivenPhoneNumberExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,5 +18,6 @@ public interface LocationService {
     Long partialUpdateLocation(Long id, Location location) throws LocationNotFoundException, LocationWithGivenEmailExistsException, LocationWithGivenPhoneNumberExistsException;
     Page<Location> getAllLocations(Pageable pageable);
     Page<String> getCities(Pageable pageable);
-
+    Location getLocationByVehicleId(Long vehicleId) throws LocationNotFoundException, VehicleNotFoundException;
+    Page<Location> getLocationsByCity(String city, Pageable pageable);
 }

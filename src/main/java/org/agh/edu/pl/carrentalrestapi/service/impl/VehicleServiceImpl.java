@@ -2,10 +2,7 @@ package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
-import org.agh.edu.pl.carrentalrestapi.exception.types.EquipmentNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleParametersNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleWithRegistrationExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.*;
 import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
 import org.agh.edu.pl.carrentalrestapi.utils.SearchRequest;
@@ -164,7 +161,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public void addEquipment(Long id, Long equipmentId) throws VehicleNotFoundException, EquipmentNotFoundException {
+    public void addEquipment(Long id, Long equipmentId) throws VehicleNotFoundException, EquipmentNotFoundException, ParameterNotNullException {
         vehicleRepository.addEquipmentToVehicle(id, equipmentId);
     }
 
@@ -175,12 +172,22 @@ public class VehicleServiceImpl implements VehicleService {
 
 
     @Override
-    public void addVehicleParameters(Long vehicleId, Long parametersId) throws VehicleNotFoundException, VehicleParametersNotFoundException {
+    public void addVehicleParameters(Long vehicleId, Long parametersId) throws VehicleNotFoundException, VehicleParametersNotFoundException, ParameterNotNullException {
         vehicleRepository.addVehicleParameters(vehicleId, parametersId);
     }
 
     @Override
     public void removeVehicleParameters(Long vehicleId) throws VehicleNotFoundException {
         vehicleRepository.removeVehicleParameters(vehicleId);
+    }
+
+    @Override
+    public void addLocation(Long vehicleId, Long locationId) throws LocationNotFoundException, VehicleNotFoundException, ParameterNotNullException {
+        vehicleRepository.addLocation(vehicleId, locationId);
+    }
+
+    @Override
+    public void removeLocation(Long vehicleId) throws VehicleNotFoundException {
+        vehicleRepository.removeLocation(vehicleId);
     }
 }

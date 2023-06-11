@@ -4,7 +4,9 @@ import org.agh.edu.pl.carrentalrestapi.entity.Location;
 import org.agh.edu.pl.carrentalrestapi.exception.types.LocationNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.LocationWithGivenEmailExistsException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.LocationWithGivenPhoneNumberExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.repository.LocationRepository;
+import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.LocationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,9 +19,12 @@ import java.util.List;
 public class LocationServiceImpl implements LocationService {
 
     private final LocationRepository locationRepository;
+    private final VehicleRepository vehicleRepository;
 
-    public LocationServiceImpl(LocationRepository locationRepository) {
+    public LocationServiceImpl(LocationRepository locationRepository,
+                               VehicleRepository vehicleRepository) {
         this.locationRepository = locationRepository;
+        this.vehicleRepository = vehicleRepository;
     }
 
     @Override
@@ -130,5 +135,18 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Page<String> getCities(Pageable pageable) {
         return locationRepository.findAllCities(pageable);
+    }
+
+    @Override
+    public Location getLocationByVehicleId(Long vehicleId) throws LocationNotFoundException, VehicleNotFoundException {
+        this.vehicleRepository.findById(vehicleId).orElseThrow(() -> new VehicleNotFoundException(vehicleId));
+        return this.locationRepository
+                .findLocationByVehicleId(vehicleId)
+                .orElseThrow(() -> new LocationNotFoundException("Vehicle with id: " + vehicleId + " has no location"));
+    }
+
+    @Override
+    public Page<Location> getLocationsByCity(String city, Pageable pageable)  {
+        return locationRepository.findLocationsByCity(city, pageable);
     }
 }

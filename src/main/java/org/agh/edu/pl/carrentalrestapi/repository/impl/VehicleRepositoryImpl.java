@@ -3,11 +3,10 @@ package org.agh.edu.pl.carrentalrestapi.repository.impl;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.agh.edu.pl.carrentalrestapi.entity.Equipment;
+import org.agh.edu.pl.carrentalrestapi.entity.Location;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
-import org.agh.edu.pl.carrentalrestapi.exception.types.EquipmentNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleParametersNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.*;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,11 +32,15 @@ public class VehicleRepositoryImpl {
     }
 
     @Transactional
-    public void addEquipmentToVehicle(Long id, Long equipmentId) throws VehicleNotFoundException, EquipmentNotFoundException {
+    public void addEquipmentToVehicle(Long id, Long equipmentId) throws VehicleNotFoundException, EquipmentNotFoundException, ParameterNotNullException {
         Vehicle vehicle = entityManager.find(Vehicle.class, id);
 
         if (vehicle == null) {
             throw new VehicleNotFoundException(id);
+        }
+
+        if (vehicle.getEquipment() == null) {
+            throw new ParameterNotNullException("Vehicle equipment");
         }
 
         Equipment equipment = entityManager.find(Equipment.class, equipmentId);
@@ -70,11 +73,15 @@ public class VehicleRepositoryImpl {
         entityManager.persist(vehicle);
     }
     @Transactional
-    public void addVehicleParameters(Long vehicleId, Long parametersId) throws VehicleNotFoundException, VehicleParametersNotFoundException {
+    public void addVehicleParameters(Long vehicleId, Long parametersId) throws VehicleNotFoundException, VehicleParametersNotFoundException, ParameterNotNullException {
         Vehicle vehicle = entityManager.find(Vehicle.class, vehicleId);
 
         if (vehicle == null) {
             throw new VehicleNotFoundException(vehicleId);
+        }
+
+        if (vehicle.getVehicleParameters() != null) {
+            throw new ParameterNotNullException("Vehicle parameters");
         }
 
         VehicleParameters vehicleParameters = entityManager.find(VehicleParameters.class, parametersId);
@@ -105,5 +112,49 @@ public class VehicleRepositoryImpl {
         entityManager.persist(vehicle);
         entityManager.persist(vehicleParameters);
     }
+
+    @Transactional
+    public void addLocation(Long vehicleId, Long locationId) throws VehicleNotFoundException, LocationNotFoundException, ParameterNotNullException {
+        Vehicle vehicle = entityManager.find(Vehicle.class, vehicleId);
+
+        if (vehicle == null) {
+            throw new VehicleNotFoundException(vehicleId);
+        }
+
+        if (vehicle.getLocation() != null) {
+            throw new ParameterNotNullException("location");
+        }
+
+        Location location = entityManager.find(Location.class, locationId);
+
+        if (location == null) {
+            throw new LocationNotFoundException(locationId);
+        }
+
+        vehicle.setLocation(location);
+        location.getVehicles().add(vehicle);
+
+        entityManager.persist(vehicle);
+        entityManager.persist(location);
+    }
+
+    @Transactional
+    public void removeLocation(Long vehicleId) throws VehicleNotFoundException {
+        Vehicle vehicle = entityManager.find(Vehicle.class, vehicleId);
+
+        if (vehicle == null) {
+            throw new VehicleNotFoundException(vehicleId);
+        }
+
+        Location location = vehicle.getLocation();
+
+        vehicle.setLocation(null);
+        location.getVehicles().remove(vehicle);
+
+        entityManager.persist(vehicle);
+        entityManager.persist(location);
+    }
+
+
 }
 
