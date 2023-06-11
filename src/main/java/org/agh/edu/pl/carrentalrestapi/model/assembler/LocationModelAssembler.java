@@ -29,6 +29,7 @@ public class LocationModelAssembler extends RepresentationModelAssemblerSupport<
                 .openingHours(location.getOpeningHours())
                 .closingHours(location.getClosingHours())
                 .postalCode(location.getPostalCode())
+                .photoURL(location.getPhotoURL())
                 .build();
     }
     public static PagedModel<LocationModel> toLocationModel(Page<Location> location)

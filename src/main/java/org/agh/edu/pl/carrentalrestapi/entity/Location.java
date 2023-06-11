@@ -88,6 +88,10 @@ public class Location  implements Serializable {
     @Size(min = 1, max = 15, message = "Postal code must be between 1 and 15 characters long")
     private String postalCode;
 
+    @JsonProperty()
+    @Column(name = "PhotoURL", columnDefinition = "VARCHAR(255) NULL")
+    private String photoURL;
+
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     private List<Booking> bookings;
@@ -210,6 +214,14 @@ public class Location  implements Serializable {
 
     public void setVehicles(List<Vehicle> vehicles) {
         this.vehicles = vehicles;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
     }
 
     @Override

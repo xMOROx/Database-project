@@ -72,6 +72,7 @@ public class LocationServiceImpl implements LocationService {
         toUpdate.setPostalCode(location.getPostalCode());
         toUpdate.setOpeningHours(location.getOpeningHours());
         toUpdate.setClosingHours(location.getClosingHours());
+        toUpdate.setPhotoURL(location.getPhotoURL());
 
         Location saved = locationRepository.save(toUpdate);
 
@@ -113,6 +114,9 @@ public class LocationServiceImpl implements LocationService {
 
         if (location.getClosingHours() != null)
             toUpdate.setClosingHours(location.getClosingHours());
+
+        if (location.getPhotoURL() != null)
+            toUpdate.setPhotoURL(location.getPhotoURL());
 
         Location saved = locationRepository.save(toUpdate);
 
