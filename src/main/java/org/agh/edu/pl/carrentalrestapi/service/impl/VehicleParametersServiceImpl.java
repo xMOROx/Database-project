@@ -24,9 +24,12 @@ public class VehicleParametersServiceImpl implements VehicleParametersService {
     }
 
     @Override
-    public VehicleParameters getVehicleParametersByVehicleId(Long vehicleId) throws VehicleNotFoundException {
+    public VehicleParameters getVehicleParametersByVehicleId(Long vehicleId) throws VehicleNotFoundException, VehicleParametersNotFoundException {
         this.vehicleRepository.findById(vehicleId).orElseThrow(() -> new VehicleNotFoundException(vehicleId));
-        return this.vehicleParametersRepository.findVehicleParametersByVehicleId(vehicleId);
+
+        return this.vehicleParametersRepository
+                .findVehicleParametersByVehicleId(vehicleId)
+                .orElseThrow(() -> new VehicleParametersNotFoundException("Vehicle with id: " + vehicleId + " has no parameters"));
     }
 
     @Override

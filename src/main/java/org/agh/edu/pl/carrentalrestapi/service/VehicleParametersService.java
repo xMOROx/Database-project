@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface VehicleParametersService {
-    VehicleParameters getVehicleParametersByVehicleId(Long vehicleId) throws VehicleNotFoundException;
+    VehicleParameters getVehicleParametersByVehicleId(Long vehicleId) throws VehicleNotFoundException, VehicleParametersNotFoundException;
     VehicleParameters getVehicleParametersById(Long id) throws VehicleParametersNotFoundException;
     Long addVehicleParameters(VehicleParameters vehicleParameters);
     Page<VehicleParameters> getVehicleParameters(Pageable pageable);
