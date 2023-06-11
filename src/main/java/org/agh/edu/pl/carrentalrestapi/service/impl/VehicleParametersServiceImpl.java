@@ -24,9 +24,12 @@ public class VehicleParametersServiceImpl implements VehicleParametersService {
     }
 
     @Override
-    public VehicleParameters getVehicleParametersByVehicleId(Long vehicleId) throws VehicleNotFoundException {
+    public VehicleParameters getVehicleParametersByVehicleId(Long vehicleId) throws VehicleNotFoundException, VehicleParametersNotFoundException {
         this.vehicleRepository.findById(vehicleId).orElseThrow(() -> new VehicleNotFoundException(vehicleId));
-        return this.vehicleParametersRepository.findVehicleParametersByVehicleId(vehicleId);
+
+        return this.vehicleParametersRepository
+                .findVehicleParametersByVehicleId(vehicleId)
+                .orElseThrow(() -> new VehicleParametersNotFoundException("Vehicle with id: " + vehicleId + " has no parameters"));
     }
 
     @Override
@@ -73,7 +76,6 @@ public class VehicleParametersServiceImpl implements VehicleParametersService {
         toUpdate.setColor(vehicleParameters.getColor());
         toUpdate.setMetalic(vehicleParameters.getMetalic());
         toUpdate.setDescription(vehicleParameters.getDescription());
-        toUpdate.setPhotoURL(vehicleParameters.getPhotoURL());
 
         this.vehicleParametersRepository.save(toUpdate);
 
@@ -116,9 +118,6 @@ public class VehicleParametersServiceImpl implements VehicleParametersService {
 
         if (vehicleParameters.getDescription() != null)
             toUpdate.setDescription(vehicleParameters.getDescription());
-
-        if (vehicleParameters.getPhotoURL() != null)
-            toUpdate.setPhotoURL(vehicleParameters.getPhotoURL());
 
         VehicleParameters saved =  this.vehicleParametersRepository.save(toUpdate);
         return saved.getId();

@@ -25,7 +25,7 @@ public class EquipmentController {
         this.equipmentService = equipmentService;
     }
 
-    @GetMapping(path = "/all")
+    @GetMapping(path = "")
     @ResponseBody
     public ResponseEntity<PagedModel<EquipmentModel>>
     getAllEquipments(@RequestParam(value = "page", required = false) Integer page,

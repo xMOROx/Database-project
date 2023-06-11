@@ -9,4 +9,7 @@ public class VehicleParametersNotFoundException extends RuntimeException{
     public VehicleParametersNotFoundException(Long id) {
         super("Could not find vehicle parameters with id: " + id);
     }
+    public VehicleParametersNotFoundException(String message) {
+        super(message);
+    }
 }

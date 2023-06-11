@@ -21,6 +21,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
@@ -45,6 +46,7 @@ public class Vehicle implements Serializable {
     @Column(name = "Registration", columnDefinition = "VARCHAR(30) NOT NULL UNIQUE")
     @NotBlank(message = "Registration is required")
     @Size(min = 1, max = 30, message = "Registration must be between 1 and 30 characters long")
+    @Pattern(regexp = "^[A-Z][A-Z0-9]+$", message = "Registration must contain only uppercase letters and digits. For example: 'KR1234'")
     private String registration;
 
     @JsonProperty
@@ -56,6 +58,10 @@ public class Vehicle implements Serializable {
     @Column(name = "Model", columnDefinition = "VARCHAR(255) NULL")
     @Size(min = 1, max = 255, message = "Model must be between 1 and 255 characters long")
     private String model;
+
+    @JsonProperty()
+    @Column(name = "PhotoURL", columnDefinition = "VARCHAR(255) NULL")
+    private String photoURL;
 
     @JsonProperty
     @Column(name = "Daily_Fee", columnDefinition = "DECIMAL(15,2) NOT NULL")
@@ -199,6 +205,14 @@ public class Vehicle implements Serializable {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
     }
 
     public VehicleParameters getVehicleParameters() {

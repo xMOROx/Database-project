@@ -51,6 +51,7 @@ public class EquipmentModelAssembler extends RepresentationModelAssemblerSupport
     public EquipmentModel toModel(Equipment entity) {
         EquipmentModel equipmentModel = EquipmentModelAssembler.toEquipmentModel(entity);
         equipmentModel.add(linkTo(methodOn(EquipmentController.class).getEquipmentById(entity.getId())).withSelfRel());
+        equipmentModel.add(linkTo(methodOn(EquipmentController.class).getAllEquipments(null, null)).withRel("all"));
         return equipmentModel;
     }
 }

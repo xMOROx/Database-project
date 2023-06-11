@@ -24,7 +24,6 @@ public class UserModel extends RepresentationModel<UserModel> {
     private String surName;
     private String email;
     private String login;
-//    private String password; //TODO: remove password from UserModel because it will be used in controllers and it is not safe
     private String phoneNumber;
     private String pesel;
 }

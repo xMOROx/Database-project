@@ -7,10 +7,13 @@ import org.agh.edu.pl.carrentalrestapi.entity.UserRole;
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserWithEmailExistsException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserRoleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.model.BookingModel;
 import org.agh.edu.pl.carrentalrestapi.model.UserModel;
 import org.agh.edu.pl.carrentalrestapi.model.UserRoleModel;
+import org.agh.edu.pl.carrentalrestapi.model.assembler.BookingModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.UserModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.UserRoleModelAssembler;
+import org.agh.edu.pl.carrentalrestapi.service.BookingService;
 import org.agh.edu.pl.carrentalrestapi.service.UserRoleService;
 import org.agh.edu.pl.carrentalrestapi.service.UserService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
@@ -41,13 +44,21 @@ import java.util.stream.Stream;
 public class UserController {
 
     private final UserService userService;
-    private final UserModelAssembler userModelAssembler;
     private final UserRoleService userRoleService;
+    private final BookingService bookingService;
+    private final UserModelAssembler userModelAssembler;
 
-    public UserController(UserService userService, UserModelAssembler userModelAssembler, UserRoleService userRoleService) {
+
+    public UserController(UserService userService,
+                          UserRoleService userRoleService,
+                          BookingService bookingService,
+                          UserModelAssembler userModelAssembler
+                          ) {
         this.userService = userService;
-        this.userModelAssembler = userModelAssembler;
         this.userRoleService = userRoleService;
+        this.bookingService = bookingService;
+        this.userModelAssembler = userModelAssembler;
+
     }
 
     @GetMapping(path = "/{id}")
@@ -187,5 +198,51 @@ public class UserController {
         userService.deleteRoleFromUser(user, role);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/{userId}"+ API_PATH.bookings)
+    @ResponseBody
+    public ResponseEntity<PagedModel<BookingModel>>
+    getBookingsByUserId(@PathVariable Long userId,
+                        @RequestParam(value = "page", required = false) Integer page,
+                        @RequestParam(value = "size", required = false) Integer size)
+            throws UserNotFoundException {
+
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
+        Pageable pageable = PageableRequest.toPageable(pageableRequest);
+
+        return ResponseEntity.ok(
+                BookingModelAssembler.toBookingModel(bookingService.getUserBookings(userId, pageable)));
+    }
+
+    @GetMapping(value = "/{userId}"+ API_PATH.bookings + "/reserved")
+    @ResponseBody
+    public ResponseEntity<PagedModel<BookingModel>>
+    getReservedBookingsByUserId(@PathVariable Long userId,
+                                @RequestParam(value = "page", required = false) Integer page,
+                                @RequestParam(value = "size", required = false) Integer size)
+            throws UserNotFoundException {
+
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
+        Pageable pageable = PageableRequest.toPageable(pageableRequest);
+
+        return ResponseEntity.ok(
+                BookingModelAssembler.toBookingModel(bookingService.getUserBookingsReserved(userId, pageable)));
+    }
+
+
+    @GetMapping(value = "/{userId}"+ API_PATH.bookings + "/rented")
+    @ResponseBody
+    public ResponseEntity<PagedModel<BookingModel>>
+    getRentedBookingsByUserId(@PathVariable Long userId,
+                              @RequestParam(value = "page", required = false) Integer page,
+                              @RequestParam(value = "size", required = false) Integer size)
+            throws UserNotFoundException {
+
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
+        Pageable pageable = PageableRequest.toPageable(pageableRequest);
+
+        return ResponseEntity.ok(
+                BookingModelAssembler.toBookingModel(bookingService.getUserBookingsRented(userId, pageable)));
     }
 }

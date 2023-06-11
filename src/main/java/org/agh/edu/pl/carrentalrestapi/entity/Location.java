@@ -20,6 +20,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
@@ -28,9 +29,9 @@ import java.util.List;
 @Entity
 @Table(name = "Locations")
 @SecondaryTables({
-        @SecondaryTable(name = "Countries", pkJoinColumns = @PrimaryKeyJoinColumn(name = "ID"), uniqueConstraints = @UniqueConstraint(columnNames = {"Country"})),
-        @SecondaryTable(name = "Cities", pkJoinColumns = @PrimaryKeyJoinColumn(name = "ID"), uniqueConstraints = @UniqueConstraint(columnNames = {"City"})),
-        @SecondaryTable(name = "Addresses", pkJoinColumns = @PrimaryKeyJoinColumn(name = "ID"), uniqueConstraints = @UniqueConstraint(columnNames = {"Address"}))}
+        @SecondaryTable(name = "Countries", pkJoinColumns = @PrimaryKeyJoinColumn(name = "ID")),
+        @SecondaryTable(name = "Cities", pkJoinColumns = @PrimaryKeyJoinColumn(name = "ID")),
+        @SecondaryTable(name = "Addresses", pkJoinColumns = @PrimaryKeyJoinColumn(name = "ID"))}
 )
 @JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -85,8 +86,12 @@ public class Location  implements Serializable {
     @JsonProperty
     @Column(name = "postal_code", columnDefinition = "varchar(15) not null", table = "Addresses")
     @NotBlank(message = "Postal code is required")
-    @Size(min = 1, max = 15, message = "Postal code must be between 1 and 15 characters long")
+    @Pattern(regexp = "^[0-9]{2}-[0-9]{3}$", message = "Postal code should be valid. For example: 00-000")
     private String postalCode;
+
+    @JsonProperty()
+    @Column(name = "PhotoURL", columnDefinition = "VARCHAR(255) NULL")
+    private String photoURL;
 
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
@@ -210,6 +215,14 @@ public class Location  implements Serializable {
 
     public void setVehicles(List<Vehicle> vehicles) {
         this.vehicles = vehicles;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
     }
 
     @Override

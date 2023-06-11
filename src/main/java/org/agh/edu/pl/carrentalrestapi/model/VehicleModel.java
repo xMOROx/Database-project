@@ -29,4 +29,5 @@ public class VehicleModel extends RepresentationModel<VehicleModel> {
     private String model;
     private BigDecimal dailyFee;
     private Boolean bestOffer;
+    private String photoURL;
 }

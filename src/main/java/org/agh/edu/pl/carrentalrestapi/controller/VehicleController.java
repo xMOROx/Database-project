@@ -1,16 +1,17 @@
 package org.agh.edu.pl.carrentalrestapi.controller;
 
 import jakarta.validation.Valid;
+import org.agh.edu.pl.carrentalrestapi.entity.Location;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
-import org.agh.edu.pl.carrentalrestapi.exception.types.EquipmentNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleParametersNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleWithRegistrationExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.*;
+import org.agh.edu.pl.carrentalrestapi.model.LocationModel;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleParametersModel;
+import org.agh.edu.pl.carrentalrestapi.model.assembler.LocationModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleParametersModelAssembler;
+import org.agh.edu.pl.carrentalrestapi.service.LocationService;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleParametersService;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
@@ -27,21 +28,27 @@ import java.net.URI;
 import java.util.stream.Stream;
 
 @RestController
-@RequestMapping(path = API_PATH.root + API_PATH.vehicle)
+@RequestMapping(path = API_PATH.root + API_PATH.vehicles)
 public class VehicleController {
     private final VehicleService vehicleService;
     private final VehicleParametersService vehicleParametersService;
+    private final LocationService locationService;
     private final VehicleModelAssembler vehicleModelAssembler;
     private final VehicleParametersModelAssembler vehicleParametersModelAssembler;
+    private final LocationModelAssembler locationModelAssembler;
 
     public VehicleController(VehicleService vehicleService,
                              VehicleParametersService vehicleParametersService,
+                             LocationService locationService,
                              VehicleModelAssembler vehicleModelAssembler,
+                             LocationModelAssembler locationModelAssembler,
                              VehicleParametersModelAssembler vehicleParametersModelAssembler) {
 
         this.vehicleService = vehicleService;
         this.vehicleParametersService = vehicleParametersService;
+        this.locationService = locationService;
         this.vehicleModelAssembler = vehicleModelAssembler;
+        this.locationModelAssembler = locationModelAssembler;
         this.vehicleParametersModelAssembler = vehicleParametersModelAssembler;
     }
 
@@ -67,6 +74,7 @@ public class VehicleController {
 
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
+
         Page<Vehicle> vehicles = vehicleService.getAll(pageable);
 
         return new ResponseEntity<>(VehicleModelAssembler.toVehicleModel(vehicles), HttpStatus.OK);
@@ -104,7 +112,7 @@ public class VehicleController {
     public ResponseEntity<Long> updateVehicle(@PathVariable("id") Long id, @Valid @RequestBody Vehicle vehicle) {
         Long savedId = vehicleService.fullUpdate(id, vehicle);
 
-        if(savedId.equals(id)) {
+        if (savedId.equals(id)) {
             return ResponseEntity
                     .ok()
                     .body(savedId);
@@ -131,10 +139,34 @@ public class VehicleController {
                 .body(savedId);
     }
 
+    @PostMapping(path = "/{id}/equipment")
+    @ResponseBody
+    public ResponseEntity<Long> addEquipment(@PathVariable("id") Long id, @RequestBody Long equipmentId)
+            throws VehicleNotFoundException, EquipmentNotFoundException {
+
+        vehicleService.addEquipment(id, equipmentId);
+
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    @DeleteMapping(path = "/{id}/equipment")
+    @ResponseBody
+    public ResponseEntity<Void> removeEquipment(@PathVariable("id") Long id, @RequestBody Long equipmentId)
+            throws VehicleNotFoundException, EquipmentNotFoundException {
+
+        vehicleService.removeEquipment(id, equipmentId);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
     @GetMapping(path = "/{id}/parameters")
     @ResponseBody
     public ResponseEntity<VehicleParametersModel> getVehicleParameters(@PathVariable("id") Long id)
-            throws VehicleNotFoundException {
+            throws VehicleNotFoundException, VehicleParametersNotFoundException {
 
         VehicleParameters vehicleParameters =
                 vehicleParametersService.getVehicleParametersByVehicleId(id);
@@ -144,35 +176,6 @@ public class VehicleController {
                 .map(ResponseEntity::ok)
                 .findFirst()
                 .get();
-    }
-
-    @PostMapping(path = "/{id}/equipment")
-    @ResponseBody
-    public ResponseEntity<Long> addEquipment(@PathVariable("id") Long id, @RequestBody Long equipmentId)
-    throws VehicleNotFoundException, EquipmentNotFoundException {
-
-        vehicleService.addEquipment(id, equipmentId);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}/equipment")
-                .buildAndExpand(id)
-                .toUri();
-
-        return ResponseEntity
-                .created(location).build();
-    }
-
-    @DeleteMapping(path = "/{id}/equipment")
-    @ResponseBody
-    public ResponseEntity<Void> removeEquipment(@PathVariable("id") Long id, @RequestBody Long equipmentId)
-    throws VehicleNotFoundException, EquipmentNotFoundException {
-
-        vehicleService.removeEquipment(id, equipmentId);
-
-        return ResponseEntity
-                .noContent()
-                .build();
     }
 
     @PostMapping("/{vehicleId}/parameters")
@@ -194,6 +197,45 @@ public class VehicleController {
             throws VehicleNotFoundException {
 
         vehicleService.removeVehicleParameters(vehicleId);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    @GetMapping(path = "/{vehicleId}/location")
+    @ResponseBody
+    public ResponseEntity<LocationModel> getLocations(@PathVariable("vehicleId") Long vehicleId)
+            throws VehicleNotFoundException, LocationNotFoundException {
+
+        Location location = locationService.getLocationByVehicleId(vehicleId);
+
+        return Stream.of(location)
+                .map(locationModelAssembler::toModel)
+                .map(ResponseEntity::ok)
+                .findFirst()
+                .get();
+    }
+
+    @PostMapping("/{vehicleId}/location")
+    @ResponseBody
+    public ResponseEntity<Void> addLocation(@PathVariable("vehicleId") Long vehicleId,
+                                             @RequestBody Long locationId)
+            throws VehicleNotFoundException, LocationNotFoundException {
+
+        vehicleService.addLocation(vehicleId, locationId);
+
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    @DeleteMapping("/{vehicleId}/location")
+    @ResponseBody
+    public ResponseEntity<Void> removeLocation(@PathVariable("vehicleId") Long vehicleId)
+            throws VehicleNotFoundException {
+
+        vehicleService.removeLocation(vehicleId);
 
         return ResponseEntity
                 .noContent()

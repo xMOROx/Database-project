@@ -69,7 +69,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             LocationWithGivenEmailExistsException.class,
             LocationWithGivenPhoneNumberExistsException.class,
             UserRoleWithGivenTypeExistsException.class,
-            VehicleWithRegistrationExistsException.class
+            VehicleWithRegistrationExistsException.class,
+            ParameterNotNullException.class
     })
     public final ResponseEntity<ErrorDetails> handleConflictException(RuntimeException ex, WebRequest request) {
         Map<String, String> messages = new HashMap<>();
@@ -99,4 +100,5 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
+
 }
