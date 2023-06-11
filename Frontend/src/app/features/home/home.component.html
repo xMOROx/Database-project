@@ -1,0 +1,50 @@
+<section class="home-main-content">
+  Welcome
+</section>
+
+<div class="container">
+
+  <section class="cars__container">
+
+    <h2 class="cars__title" title="Go to Cars">
+      <a routerLink="/cars" class="colored-background-before">
+        <mat-icon>garage</mat-icon>
+        Cars
+      </a>
+    </h2>
+
+    <mat-tab-group (selectedTabChange)="tabCarsChange($event)" [selectedIndex]="selectedCarsTab" mat-align-tabs="end">
+
+      <mat-tab *ngFor="let tab of carsTabList" [label]="tab">
+        <swiper [config]="config" style="display: flex; flex-direction: column-reverse;" [autoplay]="true" #CarSwiper>
+          <ng-template swiperSlide *ngFor="let car of carsList | slice:0:15">
+            <app-poster-card [model]="car" [isCar]="true"></app-poster-card>
+          </ng-template>
+        </swiper>
+      </mat-tab>
+
+    </mat-tab-group>
+  </section>
+
+  <section class="locations__container">
+
+    <h2 class="locations__title" title="Go to Locations">
+      <a routerLink="/locations" class="colored-background-before">
+        <mat-icon>location_on</mat-icon>
+        Locations
+      </a>
+    </h2>
+
+    <mat-tab-group (selectedTabChange)="tabLocationsChange($event)" [selectedIndex]="selectedLocation" mat-align-tabs="end">
+
+      <mat-tab *ngFor="let tab of locationsTabList" [label]="tab">
+        <swiper [config]="config" style="display: flex; flex-direction: column-reverse;" [autoplay]="true">
+          <ng-template swiperSlide *ngFor=" let location of locationsList | slice:0:15">
+            <app-poster-card [model]="location" [isCar]="false"></app-poster-card>
+          </ng-template>
+        </swiper>
+      </mat-tab>
+
+    </mat-tab-group>
+  </section>
+</div>

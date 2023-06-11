@@ -26,4 +26,6 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     Optional<Location> findLocationByVehicleId(Long vehicleId);
     @Query("SELECT l FROM Location l WHERE l.city = ?1")
     Page<Location> findLocationsByCity(String city, Pageable pageable);
+    @Query("SELECT COUNT(l) FROM Location l WHERE l.city = ?1")
+    int countAllByCity(String city);
 }

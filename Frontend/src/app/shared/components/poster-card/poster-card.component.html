@@ -1,0 +1,30 @@
+<div class="poster">
+
+  <a [routerLink]="isCar ? '/cars/' + model.id : '/locations/' + model.id"
+    [title]="'Go to ' + model.brand">
+    <img class="poster__image" loading="lazy"
+      [src]="model['photoURL']"  [alt]="model.brand" appImageMissing>
+  </a>
+
+  <div class="poster__content">
+    <a *ngIf="isCar" [routerLink]="'/cars/' + model.id"
+      [title]="model.brand" class="poster__title colored-hover">
+      {{model.brand | titlecase}} {{model.model | lowercase}}
+    </a>
+    <p *ngIf="isCar">
+      {{model.dailyFee | currency:'EUR':'symbol':'1.2-2'}} / day
+    </p>
+    <a *ngIf="!isCar" [routerLink]="'/locations/' + model.id"
+      [title]="model.address" class="poster__title colored-hover">
+      {{model.address | titlecase}} {{model.postalCode | lowercase}}
+    </a>
+    <p *ngIf="model.openingHours && model.closingHours">
+      <span class="poster__subtitle">Opening hours: </span>
+      {{model.openingHours }}
+      <br>
+      <span class="poster__subtitle">Closing hours: </span>
+      {{model.closingHours}}
+    </p>
+  </div>
+
+</div>
