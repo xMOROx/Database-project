@@ -1,0 +1,184 @@
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+<main class="content">
+
+  <section class="content__main" [style]="'background-image: url(' + content?.['photoURL'] + ');'">
+
+    <div class="content__container">
+
+      <div class="content__info container">
+
+        <img src="{{content?.['photoURL']}}" data-src="{{content?.['photoURL']}}" data-loaded="true"
+            [alt]="content?.['brand'] ?? content?.['address']" class="container__image" appImgMissingDirective>
+
+        <div class="content__data">
+          <div *ngIf="user != undefined" class="content__data--reactions">
+            <div *ngIf="rating == undefined || rating == 0" class="rating unrated">
+              <mat-icon (click)="openRatingDialog()">star_outlined</mat-icon>
+            </div>
+            <div *ngIf="rating != undefined && rating > 0" class="rating rated">
+              <mat-icon (click)="openRatingDialog()">star</mat-icon>
+            </div>
+
+          </div>
+
+          <h2 *ngIf="contentType === 'cars'">{{content?.['brand']}}
+            ({{content?.['vehicleParameters']?.['productionYear'] }})
+          </h2>
+          <h3  *ngIf="contentType === 'cars'">{{content?.['model']}}</h3>
+
+          <h2 *ngIf="contentType === 'cars'">Registration</h2>
+          <h3 *ngIf="contentType === 'cars'">{{content?.['registration']}}</h3>
+
+          <h4 *ngIf="contentType === 'cars'">Description</h4>
+          <p *ngIf="contentType === 'cars'">{{content?.['vehicleParameters']?.['description']}}</p>
+
+          <div *ngIf="contentType === 'cars'" class="content__dailyfee">
+            <h4>DailyFee</h4>
+            <p>{{content?.['dailyFee'] | currency:'EUR':'symbol':'1.2-2'}}</p>
+
+          </div>
+
+          <div *ngIf="contentType === 'locations'" class="content__seasons">
+            <div>
+              <h4>Seasons</h4>
+              <p>{{content?.['number_of_seasons']}}</p>
+            </div>
+            <div>
+              <h4>Episodes</h4>
+              <p>{{content?.['number_of_episodes']}}</p>
+            </div>
+          </div>
+
+          <button *ngIf="video" mat-raised-button color="primary" aria-label="Trailer" (click)="openDialog()"
+                  class="play-trailer">
+            <mat-icon>play_arrow</mat-icon>
+            Play Trailer
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="content__data-mobile">
+    <div *ngIf="user != undefined" class="content__data--reactions">
+      <div *ngIf="rating == undefined || rating == 0" class="rating unrated">
+        <mat-icon (click)="openRatingDialog()">star_outlined</mat-icon>
+      </div>
+      <div *ngIf="rating != undefined && rating > 0" class="rating rated">
+        <mat-icon (click)="openRatingDialog()">star</mat-icon>
+      </div>
+    </div>
+
+    <h2 *ngIf="contentType === 'cars'">{{content?.['brand']}}
+      ({{content?.['vehicleParameters']?.['productionYear'] }})
+    </h2>
+    <h3  *ngIf="contentType === 'cars'">{{content?.['model']}}</h3>
+
+    <h2 *ngIf="contentType === 'cars'">Registration</h2>
+    <h3 *ngIf="contentType === 'cars'">{{content?.['registration']}}</h3>
+
+
+    <div *ngIf="contentType === 'cars'" class="content__runtime">
+      <h4 *ngIf="contentType === 'cars'">Description</h4>
+      <p *ngIf="contentType === 'cars'">{{content?.['vehicleParameters']?.['description']}}</p>
+    </div>
+    <div *ngIf="contentType === 'cars'" class="content__dailyfee">
+      <h4>DailyFee</h4>
+      <p>{{content?.['dailyFee'] | currency:'EUR':'symbol':'1.2-2'}}</p>
+    </div>
+
+    <div *ngIf="contentType === 'locations'" class="content__seasons">
+      <div>
+        <h4>Seasons</h4>
+        <p>{{content?.['number_of_seasons']}}</p>
+      </div>
+      <div>
+        <h4>Episodes</h4>
+        <p>{{content?.['number_of_episodes']}}</p>
+      </div>
+    </div>
+
+    <button *ngIf="video" mat-raised-button color="primary" aria-label="Trailer" (click)="openDialog()"
+            class="play-trailer">
+      <mat-icon>play_arrow</mat-icon>
+      Play Trailer
+    </button>
+  </section>
+
+  <section class="content__similar_or_recommended container">
+
+    <h2 *ngIf="contentType === 'cars'">Parameters</h2>
+      <mat-list>
+        <mat-list-item>
+          Body type: {{content?.['vehicleParameters']?.['bodyType']}}
+        </mat-list-item>
+        <mat-list-item>
+          Fuel type: {{content?.['vehicleParameters']?.['fuelType']}}
+        </mat-list-item>
+        <mat-list-item>
+          Power: {{content?.['vehicleParameters']?.['power']}} kW
+        </mat-list-item>
+        <mat-list-item>
+          Gearbox type: {{content?.['vehicleParameters']?.['gearbox']}}
+        </mat-list-item>
+        <mat-list-item>
+          Drive type: {{content?.['vehicleParameters']?.['frontWheelDrive'] ? 'Front wheel drive' : 'Rear wheel drive'}}
+        </mat-list-item>
+        <mat-list-item>
+          Number of seats: {{content?.['vehicleParameters']?.['seatsNumber']}}
+        </mat-list-item>
+        <mat-list-item>
+          Number of doors: {{content?.['vehicleParameters']?.['doorsNumber']}}
+        </mat-list-item>
+        <mat-list-item>
+          {{content?.['vehicleParameters']?.['metalic'] ? "Metallic ": ""}}Color of the car: {{content?.['vehicleParameters']?.['color']}}
+        </mat-list-item>
+      </mat-list>
+
+
+  </section>
+
+  <section class="content__similar_or_recommended container">
+
+    <h2>Recommended {{contentType}}</h2>
+
+    <div class="content__similar_or_recommended--cards" *ngIf="recommendationContentList.length > 0; else noRecommendedMovies">
+      <div *ngFor="let content of recommendationContentList;">
+        <app-poster-card [model]="content" [isCar]="contentType === 'cars'"></app-poster-card>
+      </div>
+    </div>
+
+    <ng-template #noRecommendedMovies>
+      <div class="content__no-similar_or_recommended">
+        <mat-icon [inline]="true">sentiment_dissatisfied</mat-icon>
+        <span>No recommended {{contentType.slice(0, contentType.length - 1)}}</span>
+      </div>
+    </ng-template>
+
+  </section>
+</main>
+
+
+<ng-template #matTrailerDialog>
+  <div cdkDragBoundary=".cdk-overlay-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane"
+       style="background: black;">
+    <div class="dialog-title-container" cdkDragHandle>
+      <a href="javascript:void(0);" (click)="trailerDialog.closeAll()">
+        <mat-icon aria-label="cerrar dialogo cambiar imagen Cabecera">close</mat-icon>
+      </a>
+      <h2 matDialogTitle>Play Trailer</h2>
+    </div>
+
+    <mat-dialog-content class="header-content-dialog">
+
+      <div *ngIf="video" class="video-movie-main">
+        <iframe [src]="video['url']" allowfullscreen></iframe>
+      </div>
+
+    </mat-dialog-content>
+
+  </div>
+</ng-template>
