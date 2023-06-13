@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VehicleModel extends RepresentationModel<VehicleModel> {
     private Long id;
-    private Long vehicleParametersId;
+    private VehicleParametersModel vehicleParameters;
     private Long VehicleStatusId;
     private String registration;
     private String brand;

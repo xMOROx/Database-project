@@ -2,11 +2,13 @@ package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
+import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
 import org.agh.edu.pl.carrentalrestapi.exception.types.*;
 import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
-import org.agh.edu.pl.carrentalrestapi.utils.SearchRequest;
-import org.agh.edu.pl.carrentalrestapi.utils.SearchSpecification;
+import org.agh.edu.pl.carrentalrestapi.utils.search.SearchJoinSpecification;
+import org.agh.edu.pl.carrentalrestapi.utils.search.SearchRequest;
+import org.agh.edu.pl.carrentalrestapi.utils.search.SearchSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -129,10 +131,9 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public Page<Vehicle> search(SearchRequest searchRequest) {
-        SearchSpecification<Vehicle> searchSpecification = new SearchSpecification<>(searchRequest);
-        //TODO: add vehicle parameters to search
-        Pageable pageable = SearchSpecification.getPageable(searchRequest.getPage(), searchRequest.getSize());
 
+        SearchJoinSpecification<Vehicle, VehicleParameters> searchSpecification = new SearchJoinSpecification<>(searchRequest);
+        Pageable pageable = SearchJoinSpecification.getPageable(searchRequest.getPage(), searchRequest.getSize());
         return vehicleRepository.findAll(searchSpecification, pageable);
     }
 

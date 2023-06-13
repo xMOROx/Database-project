@@ -1,4 +1,4 @@
-package org.agh.edu.pl.carrentalrestapi.utils;
+package org.agh.edu.pl.carrentalrestapi.utils.search;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.UpperCamelCaseStrategy;
