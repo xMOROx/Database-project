@@ -7,7 +7,7 @@ import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
-import org.agh.edu.pl.carrentalrestapi.utils.SearchRequest;
+import org.agh.edu.pl.carrentalrestapi.utils.search.SearchRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
