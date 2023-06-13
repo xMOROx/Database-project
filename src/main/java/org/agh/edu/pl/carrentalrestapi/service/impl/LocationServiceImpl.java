@@ -8,11 +8,15 @@ import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.repository.LocationRepository;
 import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.LocationService;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 @Service("locationService")
 @Transactional
@@ -134,7 +138,17 @@ public class LocationServiceImpl implements LocationService {
     }
     @Override
     public Page<String> getCities(Pageable pageable) {
-        return locationRepository.findAllCities(pageable);
+        List<String> cities = new ArrayList<>(locationRepository.findAllCities(pageable).stream().toList());
+
+        Comparator<String> cityFrequencyComparator =  (city1, city2 ) -> {
+            int city1Frequency = this.locationRepository.countAllByCity(city1);
+            int city2Frequency = this.locationRepository.countAllByCity(city2);
+
+            return Integer.compare(city2Frequency, city1Frequency);
+        };
+
+        cities.sort(cityFrequencyComparator);
+        return new PageImpl<>(cities, pageable, cities.size());
     }
 
     @Override

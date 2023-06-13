@@ -1,0 +1,40 @@
+<mat-sidenav-container autosize>
+  <mat-sidenav #sidenav mode="side" opened="isExpanded">
+    <mat-nav-list>
+
+      <mat-list-item (click)="isExpanded = !isExpanded">
+        <mat-icon class="chevron-button" [ngClass]="{ rotated: isExpanded }">chevron_right
+        </mat-icon>
+      </mat-list-item>
+
+      <mat-list-item [routerLink]="'dashboard'" [routerLinkActive]="['activated-route']">
+        <mat-icon >home</mat-icon>
+        <span *ngIf="isExpanded" class="menu-item">Dashboard</span>
+      </mat-list-item>
+
+      <mat-list-item [routerLink]="'movies'" [routerLinkActive]="['activated-route']">
+        <mat-icon >garage</mat-icon>
+        <span *ngIf="isExpanded" class="menu-item">Rented Cars</span>
+      </mat-list-item>
+
+      <mat-list-item [routerLink]="'bookings'" [routerLinkActive]="['activated-route']">
+        <mat-icon >bookmarks</mat-icon>
+        <span *ngIf="isExpanded" class="menu-item">Bookings</span>
+      </mat-list-item>
+      <mat-list-item [routerLink]="'manage-users'" [routerLinkActive]="['activated-route']" *ngIf="auth.isAdmin()">
+        <mat-icon>manage_accounts</mat-icon>
+        <span *ngIf="isExpanded" class="menu-item">Users</span>
+      </mat-list-item>
+
+
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar>
+      <h4>{{componentName | titlecase}}</h4>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
