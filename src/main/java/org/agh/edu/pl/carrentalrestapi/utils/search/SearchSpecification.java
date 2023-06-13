@@ -1,4 +1,4 @@
-package org.agh.edu.pl.carrentalrestapi.utils;
+package org.agh.edu.pl.carrentalrestapi.utils.search;
 
 import jakarta.persistence.criteria.*;
 import lombok.AllArgsConstructor;
@@ -17,12 +17,14 @@ import java.util.Objects;
 public class SearchSpecification<T> implements Specification<T> {
     @Serial
     private final static long serialVersionUID = 158590859403908345L;
-    private final transient SearchRequest searchRequest;
+    protected final transient SearchRequest searchRequest;
+
 
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         Predicate predicate = criteriaBuilder
                 .equal(criteriaBuilder.literal(Boolean.TRUE), Boolean.TRUE);
+
 
         for (FilterRequest filter : this.searchRequest.getFilters()) {
             log.info("Filter: {} {} {}", filter.getKey(), filter.getOperator().toString(), filter.getValue());
@@ -30,9 +32,11 @@ public class SearchSpecification<T> implements Specification<T> {
             predicate = filter
                     .getOperator()
                     .build(root, criteriaBuilder, filter, predicate);
+
         }
 
         List<Order> orders = new ArrayList<>();
+
         for (SortRequest sort : this.searchRequest.getSorts()) {
             orders.add(sort.getDirection().buildOrder(root, criteriaBuilder, sort));
         }
@@ -44,6 +48,6 @@ public class SearchSpecification<T> implements Specification<T> {
     public static Pageable getPageable(Integer page, Integer size) {
         return PageRequest.of(
                 Objects.requireNonNullElse(page, 0),
-                Objects.requireNonNullElse(size, 100));
+                Objects.requireNonNullElse(size, 20));
     }
 }
