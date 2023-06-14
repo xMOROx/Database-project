@@ -2,8 +2,6 @@ package org.agh.edu.pl.carrentalrestapi.utils.enums;
 
 public enum VehicleStatuses {
     AVI,
-    BOO,
-    REN,
     UNA;
 
     public String toString() {
