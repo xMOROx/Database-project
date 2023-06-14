@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 public class VehicleModel extends RepresentationModel<VehicleModel> {
     private Long id;
     private VehicleParametersModel vehicleParameters;
-    private Long VehicleStatusId;
+    private VehicleStatusModel vehicleStatus;
     private String registration;
     private String brand;
     private String model;
