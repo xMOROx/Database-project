@@ -2,10 +2,12 @@ package org.agh.edu.pl.carrentalrestapi.exception;
 
 import jakarta.validation.constraints.NotNull;
 import org.agh.edu.pl.carrentalrestapi.exception.types.*;
+import org.agh.edu.pl.carrentalrestapi.utils.StringConvert;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,6 +48,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             LocationNotFoundException.class,
             VehicleParametersNotFoundException.class,
             BookingNotFoundException.class,
+            StatusForVehicleNotFoundException.class,
     })
     public final ResponseEntity<ErrorDetails> handleNotFoundException(RuntimeException ex, WebRequest request) {
         Map<String, String> messages = new HashMap<>();
@@ -70,7 +73,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             LocationWithGivenPhoneNumberExistsException.class,
             UserRoleWithGivenTypeExistsException.class,
             VehicleWithRegistrationExistsException.class,
-            ParameterNotNullException.class
+            ParameterNotNullException.class,
+            StatusWithGivenNameAlreadyExistsException.class,
     })
     public final ResponseEntity<ErrorDetails> handleConflictException(RuntimeException ex, WebRequest request) {
         Map<String, String> messages = new HashMap<>();
@@ -91,7 +95,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, @NotNull HttpHeaders headers, @NotNull HttpStatusCode status, WebRequest request) {
         Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+        ex.getBindingResult().getFieldErrors().forEach(error -> errors.put(StringConvert.convertToCamelCase(error.getField()), error.getDefaultMessage()));
         ErrorDetails errorDetails = new ErrorDetails(
                 errors,
                 request.getDescription(false),
@@ -101,4 +105,21 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        Map<String, String> messages = new HashMap<>();
+        messages.put("message", "Invalid JSON request");
+        messages.put("hint", "Check if request body is valid");
+        messages.put("exception", ex.getMessage());
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                messages,
+                request.getDescription(false),
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(
+                errorDetails,
+                HttpStatus.BAD_REQUEST);
+    }
 }

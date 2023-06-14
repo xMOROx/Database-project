@@ -6,8 +6,11 @@ import org.agh.edu.pl.carrentalrestapi.exception.types.LocationNotFoundException
 import org.agh.edu.pl.carrentalrestapi.exception.types.LocationWithGivenEmailExistsException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.LocationWithGivenPhoneNumberExistsException;
 import org.agh.edu.pl.carrentalrestapi.model.LocationModel;
+import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.LocationModelAssembler;
+import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.service.LocationService;
+import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
 import org.springframework.data.domain.Page;
@@ -24,10 +27,14 @@ import java.net.URI;
 @RequestMapping(path = API_PATH.root + API_PATH.locations)
 public class LocationController {
     private final LocationService locationService;
+    private final VehicleService vehicleService;
 
-    public LocationController(LocationService locationService) {
+    public LocationController(LocationService locationService,
+                              VehicleService vehicleService) {
         this.locationService = locationService;
+        this.vehicleService = vehicleService;
     }
+
     @GetMapping(path = "/{id}")
     @ResponseBody
     public ResponseEntity<LocationModel> getLocationById(@PathVariable Long id) throws LocationNotFoundException {
@@ -58,7 +65,7 @@ public class LocationController {
             throws LocationWithGivenEmailExistsException, LocationWithGivenPhoneNumberExistsException {
 
         Long savedId = locationService.fullUpdateLocation(id, location);
-        if(savedId.equals(id)) {
+        if (savedId.equals(id)) {
             return ResponseEntity.ok().build();
         }
 
@@ -82,6 +89,7 @@ public class LocationController {
                 .ok()
                 .build();
     }
+
     @DeleteMapping(path = "/{id}")
     @ResponseBody
     public ResponseEntity<LocationModel> deleteLocationById(@PathVariable Long id) throws LocationNotFoundException {
@@ -93,7 +101,7 @@ public class LocationController {
     @ResponseBody
     public ResponseEntity<PagedModel<LocationModel>>
     getAllLocations(@RequestParam(value = "page", required = false) Integer page,
-           @RequestParam(value = "size", required = false) Integer size) {
+                    @RequestParam(value = "size", required = false) Integer size) {
 
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
@@ -107,7 +115,7 @@ public class LocationController {
     @ResponseBody
     public ResponseEntity<Page<String>>
     getCities(@RequestParam(value = "page", required = false) Integer page,
-           @RequestParam(value = "size", required = false) Integer size) {
+              @RequestParam(value = "size", required = false) Integer size) {
 
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
@@ -121,8 +129,8 @@ public class LocationController {
     @ResponseBody
     public ResponseEntity<PagedModel<LocationModel>>
     getLocationsByCity(@PathVariable String city,
-           @RequestParam(value = "page", required = false) Integer page,
-           @RequestParam(value = "size", required = false) Integer size) {
+                       @RequestParam(value = "page", required = false) Integer page,
+                       @RequestParam(value = "size", required = false) Integer size) {
 
         PageableRequest pageableRequest = PageableRequest.of(page, size);
         Pageable pageable = PageableRequest.toPageable(pageableRequest);
@@ -131,4 +139,25 @@ public class LocationController {
                 LocationModelAssembler.toLocationModel(locationService.getLocationsByCity(city, pageable))
         );
     }
+
+    @GetMapping(value = "/{id}/available-vehicles")
+    @ResponseBody
+    public ResponseEntity<PagedModel<VehicleModel>>
+    getAvailableVehiclesByLocationId(@PathVariable Long id,
+                                     @RequestParam(value = "page", required = false) Integer page,
+                                     @RequestParam(value = "size", required = false) Integer size,
+                                     @RequestParam(value = "startDate", required = false) String startDate,
+                                     @RequestParam(value = "endDate", required = false) String endDate) {
+
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
+        Pageable pageable = PageableRequest.toPageable(pageableRequest);
+
+        return ResponseEntity.ok(
+                VehicleModelAssembler.toVehicleModel(
+                        vehicleService.getAvailableVehiclesForLocation(id, pageable, startDate, endDate)
+                )
+        );
+    }
+
+
 }

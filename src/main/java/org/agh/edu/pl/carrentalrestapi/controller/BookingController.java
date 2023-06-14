@@ -1,11 +1,13 @@
 package org.agh.edu.pl.carrentalrestapi.controller;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.agh.edu.pl.carrentalrestapi.entity.Booking;
 import org.agh.edu.pl.carrentalrestapi.exception.types.BookingNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.BookingUnavailableVehicleException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.model.BookingModel;
+import org.agh.edu.pl.carrentalrestapi.model.ReserveVehicleModel;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.BookingModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.service.BookingService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
@@ -29,6 +31,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(path = API_PATH.root + API_PATH.bookings)
+@Slf4j
 public class BookingController {
     private final BookingService bookingService;
 
@@ -38,10 +41,12 @@ public class BookingController {
 
     @PostMapping(path = "/reserve")
     @ResponseBody
-    public ResponseEntity<String> reserveVehicle(@Valid @RequestBody Booking booking)
+    public ResponseEntity<String> reserveVehicle(@Valid @RequestBody ReserveVehicleModel reservation)
             throws BookingUnavailableVehicleException {
 
-        Long bookingId = bookingService.addBooking(booking);
+
+        Long bookingId = bookingService.addBooking(reservation);
+
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(bookingId).toUri();
 
@@ -138,10 +143,10 @@ public class BookingController {
 
     @PostMapping(value = "/cost")
     @ResponseBody
-    public ResponseEntity<Map<String, BigDecimal>> countCost(@Valid @RequestBody Booking booking)
+    public ResponseEntity<Map<String, BigDecimal>> countCost(@RequestBody Long bookingId)
             throws BookingNotFoundException, VehicleNotFoundException {
 
-        return ResponseEntity.ok(bookingService.countCost(booking));
+        return ResponseEntity.ok(bookingService.countCost(bookingId));
     }
 
 }

@@ -20,5 +20,6 @@ import org.springframework.hateoas.server.core.Relation;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VehicleStatusModel extends RepresentationModel<VehicleStatusModel> {
     private Long id;
+    private String type;
     private String description;
 }

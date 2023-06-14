@@ -203,6 +203,31 @@ public class VehicleController {
                 .build();
     }
 
+    @PostMapping("/{vehicleId}/status")
+    @ResponseBody
+    public ResponseEntity<Void> addVehicleStatus(@PathVariable("vehicleId") Long vehicleId,
+                                                 @RequestBody Long statusId)
+            throws VehicleNotFoundException, StatusForVehicleNotFoundException {
+
+        vehicleService.addVehicleStatusToVehicle(vehicleId, statusId);
+
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    @DeleteMapping("/{vehicleId}/status")
+    @ResponseBody
+    public ResponseEntity<Void> changeVehicleStatus(@PathVariable("vehicleId") Long vehicleId, @RequestBody Long statusId)
+            throws VehicleNotFoundException {
+
+        vehicleService.changeVehicleStatusForVehicle(vehicleId, statusId);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
     @GetMapping(path = "/{vehicleId}/location")
     @ResponseBody
     public ResponseEntity<LocationModel> getLocations(@PathVariable("vehicleId") Long vehicleId)

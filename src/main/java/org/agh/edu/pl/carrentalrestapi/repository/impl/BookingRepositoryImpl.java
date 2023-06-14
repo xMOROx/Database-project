@@ -1,40 +1,89 @@
 package org.agh.edu.pl.carrentalrestapi.repository.impl;
 
 import jakarta.persistence.EntityManager;
-import org.agh.edu.pl.carrentalrestapi.entity.Booking;
-import org.agh.edu.pl.carrentalrestapi.entity.BookingStateCode;
-import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
-import org.agh.edu.pl.carrentalrestapi.entity.VehicleStatus;
+import org.agh.edu.pl.carrentalrestapi.entity.*;
 import org.agh.edu.pl.carrentalrestapi.exception.types.BookingUnavailableVehicleException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.LocationNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.model.ReserveVehicleModel;
 import org.agh.edu.pl.carrentalrestapi.utils.enums.BookingStateCodeConstants;
 import org.agh.edu.pl.carrentalrestapi.utils.enums.VehicleStatuses;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Component
 public class BookingRepositoryImpl {
     EntityManager entityManager;
 
-    public BookingRepositoryImpl(EntityManager entityManager) {
+    public BookingRepositoryImpl(EntityManager entityManager
+    ) {
         this.entityManager = entityManager;
     }
 
     @Transactional
-    public Long addBooking(Booking booking) throws BookingUnavailableVehicleException {
-        Vehicle vehicle = entityManager.find(Vehicle.class, booking.getVehicle().getId());
+    public Long addBooking(ReserveVehicleModel reservation) throws BookingUnavailableVehicleException, VehicleNotFoundException, UserNotFoundException, LocationNotFoundException {
+        Long vehicleID = reservation.getVehicleID();
+        Vehicle vehicle = entityManager.find(Vehicle.class, vehicleID);
 
-        VehicleStatus vehicleStatus = vehicle.getVehicleStatus();
-        String vehicleStatusType = vehicleStatus.getType();
-
-        if (vehicleStatusType.equals(VehicleStatuses.UNA.toString())) {
-            throw new BookingUnavailableVehicleException("Vehicle is unavailable");
+        if (vehicle == null) {
+            throw new VehicleNotFoundException(vehicleID);
         }
 
-        VehicleStatus unavailableStatus = entityManager.find(VehicleStatus.class, VehicleStatuses.UNA.toString());
+        if (!vehicle.getVehicleStatus().getType().equals(VehicleStatuses.AVI.toString())) {
+            throw new BookingUnavailableVehicleException(vehicleID);
+        }
 
-        vehicle.setVehicleStatus(unavailableStatus);
+        Location location = entityManager.find(Location.class, reservation.getLocationID());
 
-        entityManager.persist(vehicle);
+        if (location == null) {
+            throw new LocationNotFoundException(reservation.getLocationID());
+        }
+
+        LocalDateTime receiptDate;
+        LocalDateTime returnDate = LocalDateTime.parse(reservation.getReturnDate());
+        String date = reservation.getReceiptDate();
+
+        if (Objects.isNull(date)) {
+            receiptDate = LocalDateTime.now();
+        } else {
+            String replacedDate = date.replace(' ', 'T');
+            receiptDate = LocalDateTime.parse(replacedDate);
+        }
+
+
+        if (!this.isVehicleAvailableToRent(vehicleID, receiptDate, returnDate)) {
+            throw new BookingUnavailableVehicleException(vehicleID);
+        }
+
+
+        User user = entityManager.find(User.class, reservation.getUserID());
+
+        if (user == null) {
+            throw new UserNotFoundException(reservation.getUserID());
+        }
+
+
+        String query = "SELECT b FROM BookingStateCode b WHERE b.bookingCode=:bookingCode";
+
+        BookingStateCode bookingStatus = entityManager.createQuery(query, BookingStateCode.class)
+                .setParameter("bookingCode", BookingStateCodeConstants.RES.toString())
+                .getSingleResult();
+
+
+        Booking booking = new Booking(
+                user,
+                vehicle,
+                location,
+                bookingStatus,
+                receiptDate,
+                returnDate,
+                reservation.getTotalCost());
+
         entityManager.persist(booking);
 
         return booking.getId();
@@ -75,6 +124,24 @@ public class BookingRepositoryImpl {
 
         entityManager.persist(vehicle);
         entityManager.persist(booking);
+    }
+
+    private boolean isVehicleAvailableToRent(Long vehicleId,
+                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+        String query = "SELECT b FROM Booking b WHERE b.vehicle.id=:vehicleId " +
+                "AND b.bookingStateCode.bookingCode NOT IN ('CAN', 'RET') " +
+                "OR (:startDate BETWEEN b.receiptDate AND b.returnDate " +
+                "OR :endDate BETWEEN b.receiptDate AND b.returnDate)" +
+                "OR (:startDate < b.receiptDate AND :endDate > b.returnDate)";
+
+
+        return entityManager.createQuery(query, Booking.class)
+                .setParameter("vehicleId", vehicleId)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList()
+                .isEmpty();
     }
 
 }

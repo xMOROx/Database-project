@@ -6,6 +6,7 @@ import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleStatus;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleParametersModel;
+import org.agh.edu.pl.carrentalrestapi.model.VehicleStatusModel;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -28,7 +29,9 @@ public class VehicleModelAssembler extends RepresentationModelAssemblerSupport<V
         VehicleParametersModel vehicleParameters = parameters == null ? null : VehicleParametersModelAssembler.toVehicleParametersModel(parameters);
 
         VehicleStatus vehicleStatus = vehicle.getVehicleStatus();
-        Long vehicleStatusId = vehicleStatus == null ? null : vehicleStatus.getId();
+        VehicleStatusModel vehicleStatusId = vehicleStatus == null ? null : VehicleStatusModelAssembler.toVehicleStatusModel(vehicleStatus);
+
+        vehicleParameters.setVehicleId(null);
 
         return VehicleModel.builder()
                 .id(vehicle.getId())
@@ -38,7 +41,7 @@ public class VehicleModelAssembler extends RepresentationModelAssemblerSupport<V
                 .dailyFee(vehicle.getDailyFee())
                 .registration(vehicle.getRegistration())
                 .vehicleParameters(vehicleParameters)
-                .VehicleStatusId(vehicleStatusId)
+                .vehicleStatus(vehicleStatusId)
                 .photoURL(vehicle.getPhotoURL())
                 .build();
     }

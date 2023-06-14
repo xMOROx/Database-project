@@ -8,12 +8,12 @@ import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
 import org.agh.edu.pl.carrentalrestapi.utils.search.SearchJoinSpecification;
 import org.agh.edu.pl.carrentalrestapi.utils.search.SearchRequest;
-import org.agh.edu.pl.carrentalrestapi.utils.search.SearchSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service("vehicleService")
@@ -42,8 +42,11 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Page<Vehicle> getAvailableVehiclesForLocation(Long locationId, Pageable pageable) {
-        return vehicleRepository.findAvailableVehiclesForLocation(locationId, pageable);
+    public Page<Vehicle> getAvailableVehiclesForLocation(Long locationId, Pageable pageable, String startDate, String endDate) {
+        LocalDateTime startDateTime = startDate == null ? LocalDateTime.now() : LocalDateTime.parse(convertToEmptyTimePart(startDate));
+        LocalDateTime endDateTime = endDate == null ? maximalDate() : LocalDateTime.parse(convertToEmptyTimePart(endDate));
+
+        return vehicleRepository.findAvailableVehiclesForLocation(locationId, startDateTime, endDateTime, pageable);
     }
 
     @Override
@@ -146,6 +149,7 @@ public class VehicleServiceImpl implements VehicleService {
     public Page<String> getModelsForBrand(String brand, Pageable pageable) {
         return vehicleRepository.findModelsForBrand(brand, pageable);
     }
+
     @Override
     public Page<String> getModels(Pageable pageable) {
         return vehicleRepository.findModels(pageable);
@@ -190,5 +194,23 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public void removeLocation(Long vehicleId) throws VehicleNotFoundException {
         vehicleRepository.removeLocation(vehicleId);
+    }
+
+    @Override
+    public void addVehicleStatusToVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException {
+        vehicleRepository.addVehicleStatusToVehicle(vehicleId, statusId);
+    }
+
+    @Override
+    public void changeVehicleStatusForVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException {
+        vehicleRepository.changeVehicleStatusForVehicle(vehicleId, statusId);
+    }
+
+    private String convertToEmptyTimePart(String date) {
+        return date + "T00:00:00";
+    }
+
+    private LocalDateTime maximalDate() {
+        return LocalDateTime.parse("9999-12-31T23:59:59");
     }
 }

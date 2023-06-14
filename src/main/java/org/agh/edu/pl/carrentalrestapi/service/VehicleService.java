@@ -2,6 +2,7 @@ package org.agh.edu.pl.carrentalrestapi.service;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.exception.types.LocationNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.StatusForVehicleNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.utils.search.SearchRequest;
 import org.springframework.data.domain.Page;
@@ -15,8 +16,8 @@ public interface VehicleService {
     Page<Vehicle> getAll(Pageable pageable);
 
     Page<Vehicle> getBestOffer(Pageable pageable);
-    // TODO: implement to location repository
-    Page<Vehicle> getAvailableVehiclesForLocation(Long locationId, Pageable pageable);
+
+    Page<Vehicle> getAvailableVehiclesForLocation(Long locationId, Pageable pageable, String startDate, String endDate);
 
     Vehicle getById(Long id);
 
@@ -33,6 +34,7 @@ public interface VehicleService {
     Page<String> getBrands(Pageable pageable);
 
     Page<String> getModelsForBrand(String brand, Pageable pageable);
+
     Page<String> getModels(Pageable pageable);
 
     Page<String> getBodyTypes(Pageable pageable);
@@ -50,4 +52,8 @@ public interface VehicleService {
     void addLocation(Long vehicleId, Long locationId) throws LocationNotFoundException, VehicleNotFoundException;
 
     void removeLocation(Long vehicleId) throws VehicleNotFoundException;
+
+    void addVehicleStatusToVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException;
+
+    void changeVehicleStatusForVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException;
 }

@@ -2,10 +2,8 @@ package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Booking;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
-import org.agh.edu.pl.carrentalrestapi.exception.types.BookingNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.BookingUnavailableVehicleException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.*;
+import org.agh.edu.pl.carrentalrestapi.model.ReserveVehicleModel;
 import org.agh.edu.pl.carrentalrestapi.repository.BookingRepository;
 import org.agh.edu.pl.carrentalrestapi.repository.UserRepository;
 import org.agh.edu.pl.carrentalrestapi.service.BookingService;
@@ -44,8 +42,9 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Long addBooking(Booking booking) throws BookingUnavailableVehicleException {
-        return bookingRepository.addBooking(booking);
+    public Long addBooking(ReserveVehicleModel reservation)
+            throws BookingUnavailableVehicleException, VehicleNotFoundException, UserNotFoundException, LocationNotFoundException {
+        return bookingRepository.addBooking(reservation);
     }
 
     @Override
@@ -123,9 +122,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Map<String, BigDecimal> countCost(Booking booking) throws BookingNotFoundException, VehicleNotFoundException {
+    public Map<String, BigDecimal> countCost(Long bookingId) throws BookingNotFoundException, VehicleNotFoundException {
         BigDecimal itemCost;
         BigDecimal totalCost;
+        Booking booking = getBookingById(bookingId);
+
 
         LocalDateTime receiptDate = booking.getReceiptDate();
         LocalDateTime returnDate = booking.getReturnDate();

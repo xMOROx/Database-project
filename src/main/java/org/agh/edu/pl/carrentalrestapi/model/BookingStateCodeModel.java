@@ -10,9 +10,9 @@ import org.springframework.hateoas.server.core.Relation;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonRootName(value = "ChangesBookings")
+@JsonRootName(value = "BookingsStateCodes")
 @EqualsAndHashCode(callSuper = false)
-@Relation(collectionRelation = "ChangesBookings")
+@Relation(collectionRelation = "BookingsStateCodes")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookingStateCodeModel extends RepresentationModel<BookingStateCodeModel> {
     private Long id;
