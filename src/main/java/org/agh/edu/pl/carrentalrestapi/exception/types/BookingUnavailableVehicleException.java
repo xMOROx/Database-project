@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(reason = "Location not found", value = HttpStatus.CONFLICT)
 public class BookingUnavailableVehicleException extends RuntimeException {
-    public BookingUnavailableVehicleException(String id) {
-        super("Vehicle with given id: " + id + "is already booked in this time period");
+    public BookingUnavailableVehicleException(Long id) {
+        super("Vehicle with given id: " + id + " is already booked in this time period");
     }
 }

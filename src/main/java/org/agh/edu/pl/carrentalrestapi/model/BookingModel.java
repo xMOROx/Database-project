@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.agh.edu.pl.carrentalrestapi.entity.BookingStateCode;
+import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -23,10 +25,10 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookingModel extends RepresentationModel<BookingModel> {
     private Long id;
-    private Long userID;
-    private Long vehicleID;
-    private Long locationID;
-    private Long bookingStateCodeID;
+    private UserModel user;
+    private VehicleModel vehicle;
+    private LocationModel pickupLocation;
+    private BookingStateCodeModel bookingStateCode;
     private LocalDateTime receiptDate;
     private LocalDateTime returnDate;
     private BigDecimal totalCost;

@@ -63,7 +63,7 @@ public class Booking implements Serializable {
 
     @JsonProperty()
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "receipt_Date", columnDefinition = "DATETIME default CURRENT_TIMESTAMP NOT NULL")
+    @Column(name = "receipt_Date", columnDefinition = "DATETIME default CURRENT_TIMESTAMP NULL")
     @PastOrPresent(message = "Receipt date must be in the past or present")
     private LocalDateTime receiptDate;
 
@@ -82,22 +82,19 @@ public class Booking implements Serializable {
         super();
     }
 
-    public Booking(Long id,
+    public Booking(
                    User user,
                    Vehicle vehicle,
                    Location location,
                    BookingStateCode bookingStateCode,
-                   List<ChangesBooking> changesBooking,
                    LocalDateTime receiptDate,
                    LocalDateTime returnDate,
                    BigDecimal totalCost) {
         super();
-        this.id = id;
         this.user = user;
         this.vehicle = vehicle;
         this.location = location;
         this.bookingStateCode = bookingStateCode;
-        this.changesBooking = changesBooking;
         this.receiptDate = receiptDate;
         this.returnDate = returnDate;
         this.totalCost = totalCost;

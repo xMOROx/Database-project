@@ -2,7 +2,7 @@ package org.agh.edu.pl.carrentalrestapi.model.assembler;
 
 import org.agh.edu.pl.carrentalrestapi.controller.BookingController;
 import org.agh.edu.pl.carrentalrestapi.entity.*;
-import org.agh.edu.pl.carrentalrestapi.model.BookingModel;
+import org.agh.edu.pl.carrentalrestapi.model.*;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -21,23 +21,28 @@ public class BookingModelAssembler extends RepresentationModelAssemblerSupport<B
 
     public static BookingModel toBookingModel(Booking booking) {
         User user = booking.getUser();
-        Long userID = user == null ? null : user.getId();
+        UserModel userModel = user == null ? null : UserModelAssembler.toUserModel(user);
 
         Vehicle vehicle = booking.getVehicle();
-        Long vehicleID = vehicle == null ? null : vehicle.getId();
+        VehicleModel vehicleModel = vehicle == null ? null : VehicleModelAssembler.toVehicleModel(vehicle);
 
         Location location = booking.getLocation();
-        Long locationID = location == null ? null : location.getId();
+        LocationModel locationModel = location == null ? null : LocationModelAssembler.toLocationModel(location);
 
         BookingStateCode bookingStateCode = booking.getBookingStateCode();
-        Long bookingStateCodeID = bookingStateCode == null ? null : bookingStateCode.getId();
+
+        BookingStateCodeModel bookingStateCodeModel = bookingStateCode == null ? null : BookingStateCodeModel.builder()
+                .id(bookingStateCode.getId())
+                .bookingCode(bookingStateCode.getBookingCode())
+                .description(bookingStateCode.getDescription())
+                .build();
 
         return BookingModel.builder()
                 .id(booking.getId())
-                .userID(userID)
-                .vehicleID(vehicleID)
-                .locationID(locationID)
-                .bookingStateCodeID(bookingStateCodeID)
+                .user(userModel)
+                .vehicle(vehicleModel)
+                .pickupLocation(locationModel)
+                .bookingStateCode(bookingStateCodeModel)
                 .receiptDate(booking.getReceiptDate())
                 .returnDate(booking.getReturnDate())
                 .totalCost(booking.getTotalCost()).build();
