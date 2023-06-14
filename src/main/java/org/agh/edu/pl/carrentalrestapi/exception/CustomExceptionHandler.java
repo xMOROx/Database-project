@@ -2,6 +2,7 @@ package org.agh.edu.pl.carrentalrestapi.exception;
 
 import jakarta.validation.constraints.NotNull;
 import org.agh.edu.pl.carrentalrestapi.exception.types.*;
+import org.agh.edu.pl.carrentalrestapi.utils.StringConvert;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -46,6 +47,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             LocationNotFoundException.class,
             VehicleParametersNotFoundException.class,
             BookingNotFoundException.class,
+            StatusForVehicleNotFoundException.class,
     })
     public final ResponseEntity<ErrorDetails> handleNotFoundException(RuntimeException ex, WebRequest request) {
         Map<String, String> messages = new HashMap<>();
@@ -70,7 +72,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             LocationWithGivenPhoneNumberExistsException.class,
             UserRoleWithGivenTypeExistsException.class,
             VehicleWithRegistrationExistsException.class,
-            ParameterNotNullException.class
+            ParameterNotNullException.class,
+            StatusWithGivenNameAlreadyExistsException.class,
     })
     public final ResponseEntity<ErrorDetails> handleConflictException(RuntimeException ex, WebRequest request) {
         Map<String, String> messages = new HashMap<>();
@@ -91,7 +94,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, @NotNull HttpHeaders headers, @NotNull HttpStatusCode status, WebRequest request) {
         Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+        ex.getBindingResult().getFieldErrors().forEach(error -> errors.put(StringConvert.convertToCamelCase(error.getField()), error.getDefaultMessage()));
         ErrorDetails errorDetails = new ErrorDetails(
                 errors,
                 request.getDescription(false),
