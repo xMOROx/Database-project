@@ -46,7 +46,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             UserRoleNotFoundException.class,
             UserNotFoundException.class,
             LocationNotFoundException.class,
-            VehicleParametersNotFoundException.class,
             BookingNotFoundException.class,
             StatusForVehicleNotFoundException.class,
     })
@@ -110,7 +109,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, String> messages = new HashMap<>();
         messages.put("message", "Invalid JSON request");
         messages.put("hint", "Check if request body is valid");
-        messages.put("exception", ex.getMessage());
+        messages.put("exception", ex.getMessage().split(":")[0].trim());
 
         ErrorDetails errorDetails = new ErrorDetails(
                 messages,

@@ -102,14 +102,4 @@ public class EquipmentController {
 
         return ResponseEntity.created(location).build();
     }
-
-    @PatchMapping(path = "/{id}")
-    @ResponseBody
-    public ResponseEntity<Long>
-    partialUpdateEquipment(@PathVariable Long id, @Valid @RequestBody Equipment equipment) throws EquipmentNotFoundException {
-
-        Long savedId = equipmentService.partialUpdateEquipment(id, equipment);
-
-        return ResponseEntity.ok().body(savedId);
-    }
 }

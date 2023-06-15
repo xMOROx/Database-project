@@ -2,12 +2,13 @@ package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
-import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
 import org.agh.edu.pl.carrentalrestapi.exception.types.*;
+import org.agh.edu.pl.carrentalrestapi.model.VehicleAddModel;
 import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
 import org.agh.edu.pl.carrentalrestapi.utils.search.SearchJoinSpecification;
 import org.agh.edu.pl.carrentalrestapi.utils.search.SearchRequest;
+import org.agh.edu.pl.carrentalrestapi.utils.search.SearchSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -55,15 +56,9 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Long addVehicle(Vehicle vehicle) throws VehicleWithRegistrationExistsException {
-        String registration = vehicle.getRegistration();
-
-        if (vehicleRepository.findByRegistration(registration).isPresent())
-            throw new VehicleWithRegistrationExistsException(registration);
-
-        Vehicle saved = vehicleRepository.save(vehicle);
-
-        return saved.getId();
+    public Long addVehicle(VehicleAddModel vehicle) throws VehicleWithRegistrationExistsException, LocationNotFoundException,
+            StatusForVehicleNotFoundException, EquipmentNotFoundException  {
+        return vehicleRepository.addVehicle(vehicle);
     }
 
     @Override
@@ -81,7 +76,7 @@ public class VehicleServiceImpl implements VehicleService {
         try {
             toUpdate = getById(id);
         } catch (VehicleNotFoundException e) {
-            return addVehicle(vehicle);
+            return vehicleRepository.save(vehicle).getId();
         }
 
         String registration = vehicle.getRegistration();
@@ -94,6 +89,18 @@ public class VehicleServiceImpl implements VehicleService {
         toUpdate.setBestOffer(vehicle.getBestOffer());
         toUpdate.setDailyFee(vehicle.getDailyFee());
         toUpdate.setPhotoURL(vehicle.getPhotoURL());
+        toUpdate.setBodyType(vehicle.getBodyType());
+        toUpdate.setColor(vehicle.getColor());
+        toUpdate.setProductionYear(vehicle.getProductionYear());
+        toUpdate.setFuelType(vehicle.getFuelType());
+        toUpdate.setPower(vehicle.getPower());
+        toUpdate.setGearbox(vehicle.getGearbox());
+        toUpdate.setFrontWheelDrive(vehicle.getFrontWheelDrive());
+        toUpdate.setDoorsNumber(vehicle.getDoorsNumber());
+        toUpdate.setSeatsNumber(vehicle.getSeatsNumber());
+        toUpdate.setMetalic(vehicle.getMetalic());
+        toUpdate.setDescription(vehicle.getDescription());
+
 
         Vehicle saved = vehicleRepository.save(toUpdate);
 
@@ -135,7 +142,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public Page<Vehicle> search(SearchRequest searchRequest) {
 
-        SearchJoinSpecification<Vehicle, VehicleParameters> searchSpecification = new SearchJoinSpecification<>(searchRequest);
+        SearchSpecification<Vehicle> searchSpecification = new SearchSpecification<>(searchRequest);
         Pageable pageable = SearchJoinSpecification.getPageable(searchRequest.getPage(), searchRequest.getSize());
         return vehicleRepository.findAll(searchSpecification, pageable);
     }
@@ -175,36 +182,16 @@ public class VehicleServiceImpl implements VehicleService {
         vehicleRepository.removeEquipmentFromVehicle(id, equipmentId);
     }
 
-
     @Override
-    public void addVehicleParameters(Long vehicleId, Long parametersId) throws VehicleNotFoundException, VehicleParametersNotFoundException, ParameterNotNullException {
-        vehicleRepository.addVehicleParameters(vehicleId, parametersId);
+    public void changeLocation(Long vehicleId, Long locationId) throws LocationNotFoundException, VehicleNotFoundException {
+        vehicleRepository.changeLocation(vehicleId, locationId);
     }
 
     @Override
-    public void removeVehicleParameters(Long vehicleId) throws VehicleNotFoundException {
-        vehicleRepository.removeVehicleParameters(vehicleId);
+    public void changeVehicleStatusToVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException {
+        vehicleRepository.changeStatusForVehicle(vehicleId, statusId);
     }
 
-    @Override
-    public void addLocation(Long vehicleId, Long locationId) throws LocationNotFoundException, VehicleNotFoundException, ParameterNotNullException {
-        vehicleRepository.addLocation(vehicleId, locationId);
-    }
-
-    @Override
-    public void removeLocation(Long vehicleId) throws VehicleNotFoundException {
-        vehicleRepository.removeLocation(vehicleId);
-    }
-
-    @Override
-    public void addVehicleStatusToVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException {
-        vehicleRepository.addVehicleStatusToVehicle(vehicleId, statusId);
-    }
-
-    @Override
-    public void changeVehicleStatusForVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException {
-        vehicleRepository.changeVehicleStatusForVehicle(vehicleId, statusId);
-    }
 
     private String convertToEmptyTimePart(String date) {
         return date + "T00:00:00";

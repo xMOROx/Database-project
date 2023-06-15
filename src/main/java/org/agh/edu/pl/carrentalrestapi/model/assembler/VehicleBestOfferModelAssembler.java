@@ -2,10 +2,8 @@ package org.agh.edu.pl.carrentalrestapi.model.assembler;
 
 import org.agh.edu.pl.carrentalrestapi.controller.BestOfferController;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
-import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleStatus;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
-import org.agh.edu.pl.carrentalrestapi.model.VehicleParametersModel;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleStatusModel;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.PagedModel;
@@ -24,9 +22,6 @@ public class VehicleBestOfferModelAssembler extends RepresentationModelAssembler
     }
 
     public static VehicleModel toVehicleModel(Vehicle vehicle) {
-        VehicleParameters parameters = vehicle.getVehicleParameters();
-        VehicleParametersModel vehicleParameters = parameters == null ? null : VehicleParametersModelAssembler.toVehicleParametersModel(parameters);
-
         VehicleStatus vehicleStatus = vehicle.getVehicleStatus();
         VehicleStatusModel VehicleStatusId = vehicleStatus == null ? null : VehicleStatusModelAssembler.toVehicleStatusModel(vehicleStatus);
 
@@ -37,9 +32,19 @@ public class VehicleBestOfferModelAssembler extends RepresentationModelAssembler
                 .bestOffer(vehicle.getBestOffer())
                 .dailyFee(vehicle.getDailyFee())
                 .registration(vehicle.getRegistration())
-                .vehicleParameters(vehicleParameters)
                 .vehicleStatus(VehicleStatusId)
                 .photoURL(vehicle.getPhotoURL())
+                .bodyType(vehicle.getBodyType())
+                .productionYear(vehicle.getProductionYear())
+                .fuelType(vehicle.getFuelType())
+                .power(vehicle.getPower())
+                .gearbox(vehicle.getGearbox())
+                .frontWheelDrive(vehicle.getFrontWheelDrive())
+                .doorsNumber(vehicle.getDoorsNumber())
+                .seatsNumber(vehicle.getSeatsNumber())
+                .color(vehicle.getColor())
+                .metalic(vehicle.getMetalic())
+                .description(vehicle.getDescription())
                 .build();
     }
 

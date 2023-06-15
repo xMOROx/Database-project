@@ -1,9 +1,8 @@
 package org.agh.edu.pl.carrentalrestapi.service;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
-import org.agh.edu.pl.carrentalrestapi.exception.types.LocationNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.StatusForVehicleNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.*;
+import org.agh.edu.pl.carrentalrestapi.model.VehicleAddModel;
 import org.agh.edu.pl.carrentalrestapi.utils.search.SearchRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +20,8 @@ public interface VehicleService {
 
     Vehicle getById(Long id);
 
-    Long addVehicle(Vehicle vehicle);
+    Long addVehicle(VehicleAddModel vehicle) throws VehicleWithRegistrationExistsException, LocationNotFoundException,
+            StatusForVehicleNotFoundException, EquipmentNotFoundException;
 
     void deleteVehicle(Long id);
 
@@ -45,15 +45,8 @@ public interface VehicleService {
 
     void removeEquipment(Long id, Long equipmentId);
 
-    void addVehicleParameters(Long vehicleId, Long parametersId);
+    void changeLocation(Long vehicleId, Long locationId) throws LocationNotFoundException, VehicleNotFoundException;
 
-    void removeVehicleParameters(Long vehicleId);
+    void changeVehicleStatusToVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException;
 
-    void addLocation(Long vehicleId, Long locationId) throws LocationNotFoundException, VehicleNotFoundException;
-
-    void removeLocation(Long vehicleId) throws VehicleNotFoundException;
-
-    void addVehicleStatusToVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException;
-
-    void changeVehicleStatusForVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException;
 }

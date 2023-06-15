@@ -122,16 +122,6 @@ public class UserController {
         return ResponseEntity.created(location).build();
     }
 
-    @PatchMapping(path = "/{id}")
-    @ResponseBody
-    public ResponseEntity<Long> partiallyUpdateUser(@PathVariable("id") Long id, @RequestBody User user)
-    throws UserNotFoundException, UserWithEmailExistsException {
-
-        Long userId = userService.partialUpdate(id, user);
-
-        return ResponseEntity.ok(userId);
-    }
-
     @DeleteMapping(path = "/{id}")
     @ResponseBody
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) throws UserNotFoundException {

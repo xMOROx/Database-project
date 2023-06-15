@@ -41,17 +41,6 @@ public class UserRoleController {
         return ResponseEntity.created(location).build();
     }
 
-    @PatchMapping(path = "/{id}")
-    @ResponseBody
-    public ResponseEntity<Long> updateRole(@PathVariable("id") Long id, @RequestBody UserRole role)
-            throws UserRoleNotFoundException {
-
-        role.setId(id);
-        Long userRoleId = userRoleService.updateUserRole(id, role);
-
-        return ResponseEntity.ok(userRoleId);
-    }
-
     @DeleteMapping(path = "")
     @ResponseBody
     public ResponseEntity<Void> deleteRole(@Valid @RequestBody String type) throws UserRoleNotFoundException {

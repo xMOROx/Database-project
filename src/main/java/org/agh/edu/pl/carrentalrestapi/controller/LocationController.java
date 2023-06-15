@@ -78,18 +78,6 @@ public class LocationController {
         return ResponseEntity.created(locationUri).build();
     }
 
-    @PatchMapping(path = "/{id}")
-    @ResponseBody
-    public ResponseEntity<LocationModel> partiallyLocationUpdate(@PathVariable Long id, @Valid @RequestBody Location location)
-            throws LocationNotFoundException, LocationWithGivenEmailExistsException, LocationWithGivenPhoneNumberExistsException {
-
-        Long savedId = locationService.partialUpdateLocation(id, location);
-
-        return ResponseEntity
-                .ok()
-                .build();
-    }
-
     @DeleteMapping(path = "/{id}")
     @ResponseBody
     public ResponseEntity<LocationModel> deleteLocationById(@PathVariable Long id) throws LocationNotFoundException {
