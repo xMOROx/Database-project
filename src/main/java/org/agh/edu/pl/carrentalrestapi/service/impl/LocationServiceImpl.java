@@ -8,7 +8,6 @@ import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.repository.LocationRepository;
 import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.LocationService;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+
 @Service("locationService")
 @Transactional
 public class LocationServiceImpl implements LocationService {
@@ -59,10 +60,13 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Long fullUpdateLocation(Long id, Location location) throws LocationWithGivenEmailExistsException, LocationWithGivenPhoneNumberExistsException {
 
-        if (locationRepository.findByEmail(location.getEmail()).isPresent())
+        Optional<Location> locationByEmail = locationRepository.findByEmail(location.getEmail());
+        if (locationByEmail.isPresent() && !locationByEmail.get().getId().equals(id))
             throw new LocationWithGivenEmailExistsException(location.getEmail());
 
-        if (locationRepository.findByPhoneNumber(location.getPhoneNumber()).isPresent())
+        Optional<Location> locationByPhoneNumber = locationRepository.findByPhoneNumber(location.getPhoneNumber());
+
+        if (locationByPhoneNumber.isPresent() && !locationByPhoneNumber.get().getId().equals(id))
             throw new LocationWithGivenPhoneNumberExistsException(location.getPhoneNumber());
 
         Location toUpdate;

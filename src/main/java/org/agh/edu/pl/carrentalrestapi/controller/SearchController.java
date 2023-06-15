@@ -55,7 +55,7 @@ public class SearchController {
         );
     }
 
-    @GetMapping(path = API_PATH.vehicles + "/models", params = {"brand"})
+    @GetMapping(path = API_PATH.vehicles + "/models")
     @ResponseBody
     public ResponseEntity<Page<String>>
     getModelsForBrand(@RequestParam(value = "brand", required = false) String brand, @RequestParam(value = "page", required = false) Integer page,
