@@ -53,12 +53,7 @@ export class DetailComponent implements OnInit {
       if (this.contentType === 'cars') {
         this.carsService.getVehicleById(id).pipe(take(1)).subscribe((car: CarModel) => {
           this.content = car;
-          this.carsService.getVehicleParameters(car.vehicleParametersId).pipe(take(1)).subscribe((parameters: any) => {
-            {
-              this.content = { ...this.content, vehicleParameters: parameters };
               this.isLoading = false;
-            }
-          });
         });
       } else {
       }

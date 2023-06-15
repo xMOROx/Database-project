@@ -83,7 +83,7 @@
 
     <div *ngIf="contentType === 'cars'" class="content__runtime">
       <h4 *ngIf="contentType === 'cars'">Description</h4>
-      <p *ngIf="contentType === 'cars'">{{content?.['vehicleParameters']?.['description']}}</p>
+      <p *ngIf="contentType === 'cars'">{{content?.['description']}}</p>
     </div>
     <div *ngIf="contentType === 'cars'" class="content__dailyfee">
       <h4>DailyFee</h4>
@@ -113,28 +113,28 @@
     <h2 *ngIf="contentType === 'cars'">Parameters</h2>
       <mat-list>
         <mat-list-item>
-          Body type: {{content?.['vehicleParameters']?.['bodyType']}}
+          Body type: {{content?.['bodyType']}}
         </mat-list-item>
         <mat-list-item>
-          Fuel type: {{content?.['vehicleParameters']?.['fuelType']}}
+          Fuel type: {{content?.['fuelType']}}
         </mat-list-item>
         <mat-list-item>
-          Power: {{content?.['vehicleParameters']?.['power']}} kW
+          Power: {{content?.['power']}} kW
         </mat-list-item>
         <mat-list-item>
-          Gearbox type: {{content?.['vehicleParameters']?.['gearbox']}}
+          Gearbox type: {{content?.['gearbox']}}
         </mat-list-item>
         <mat-list-item>
-          Drive type: {{content?.['vehicleParameters']?.['frontWheelDrive'] ? 'Front wheel drive' : 'Rear wheel drive'}}
+          Drive type: {{content?.['frontWheelDrive'] ? 'Front wheel drive' : 'Rear wheel drive'}}
         </mat-list-item>
         <mat-list-item>
-          Number of seats: {{content?.['vehicleParameters']?.['seatsNumber']}}
+          Number of seats: {{content?.['seatsNumber']}}
         </mat-list-item>
         <mat-list-item>
-          Number of doors: {{content?.['vehicleParameters']?.['doorsNumber']}}
+          Number of doors: {{content?.['doorsNumber']}}
         </mat-list-item>
         <mat-list-item>
-          {{content?.['vehicleParameters']?.['metalic'] ? "Metallic ": ""}}Color of the car: {{content?.['vehicleParameters']?.['color']}}
+          {{content?.['metalic'] ? "Metallic ": ""}}Color of the car: {{content?.['color']}}
         </mat-list-item>
       </mat-list>
 
