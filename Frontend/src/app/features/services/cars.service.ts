@@ -47,8 +47,4 @@ export class CarsService {
     return this.http.get(`${this.endpoint}vehicles?page=${page}`, this.httpOptions);
   }
 
-  public getVehicleParameters(id: any): Observable<any> {
-    return this.http.get(`${this.endpoint}vehicles/${id}/parameters`, this.httpOptions);
-  }
-
 }

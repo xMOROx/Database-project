@@ -1,4 +1,3 @@
-import {VehicleParametersModel} from "./VehicleParameters.model";
 
 export interface CarModel {
   id: string;
@@ -9,5 +8,15 @@ export interface CarModel {
   dailyFee: number;
   bestOffer: boolean;
   photoURL?: string;
-  vehicleParameters?: VehicleParametersModel;
+  bodyType: string;
+  productionYear: number;
+  fuelType: string;
+  power: number;
+  gearbox: string;
+  frontWheelDrive: boolean;
+  doorsNumber: number;
+  seatsNumber: number;
+  color: string;
+  metallic: boolean;
+  description: string;
 }
