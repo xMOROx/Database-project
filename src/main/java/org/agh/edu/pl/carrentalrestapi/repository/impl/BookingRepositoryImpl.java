@@ -45,13 +45,13 @@ public class BookingRepositoryImpl {
         }
 
         LocalDateTime receiptDate;
-        LocalDateTime returnDate = LocalDateTime.parse(reservation.getReturnDate());
+        LocalDateTime returnDate = LocalDateTime.parse(reservation.getReturnDate().trim().replace(' ', 'T'));
         String date = reservation.getReceiptDate();
 
         if (Objects.isNull(date)) {
             receiptDate = LocalDateTime.now();
         } else {
-            String replacedDate = date.replace(' ', 'T');
+            String replacedDate = date.trim().replace(' ', 'T');
             receiptDate = LocalDateTime.parse(replacedDate);
         }
 

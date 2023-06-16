@@ -31,7 +31,7 @@ public class SearchController {
     @ResponseBody
     public ResponseEntity<PagedModel<VehicleModel>>
     searchVehicles(@RequestBody @Valid SearchRequest searchRequest) {
-        Page<Vehicle> vehicles = vehicleService.search(searchRequest);
+        Page<Vehicle> vehicles = vehicleService.searchVehicles(searchRequest);
 
         return new ResponseEntity<>(
                 VehicleModelAssembler.toVehicleModel(vehicles),

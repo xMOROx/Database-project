@@ -29,7 +29,7 @@ public interface VehicleService {
 
     Long partialUpdate(Long id, Vehicle vehicle);
 
-    Page<Vehicle> search(SearchRequest searchRequest);
+    Page<Vehicle> searchVehicles(SearchRequest searchRequest);
 
     Page<String> getBrands(Pageable pageable);
 

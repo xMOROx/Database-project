@@ -28,10 +28,12 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
 
     @Transactional
     @Query(value = "SELECT DISTINCT v FROM Vehicle v " + "JOIN Location l ON(v.location.id=l.id)" +
-            "WHERE l.id=?1 AND v.vehicleStatus.type='AVI' AND v.id NOT IN (SELECT b.vehicle.id FROM Booking b WHERE b.receiptDate >= ?2 AND b.returnDate <= ?3)",
+            "WHERE l.id=?1 AND v.vehicleStatus.type='AVI' AND v.id NOT IN (SELECT b.vehicle.id FROM Booking b WHERE b.receiptDate <= ?3 AND b.returnDate >= ?2 " +
+            "AND b.bookingStateCode.bookingCode IN ('RES', 'REN'))",
 
             countQuery = "SELECT COUNT(DISTINCT v) FROM Vehicle v " + "JOIN Location l ON(v.location.id=l.id)" +
-                    "WHERE l.id=?1 AND v.vehicleStatus.type='AVI' AND v.id NOT IN (SELECT b.vehicle.id FROM Booking b WHERE b.receiptDate >= ?2 AND b.returnDate <= ?3)")
+                    "WHERE l.id=?1 AND v.vehicleStatus.type='AVI' AND v.id NOT IN (SELECT b.vehicle.id FROM Booking b WHERE b.receiptDate <= ?3 AND b.returnDate >= ?2 " +
+                    "AND b.bookingStateCode.bookingCode IN ('RES', 'REN'))")
     Page<Vehicle> findAvailableVehiclesForLocation(Long locationId,
                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate, Pageable pageable);
