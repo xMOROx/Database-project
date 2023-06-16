@@ -2,9 +2,9 @@ package org.agh.edu.pl.carrentalrestapi.model.assembler;
 
 import org.agh.edu.pl.carrentalrestapi.controller.VehicleController;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
-import org.agh.edu.pl.carrentalrestapi.entity.VehicleParameters;
 import org.agh.edu.pl.carrentalrestapi.entity.VehicleStatus;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
+import org.agh.edu.pl.carrentalrestapi.model.VehicleStatusModel;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -22,11 +22,9 @@ public class VehicleModelAssembler extends RepresentationModelAssemblerSupport<V
     }
 
     public static VehicleModel toVehicleModel(Vehicle vehicle) {
-        VehicleParameters vehicleParameters = vehicle.getVehicleParameters();
-        Long vehicleParametersId = vehicleParameters == null ? null : vehicle.getId();
-
         VehicleStatus vehicleStatus = vehicle.getVehicleStatus();
-        Long vehicleStatusId = vehicleStatus == null ? null : vehicleStatus.getId();
+        VehicleStatusModel vehicleStatusId = vehicleStatus == null ? null : VehicleStatusModelAssembler.toVehicleStatusModel(vehicleStatus);
+
 
         return VehicleModel.builder()
                 .id(vehicle.getId())
@@ -35,8 +33,19 @@ public class VehicleModelAssembler extends RepresentationModelAssemblerSupport<V
                 .bestOffer(vehicle.getBestOffer())
                 .dailyFee(vehicle.getDailyFee())
                 .registration(vehicle.getRegistration())
-                .vehicleParametersId(vehicleParametersId)
-                .VehicleStatusId(vehicleStatusId)
+                .bodyType(vehicle.getBodyType())
+                .productionYear(vehicle.getProductionYear())
+                .fuelType(vehicle.getFuelType())
+                .power(vehicle.getPower())
+                .gearbox(vehicle.getGearbox())
+                .frontWheelDrive(vehicle.getFrontWheelDrive())
+                .doorsNumber(vehicle.getDoorsNumber())
+                .seatsNumber(vehicle.getSeatsNumber())
+                .color(vehicle.getColor())
+                .metalic(vehicle.getMetalic())
+                .description(vehicle.getDescription())
+                .vehicleStatus(vehicleStatusId)
+                .photoURL(vehicle.getPhotoURL())
                 .build();
     }
 
@@ -61,6 +70,7 @@ public class VehicleModelAssembler extends RepresentationModelAssemblerSupport<V
     public VehicleModel toModel(Vehicle entity) {
         VehicleModel vehicleModel = VehicleModelAssembler.toVehicleModel(entity);
         vehicleModel.add(linkTo(methodOn(VehicleController.class).getVehicleById(entity.getId())).withSelfRel());
+        vehicleModel.add(linkTo(methodOn(VehicleController.class).getAllVehicles(null, null)).withRel("all"));
         return vehicleModel;
     }
 }

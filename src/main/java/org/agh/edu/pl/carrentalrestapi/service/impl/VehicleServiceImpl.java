@@ -2,18 +2,19 @@ package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleParametersNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleWithRegistrationExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.*;
+import org.agh.edu.pl.carrentalrestapi.model.VehicleAddModel;
 import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
-import org.agh.edu.pl.carrentalrestapi.utils.SearchRequest;
-import org.agh.edu.pl.carrentalrestapi.utils.SearchSpecification;
+import org.agh.edu.pl.carrentalrestapi.utils.search.SearchJoinSpecification;
+import org.agh.edu.pl.carrentalrestapi.utils.search.SearchRequest;
+import org.agh.edu.pl.carrentalrestapi.utils.search.SearchSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service("vehicleService")
@@ -42,8 +43,11 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Page<Vehicle> getAvailableVehiclesForLocation(Long locationId, Pageable pageable) {
-        return vehicleRepository.findAvailableVehiclesForLocation(locationId, pageable);
+    public Page<Vehicle> getAvailableVehiclesForLocation(Long locationId, Pageable pageable, String startDate, String endDate) {
+        LocalDateTime startDateTime = startDate == null ? LocalDateTime.now() : LocalDateTime.parse(convertToEmptyTimePart(startDate));
+        LocalDateTime endDateTime = endDate == null ? maximalDate() : LocalDateTime.parse(convertToEmptyTimePart(endDate));
+
+        return vehicleRepository.findAvailableVehiclesForLocation(locationId, startDateTime, endDateTime, pageable);
     }
 
     @Override
@@ -52,15 +56,9 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Long addVehicle(Vehicle vehicle) throws VehicleWithRegistrationExistsException {
-        String registration = vehicle.getRegistration();
-
-        if (vehicleRepository.findByRegistration(registration).isPresent())
-            throw new VehicleWithRegistrationExistsException(registration);
-
-        Vehicle saved = vehicleRepository.save(vehicle);
-
-        return saved.getId();
+    public Long addVehicle(VehicleAddModel vehicle) throws VehicleWithRegistrationExistsException, LocationNotFoundException,
+            StatusForVehicleNotFoundException, EquipmentNotFoundException  {
+        return vehicleRepository.addVehicle(vehicle);
     }
 
     @Override
@@ -73,12 +71,12 @@ public class VehicleServiceImpl implements VehicleService {
 
 
     @Override
-    public Long fullUpdate(Vehicle vehicle) throws VehicleWithRegistrationExistsException {
+    public Long fullUpdate(Long id, Vehicle vehicle) throws VehicleWithRegistrationExistsException {
         Vehicle toUpdate;
         try {
-            toUpdate = getById(vehicle.getId());
+            toUpdate = getById(id);
         } catch (VehicleNotFoundException e) {
-            return addVehicle(vehicle);
+            return vehicleRepository.save(vehicle).getId();
         }
 
         String registration = vehicle.getRegistration();
@@ -90,6 +88,19 @@ public class VehicleServiceImpl implements VehicleService {
         toUpdate.setModel(vehicle.getModel());
         toUpdate.setBestOffer(vehicle.getBestOffer());
         toUpdate.setDailyFee(vehicle.getDailyFee());
+        toUpdate.setPhotoURL(vehicle.getPhotoURL());
+        toUpdate.setBodyType(vehicle.getBodyType());
+        toUpdate.setColor(vehicle.getColor());
+        toUpdate.setProductionYear(vehicle.getProductionYear());
+        toUpdate.setFuelType(vehicle.getFuelType());
+        toUpdate.setPower(vehicle.getPower());
+        toUpdate.setGearbox(vehicle.getGearbox());
+        toUpdate.setFrontWheelDrive(vehicle.getFrontWheelDrive());
+        toUpdate.setDoorsNumber(vehicle.getDoorsNumber());
+        toUpdate.setSeatsNumber(vehicle.getSeatsNumber());
+        toUpdate.setMetalic(vehicle.getMetalic());
+        toUpdate.setDescription(vehicle.getDescription());
+
 
         Vehicle saved = vehicleRepository.save(toUpdate);
 
@@ -97,8 +108,8 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Long partialUpdate(Vehicle vehicle) throws VehicleNotFoundException, VehicleWithRegistrationExistsException {
-        Vehicle toUpdate = getById(vehicle.getId());
+    public Long partialUpdate(Long id, Vehicle vehicle) throws VehicleNotFoundException, VehicleWithRegistrationExistsException {
+        Vehicle toUpdate = getById(id);
 
         if (vehicle.getRegistration() != null) {
             String registration = vehicle.getRegistration();
@@ -120,6 +131,9 @@ public class VehicleServiceImpl implements VehicleService {
         if (vehicle.getDailyFee() != null)
             toUpdate.setDailyFee(vehicle.getDailyFee());
 
+        if (vehicle.getPhotoURL() != null)
+            toUpdate.setPhotoURL(vehicle.getPhotoURL());
+
         Vehicle saved = vehicleRepository.save(toUpdate);
 
         return saved.getId();
@@ -127,9 +141,9 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public Page<Vehicle> search(SearchRequest searchRequest) {
-        SearchSpecification<Vehicle> searchSpecification = new SearchSpecification<>(searchRequest);
-        Pageable pageable = SearchSpecification.getPageable(searchRequest.getPage(), searchRequest.getSize());
 
+        SearchSpecification<Vehicle> searchSpecification = new SearchSpecification<>(searchRequest);
+        Pageable pageable = SearchJoinSpecification.getPageable(searchRequest.getPage(), searchRequest.getSize());
         return vehicleRepository.findAll(searchSpecification, pageable);
     }
 
@@ -144,6 +158,11 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    public Page<String> getModels(Pageable pageable) {
+        return vehicleRepository.findModels(pageable);
+    }
+
+    @Override
     public Page<String> getBodyTypes(Pageable pageable) {
         return vehicleRepository.findBodyTypes(pageable);
     }
@@ -154,24 +173,31 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public void addEquipment(Long id, Long equipmentId) {
+    public void addEquipment(Long id, Long equipmentId) throws VehicleNotFoundException, EquipmentNotFoundException, ParameterNotNullException {
         vehicleRepository.addEquipmentToVehicle(id, equipmentId);
     }
 
     @Override
-    public void deleteEquipment(Long id, Long equipmentId) {
+    public void removeEquipment(Long id, Long equipmentId) throws VehicleNotFoundException, EquipmentNotFoundException {
         vehicleRepository.removeEquipmentFromVehicle(id, equipmentId);
     }
 
-
     @Override
-    public void addVehicleParameters(Long vehicleId, Long parametersId) throws VehicleNotFoundException, VehicleParametersNotFoundException {
-
-        vehicleRepository.addVehicleParameters(vehicleId, parametersId);
+    public void changeLocation(Long vehicleId, Long locationId) throws LocationNotFoundException, VehicleNotFoundException {
+        vehicleRepository.changeLocation(vehicleId, locationId);
     }
 
     @Override
-    public void removeVehicleParameters(Long vehicleId) {
-        vehicleRepository.removeVehicleParameters(vehicleId);
+    public void changeVehicleStatusToVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException {
+        vehicleRepository.changeStatusForVehicle(vehicleId, statusId);
+    }
+
+
+    private String convertToEmptyTimePart(String date) {
+        return date + "T00:00:00";
+    }
+
+    private LocalDateTime maximalDate() {
+        return LocalDateTime.parse("9999-12-31T23:59:59");
     }
 }

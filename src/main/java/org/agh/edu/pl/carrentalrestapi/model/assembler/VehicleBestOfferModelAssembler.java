@@ -2,7 +2,9 @@ package org.agh.edu.pl.carrentalrestapi.model.assembler;
 
 import org.agh.edu.pl.carrentalrestapi.controller.BestOfferController;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
+import org.agh.edu.pl.carrentalrestapi.entity.VehicleStatus;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
+import org.agh.edu.pl.carrentalrestapi.model.VehicleStatusModel;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -20,6 +22,9 @@ public class VehicleBestOfferModelAssembler extends RepresentationModelAssembler
     }
 
     public static VehicleModel toVehicleModel(Vehicle vehicle) {
+        VehicleStatus vehicleStatus = vehicle.getVehicleStatus();
+        VehicleStatusModel VehicleStatusId = vehicleStatus == null ? null : VehicleStatusModelAssembler.toVehicleStatusModel(vehicleStatus);
+
         return VehicleModel.builder()
                 .id(vehicle.getId())
                 .brand(vehicle.getBrand())
@@ -27,8 +32,19 @@ public class VehicleBestOfferModelAssembler extends RepresentationModelAssembler
                 .bestOffer(vehicle.getBestOffer())
                 .dailyFee(vehicle.getDailyFee())
                 .registration(vehicle.getRegistration())
-                .vehicleParametersId(vehicle.getVehicleParameters().getId())
-                .VehicleStatusId(vehicle.getVehicleStatus().getId())
+                .vehicleStatus(VehicleStatusId)
+                .photoURL(vehicle.getPhotoURL())
+                .bodyType(vehicle.getBodyType())
+                .productionYear(vehicle.getProductionYear())
+                .fuelType(vehicle.getFuelType())
+                .power(vehicle.getPower())
+                .gearbox(vehicle.getGearbox())
+                .frontWheelDrive(vehicle.getFrontWheelDrive())
+                .doorsNumber(vehicle.getDoorsNumber())
+                .seatsNumber(vehicle.getSeatsNumber())
+                .color(vehicle.getColor())
+                .metalic(vehicle.getMetalic())
+                .description(vehicle.getDescription())
                 .build();
     }
 
@@ -42,12 +58,15 @@ public class VehicleBestOfferModelAssembler extends RepresentationModelAssembler
         long totalElements = vehicles.getTotalElements();
         long totalPages = vehicles.getTotalPages();
         return PagedModel.of(
-                vehicles.stream().map(VehicleBestOfferModelAssembler::toVehicleModel).collect(Collectors.toList()),
+                vehicles.stream()
+                        .map(VehicleBestOfferModelAssembler::toVehicleModel)
+                        .collect(Collectors.toList()),
                 new PagedModel.PageMetadata(size, page, totalElements, totalPages),
                 linkTo(methodOn(BestOfferController.class).getBestOffer(page, size)).withSelfRel()
 
         );
     }
+
 
     @Override
     public VehicleModel toModel(Vehicle entity) {

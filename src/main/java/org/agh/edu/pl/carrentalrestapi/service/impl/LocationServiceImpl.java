@@ -4,22 +4,32 @@ import org.agh.edu.pl.carrentalrestapi.entity.Location;
 import org.agh.edu.pl.carrentalrestapi.exception.types.LocationNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.LocationWithGivenEmailExistsException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.LocationWithGivenPhoneNumberExistsException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.repository.LocationRepository;
+import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.LocationService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+
 @Service("locationService")
 @Transactional
 public class LocationServiceImpl implements LocationService {
 
     private final LocationRepository locationRepository;
+    private final VehicleRepository vehicleRepository;
 
-    public LocationServiceImpl(LocationRepository locationRepository) {
+    public LocationServiceImpl(LocationRepository locationRepository,
+                               VehicleRepository vehicleRepository) {
         this.locationRepository = locationRepository;
+        this.vehicleRepository = vehicleRepository;
     }
 
     @Override
@@ -50,10 +60,13 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Long fullUpdateLocation(Long id, Location location) throws LocationWithGivenEmailExistsException, LocationWithGivenPhoneNumberExistsException {
 
-        if (locationRepository.findByEmail(location.getEmail()).isPresent())
+        Optional<Location> locationByEmail = locationRepository.findByEmail(location.getEmail());
+        if (locationByEmail.isPresent() && !locationByEmail.get().getId().equals(id))
             throw new LocationWithGivenEmailExistsException(location.getEmail());
 
-        if (locationRepository.findByPhoneNumber(location.getPhoneNumber()).isPresent())
+        Optional<Location> locationByPhoneNumber = locationRepository.findByPhoneNumber(location.getPhoneNumber());
+
+        if (locationByPhoneNumber.isPresent() && !locationByPhoneNumber.get().getId().equals(id))
             throw new LocationWithGivenPhoneNumberExistsException(location.getPhoneNumber());
 
         Location toUpdate;
@@ -72,6 +85,7 @@ public class LocationServiceImpl implements LocationService {
         toUpdate.setPostalCode(location.getPostalCode());
         toUpdate.setOpeningHours(location.getOpeningHours());
         toUpdate.setClosingHours(location.getClosingHours());
+        toUpdate.setPhotoURL(location.getPhotoURL());
 
         Location saved = locationRepository.save(toUpdate);
 
@@ -114,6 +128,9 @@ public class LocationServiceImpl implements LocationService {
         if (location.getClosingHours() != null)
             toUpdate.setClosingHours(location.getClosingHours());
 
+        if (location.getPhotoURL() != null)
+            toUpdate.setPhotoURL(location.getPhotoURL());
+
         Location saved = locationRepository.save(toUpdate);
 
         return saved.getId();
@@ -125,6 +142,29 @@ public class LocationServiceImpl implements LocationService {
     }
     @Override
     public Page<String> getCities(Pageable pageable) {
-        return locationRepository.findAllCities(pageable);
+        List<String> cities = new ArrayList<>(locationRepository.findAllCities(pageable).stream().toList());
+
+        Comparator<String> cityFrequencyComparator =  (city1, city2 ) -> {
+            int city1Frequency = this.locationRepository.countAllByCity(city1);
+            int city2Frequency = this.locationRepository.countAllByCity(city2);
+
+            return Integer.compare(city2Frequency, city1Frequency);
+        };
+
+        cities.sort(cityFrequencyComparator);
+        return new PageImpl<>(cities, pageable, cities.size());
+    }
+
+    @Override
+    public Location getLocationByVehicleId(Long vehicleId) throws LocationNotFoundException, VehicleNotFoundException {
+        this.vehicleRepository.findById(vehicleId).orElseThrow(() -> new VehicleNotFoundException(vehicleId));
+        return this.locationRepository
+                .findLocationByVehicleId(vehicleId)
+                .orElseThrow(() -> new LocationNotFoundException("Vehicle with id: " + vehicleId + " has no location"));
+    }
+
+    @Override
+    public Page<Location> getLocationsByCity(String city, Pageable pageable)  {
+        return locationRepository.findLocationsByCity(city, pageable);
     }
 }

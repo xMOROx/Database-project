@@ -28,5 +28,6 @@ public class LocationModel extends RepresentationModel<LocationModel> {
     private String openingHours;
     private String closingHours;
     private String postalCode;
+    private String photoURL;
 
 }

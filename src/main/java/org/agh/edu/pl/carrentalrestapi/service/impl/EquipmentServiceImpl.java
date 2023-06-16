@@ -23,7 +23,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     }
 
     @Override
-    public Page<Equipment> getAllEquipment(Pageable pageable) {
+    public Page<Equipment> getAllEquipments(Pageable pageable) {
         return equipmentRepository.findAll(pageable);
     }
 

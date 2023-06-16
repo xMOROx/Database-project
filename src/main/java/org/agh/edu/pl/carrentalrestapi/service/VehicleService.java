@@ -1,7 +1,9 @@
 package org.agh.edu.pl.carrentalrestapi.service;
 
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
-import org.agh.edu.pl.carrentalrestapi.utils.SearchRequest;
+import org.agh.edu.pl.carrentalrestapi.exception.types.*;
+import org.agh.edu.pl.carrentalrestapi.model.VehicleAddModel;
+import org.agh.edu.pl.carrentalrestapi.utils.search.SearchRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,18 +15,19 @@ public interface VehicleService {
     Page<Vehicle> getAll(Pageable pageable);
 
     Page<Vehicle> getBestOffer(Pageable pageable);
-    // TODO: implement to location repository
-    Page<Vehicle> getAvailableVehiclesForLocation(Long locationId, Pageable pageable);
+
+    Page<Vehicle> getAvailableVehiclesForLocation(Long locationId, Pageable pageable, String startDate, String endDate);
 
     Vehicle getById(Long id);
 
-    Long addVehicle(Vehicle vehicle);
+    Long addVehicle(VehicleAddModel vehicle) throws VehicleWithRegistrationExistsException, LocationNotFoundException,
+            StatusForVehicleNotFoundException, EquipmentNotFoundException;
 
     void deleteVehicle(Long id);
 
-    Long fullUpdate(Vehicle vehicle);
+    Long fullUpdate(Long id, Vehicle vehicle);
 
-    Long partialUpdate(Vehicle vehicle);
+    Long partialUpdate(Long id, Vehicle vehicle);
 
     Page<Vehicle> search(SearchRequest searchRequest);
 
@@ -32,15 +35,18 @@ public interface VehicleService {
 
     Page<String> getModelsForBrand(String brand, Pageable pageable);
 
+    Page<String> getModels(Pageable pageable);
+
     Page<String> getBodyTypes(Pageable pageable);
 
     Page<String> getColors(Pageable pageable);
 
     void addEquipment(Long id, Long equipmentId);
 
-    void deleteEquipment(Long id, Long equipmentId);
+    void removeEquipment(Long id, Long equipmentId);
 
-    void addVehicleParameters(Long vehicleId, Long parametersId);
+    void changeLocation(Long vehicleId, Long locationId) throws LocationNotFoundException, VehicleNotFoundException;
 
-    void removeVehicleParameters(Long vehicleId);
+    void changeVehicleStatusToVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException;
+
 }

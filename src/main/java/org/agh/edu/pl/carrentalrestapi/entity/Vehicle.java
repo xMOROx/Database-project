@@ -20,9 +20,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -45,6 +43,7 @@ public class Vehicle implements Serializable {
     @Column(name = "Registration", columnDefinition = "VARCHAR(30) NOT NULL UNIQUE")
     @NotBlank(message = "Registration is required")
     @Size(min = 1, max = 30, message = "Registration must be between 1 and 30 characters long")
+    @Pattern(regexp = "^[A-Z][A-Z0-9]+$", message = "Registration must contain only uppercase letters and digits. For example: 'KR1234'")
     private String registration;
 
     @JsonProperty
@@ -56,6 +55,69 @@ public class Vehicle implements Serializable {
     @Column(name = "Model", columnDefinition = "VARCHAR(255) NULL")
     @Size(min = 1, max = 255, message = "Model must be between 1 and 255 characters long")
     private String model;
+
+    @JsonProperty()
+    @Column(name = "PhotoURL", columnDefinition = "VARCHAR(255) NULL")
+    private String photoURL;
+
+    @JsonProperty()
+    @Column(name = "Body_Type", columnDefinition = "VARCHAR(100) NOT NULL")
+    @NotBlank(message = "Body type is required")
+    @Size(min = 1, max = 100, message = "Body type must be between 1 and 100 characters long")
+    private String bodyType;
+
+    @JsonProperty()
+    @Column(name = "Production_Year", columnDefinition = "INT NOT NULL")
+    @Min(value = 1900, message = "Production year must be greater than 1900")
+    private Integer productionYear;
+
+    @JsonProperty()
+    @Column(name = "Fuel_Type", columnDefinition = "VARCHAR(30) NOT NULL")
+    @NotBlank(message = "Fuel type is required")
+    @Size(min = 1, max = 30, message = "Fuel type must be between 1 and 30 characters long")
+    private String fuelType;
+
+    @JsonProperty()
+    @Column(name = "Power", columnDefinition = "INT NOT NULL")
+    @Positive(message = "Power must be greater than 0")
+    private Integer power;
+
+    @JsonProperty()
+    @Column(name = "Gearbox", columnDefinition = "VARCHAR(50) NOT NULL")
+    @NotBlank(message = "Gearbox is required")
+    @Size(min = 1, max = 50, message = "Gearbox must be between 1 and 50 characters long")
+    private String gearbox;
+
+    @JsonProperty()
+    @Column(name = "Front_Wheel_Drive", columnDefinition = "tinyint NOT NULL default 1")
+    private Boolean frontWheelDrive;
+
+    @JsonProperty()
+    @Column(name = "Doors_Number", columnDefinition = "INT NOT NULL")
+    @Min(value = 3, message = "Doors number must be between 1 and 5")
+    @Max(value = 5, message = "Doors number must be between 1 and 5")
+    private Integer doorsNumber;
+
+    @JsonProperty()
+    @Column(name = "Seats_Number", columnDefinition = "INT NOT NULL default 5")
+    @Min(value = 2, message = "Seats number must be between 2 and 9")
+    @Max(value = 9, message = "Seats number must be between 2 and 9")
+    private Integer seatsNumber;
+
+    @JsonProperty()
+    @Column(name = "Color", columnDefinition = "VARCHAR(50) NOT NULL")
+    @NotBlank(message = "Color is required")
+    @Size(min = 1, max = 50, message = "Color must be between 1 and 50 characters long")
+    private String color;
+
+    @JsonProperty()
+    @Column(name = "Metalic", columnDefinition = "tinyint NOT NULL default 0")
+    private Boolean metalic;
+
+    @JsonProperty()
+    @Column(name = "Description", columnDefinition = "varchar(1000) NOT NULL")
+    @NotBlank(message = "Description is required")
+    private String description;
 
     @JsonProperty
     @Column(name = "Daily_Fee", columnDefinition = "DECIMAL(15,2) NOT NULL")
@@ -72,9 +134,6 @@ public class Vehicle implements Serializable {
     @JoinColumn(name = "locationID")
     @JsonIgnore
     private Location location;
-    @OneToOne(mappedBy = "vehicle", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private VehicleParameters vehicleParameters;
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
@@ -104,28 +163,92 @@ public class Vehicle implements Serializable {
                    String registration,
                    String brand,
                    String model,
+                   String photoURL,
+                   String bodyType,
+                   Integer productionYear,
+                   String fuelType,
+                   Integer power,
+                   String gearbox,
+                   Boolean frontWheelDrive,
+                   Integer doorsNumber,
+                   Integer seatsNumber,
+                   String color,
+                   Boolean metalic,
+                   String description,
                    BigDecimal dailyFee,
+                   Boolean bestOffer,
                    VehicleStatus vehicleStatus,
                    Location location,
-                   VehicleParameters vehicleParameters,
-                   Boolean bestOffer,
                    List<Booking> bookings,
                    List<Comment> comments,
                    List<Stars> stars,
                    Set<Equipment> equipment) {
+
         this.id = id;
         this.registration = registration;
         this.brand = brand;
         this.model = model;
+        this.photoURL = photoURL;
+        this.bodyType = bodyType;
+        this.productionYear = productionYear;
+        this.fuelType = fuelType;
+        this.power = power;
+        this.gearbox = gearbox;
+        this.frontWheelDrive = frontWheelDrive;
+        this.doorsNumber = doorsNumber;
+        this.seatsNumber = seatsNumber;
+        this.color = color;
+        this.metalic = metalic;
+        this.description = description;
         this.dailyFee = dailyFee;
-        this.vehicleStatus = vehicleStatus;
         this.bestOffer = bestOffer;
+        this.vehicleStatus = vehicleStatus;
         this.location = location;
         this.bookings = bookings;
         this.comments = comments;
-        this.vehicleParameters = vehicleParameters;
         this.stars = stars;
         this.equipment = equipment;
+    }
+
+
+    public Vehicle(String registration,
+                   String brand,
+                   String model,
+                   String photoURL,
+                   String bodyType,
+                   Integer productionYear,
+                   String fuelType,
+                   Integer power,
+                   String gearbox,
+                   Boolean frontWheelDrive,
+                   Integer doorsNumber,
+                   Integer seatsNumber,
+                   String color,
+                   Boolean metalic,
+                   String description,
+                   BigDecimal dailyFee,
+                   Boolean bestOffer,
+                   VehicleStatus vehicleStatus,
+                   Location location) {
+        this.registration = registration;
+        this.brand = brand;
+        this.model = model;
+        this.photoURL = photoURL;
+        this.bodyType = bodyType;
+        this.productionYear = productionYear;
+        this.fuelType = fuelType;
+        this.power = power;
+        this.gearbox = gearbox;
+        this.frontWheelDrive = frontWheelDrive;
+        this.doorsNumber = doorsNumber;
+        this.seatsNumber = seatsNumber;
+        this.color = color;
+        this.metalic = metalic;
+        this.description = description;
+        this.dailyFee = dailyFee;
+        this.bestOffer = bestOffer;
+        this.vehicleStatus = vehicleStatus;
+        this.location = location;
     }
 
     public Long getId() {
@@ -201,13 +324,14 @@ public class Vehicle implements Serializable {
         this.comments = comments;
     }
 
-    public VehicleParameters getVehicleParameters() {
-        return vehicleParameters;
+    public String getPhotoURL() {
+        return photoURL;
     }
 
-    public void setVehicleParameters(VehicleParameters vehicleParameters) {
-        this.vehicleParameters = vehicleParameters;
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
     }
+
 
     public List<Stars> getStars() {
         return stars;
@@ -229,6 +353,94 @@ public class Vehicle implements Serializable {
         return bestOffer;
     }
 
+    public String getBodyType() {
+        return bodyType;
+    }
+
+    public void setBodyType(String bodyType) {
+        this.bodyType = bodyType;
+    }
+
+    public Integer getProductionYear() {
+        return productionYear;
+    }
+
+    public void setProductionYear(Integer productionYear) {
+        this.productionYear = productionYear;
+    }
+
+    public String getFuelType() {
+        return fuelType;
+    }
+
+    public void setFuelType(String fuelType) {
+        this.fuelType = fuelType;
+    }
+
+    public Integer getPower() {
+        return power;
+    }
+
+    public void setPower(Integer power) {
+        this.power = power;
+    }
+
+    public String getGearbox() {
+        return gearbox;
+    }
+
+    public void setGearbox(String gearbox) {
+        this.gearbox = gearbox;
+    }
+
+    public Boolean getFrontWheelDrive() {
+        return frontWheelDrive;
+    }
+
+    public void setFrontWheelDrive(Boolean frontWheelDrive) {
+        this.frontWheelDrive = frontWheelDrive;
+    }
+
+    public Integer getDoorsNumber() {
+        return doorsNumber;
+    }
+
+    public void setDoorsNumber(Integer doorsNumber) {
+        this.doorsNumber = doorsNumber;
+    }
+
+    public Integer getSeatsNumber() {
+        return seatsNumber;
+    }
+
+    public void setSeatsNumber(Integer seatsNumber) {
+        this.seatsNumber = seatsNumber;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public Boolean getMetalic() {
+        return metalic;
+    }
+
+    public void setMetalic(Boolean metalic) {
+        this.metalic = metalic;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void setBestOffer(Boolean bestOffer) {
         this.bestOffer = bestOffer;
     }
@@ -240,11 +452,22 @@ public class Vehicle implements Serializable {
                 ", registration='" + registration + '\'' +
                 ", brand='" + brand + '\'' +
                 ", model='" + model + '\'' +
+                ", photoURL='" + photoURL + '\'' +
+                ", bodyType='" + bodyType + '\'' +
+                ", productionYear=" + productionYear +
+                ", fuelType='" + fuelType + '\'' +
+                ", power=" + power +
+                ", gearbox='" + gearbox + '\'' +
+                ", frontWheelDrive=" + frontWheelDrive +
+                ", doorsNumber=" + doorsNumber +
+                ", seatsNumber=" + seatsNumber +
+                ", color='" + color + '\'' +
+                ", metalic=" + metalic +
+                ", description='" + description + '\'' +
                 ", dailyFee=" + dailyFee +
                 ", bestOffer=" + bestOffer +
-                ", vehicleStatusId=" + vehicleStatus.getId() +
-                ", locationId=" + location.getId() +
-                ", vehicleParametersId=" + vehicleParameters.getId() +
+                ", vehicleStatus=" + vehicleStatus +
+                ", location=" + location +
                 '}';
     }
 }

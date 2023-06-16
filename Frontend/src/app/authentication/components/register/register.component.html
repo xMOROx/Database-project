@@ -1,0 +1,72 @@
+<div class="auth-wrapper">
+  <form class="form-signin" [formGroup]="signupForm" (ngSubmit)="registerUser()">
+    <div class="header__container">
+      <h1 class="h3 mb-3 font-weight-normal text-center">Please sign up</h1>
+    </div>
+    <div class="form-group">
+      <mat-icon>person</mat-icon>
+      <mat-form-field>
+        <input matInput placeholder="First name" formControlName="first_name" required type="text" />
+      </mat-form-field>
+    </div>
+    <div class="form-group">
+      <mat-icon>person</mat-icon>
+      <mat-form-field>
+        <input matInput placeholder="Last name" formControlName="last_name" required type="text" />
+      </mat-form-field>
+    </div>
+    <div class="form-group">
+      <mat-icon>email</mat-icon>
+      <mat-form-field>
+        <input matInput placeholder="Email" formControlName="email" required type="email" />
+      </mat-form-field>
+    </div>
+    <div class="form-group">
+      <mat-icon>lock</mat-icon>
+      <mat-form-field>
+        <input matInput placeholder="Password" formControlName="password" required type="password" />
+      </mat-form-field>
+    </div>
+    <button mat-raised-button type="submit" class="btn btn-block btn-primary">Sign up</button>
+    <div class="error__container" *ngIf="
+      (signupForm.controls['email'].hasError('required') && signupForm.controls['email'].dirty) ||
+      (signupForm.controls['password'].hasError('required') && signupForm.controls['password'].dirty) ||
+      signupForm.controls['email'].hasError('incorrect') ||
+      (signupForm.controls['last_name'].hasError('required') && signupForm.controls['last_name'].dirty) ||
+      (signupForm.controls['first_name'].hasError('required') && signupForm.controls['first_name'].dirty)
+      || signupForm.controls['password'].hasError('incorrect')
+      || signupForm.controls['email'].hasError('conflict')
+    ">
+      <mat-error *ngIf="signupForm.controls['email'].hasError('required') && signupForm.controls['email'].dirty">
+        <mat-icon>error</mat-icon>
+        Email is required
+      </mat-error>
+      <mat-error *ngIf="signupForm.controls['password'].hasError('required') && signupForm.controls['password'].dirty">
+        <mat-icon>error</mat-icon>
+        Password is required
+      </mat-error>
+      <mat-error *ngIf="signupForm.controls['password'].hasError('incorrect')">
+        <mat-icon>error</mat-icon>
+        Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, one special character.
+      </mat-error>
+      <mat-error *ngIf="signupForm.controls['email'].hasError('incorrect')">
+        <mat-icon>error</mat-icon>
+        Email is invalid
+      </mat-error>
+      <mat-error *ngIf="signupForm.controls['email'].hasError('conflict')">
+        <mat-icon>error</mat-icon>
+        Email already exists
+      </mat-error>
+      <mat-error
+        *ngIf="signupForm.controls['first_name'].hasError('required') && signupForm.controls['first_name'].dirty">
+        <mat-icon>error</mat-icon>
+        First name is required
+      </mat-error>
+      <mat-error
+        *ngIf="signupForm.controls['last_name'].hasError('required') && signupForm.controls['last_name'].dirty">
+        <mat-icon>error</mat-icon>
+        Last name is required
+      </mat-error>
+    </div>
+  </form>
+</div>
