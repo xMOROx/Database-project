@@ -3,11 +3,13 @@ package org.agh.edu.pl.carrentalrestapi.exception;
 import jakarta.validation.constraints.NotNull;
 import org.agh.edu.pl.carrentalrestapi.exception.types.*;
 import org.agh.edu.pl.carrentalrestapi.utils.StringConvert;
+import org.hibernate.query.SemanticException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,6 +39,27 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 errorDetails,
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler({
+            JpaSystemException.class
+    })
+    public final ResponseEntity<ErrorDetails> handleJpaSystemException(JpaSystemException ex, WebRequest request) {
+        Map<String, String> messages = new HashMap<>();
+        messages.put("message", "Jpa system error");
+        messages.put("hint", "Check if request body is valid");
+        messages.put("exception", ex.getMessage());
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                messages,
+                request.getDescription(false),
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value());
+
+        return new ResponseEntity<>(
+                errorDetails,
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler({
