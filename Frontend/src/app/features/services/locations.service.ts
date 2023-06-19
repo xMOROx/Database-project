@@ -35,4 +35,8 @@ export class LocationsService {
     return this.http.get(`${this.endpoint}locations/cities/${city}?page=${page}`, this.httpOptions);
   }
 
+  public getAvailableVehicles(locationId: number, startDate:string, endDate:string, page:number = 0): Observable<any> {
+    return this.http.get(`${this.endpoint}locations/${locationId}/available-vehicles?startDate=${startDate}&endDate=${endDate}&page=${page}`, this.httpOptions);
+  }
+
 }
