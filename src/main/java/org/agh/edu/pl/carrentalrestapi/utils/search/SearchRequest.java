@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.agh.edu.pl.carrentalrestapi.validation.FutureDate;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -25,6 +26,10 @@ public class SearchRequest implements Serializable {
     private List<SortRequest> sorts;
     private Integer page;
     private Integer size;
+    @FutureDate(message = "Start date must be in the future")
+    private transient String startDate;
+    @FutureDate(message = "End date must be in the future")
+    private transient String endDate;
 
     public List<FilterRequest> getFilters() {
         if (filters == null) {

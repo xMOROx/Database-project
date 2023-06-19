@@ -9,7 +9,6 @@ import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
 import org.agh.edu.pl.carrentalrestapi.utils.search.SearchRequest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -31,7 +30,7 @@ public class SearchController {
     @ResponseBody
     public ResponseEntity<PagedModel<VehicleModel>>
     searchVehicles(@RequestBody @Valid SearchRequest searchRequest) {
-        Page<Vehicle> vehicles = vehicleService.search(searchRequest);
+        Page<Vehicle> vehicles = vehicleService.searchVehicles(searchRequest);
 
         return new ResponseEntity<>(
                 VehicleModelAssembler.toVehicleModel(vehicles),
@@ -66,12 +65,6 @@ public class SearchController {
 
         Page<String> models = brand != null ?
                 vehicleService.getModelsForBrand(brand, pageable) : vehicleService.getModels(pageable);
-
-        var filtered = models.stream()
-                .filter(model -> !model.equals("null"))
-                .toList();
-
-        models = new PageImpl<>(filtered, pageable, filtered.size());
 
         return new ResponseEntity<>(
                 models,

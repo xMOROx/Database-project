@@ -44,7 +44,6 @@ public class VehicleModelAssembler extends RepresentationModelAssemblerSupport<V
                 .color(vehicle.getColor())
                 .metalic(vehicle.getMetalic())
                 .description(vehicle.getDescription())
-                .vehicleStatus(vehicleStatusId)
                 .photoURL(vehicle.getPhotoURL())
                 .build();
     }
@@ -64,7 +63,6 @@ public class VehicleModelAssembler extends RepresentationModelAssemblerSupport<V
                 linkTo(methodOn(VehicleController.class).getAllVehicles(page, size)).withSelfRel()
         );
     }
-
 
     @Override
     public VehicleModel toModel(Vehicle entity) {

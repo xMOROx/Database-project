@@ -16,10 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -64,7 +61,7 @@ public class Booking implements Serializable {
     @JsonProperty()
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "receipt_Date", columnDefinition = "DATETIME default CURRENT_TIMESTAMP NULL")
-    @PastOrPresent(message = "Receipt date must be in the past or present")
+    @FutureOrPresent(message = "Receipt date must be in the present or future")
     private LocalDateTime receiptDate;
 
     @JsonProperty()

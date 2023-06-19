@@ -1,16 +1,21 @@
 package org.agh.edu.pl.carrentalrestapi.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.agh.edu.pl.carrentalrestapi.entity.Booking;
+import org.agh.edu.pl.carrentalrestapi.entity.Location;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.exception.types.*;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleAddModel;
+import org.agh.edu.pl.carrentalrestapi.repository.BookingRepository;
 import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
+import org.agh.edu.pl.carrentalrestapi.utils.search.BookingSpecification;
 import org.agh.edu.pl.carrentalrestapi.utils.search.SearchJoinSpecification;
 import org.agh.edu.pl.carrentalrestapi.utils.search.SearchRequest;
-import org.agh.edu.pl.carrentalrestapi.utils.search.SearchSpecification;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +27,13 @@ import java.util.List;
 @Slf4j
 public class VehicleServiceImpl implements VehicleService {
     private final VehicleRepository vehicleRepository;
+    private final BookingRepository bookingRepository;
 
-    public VehicleServiceImpl(VehicleRepository vehicleRepository) {
+    public VehicleServiceImpl(VehicleRepository vehicleRepository,
+                              BookingRepository bookingRepository) {
+
         this.vehicleRepository = vehicleRepository;
+        this.bookingRepository = bookingRepository;
     }
 
     @Override
@@ -57,7 +66,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public Long addVehicle(VehicleAddModel vehicle) throws VehicleWithRegistrationExistsException, LocationNotFoundException,
-            StatusForVehicleNotFoundException, EquipmentNotFoundException  {
+            StatusForVehicleNotFoundException, EquipmentNotFoundException {
         return vehicleRepository.addVehicle(vehicle);
     }
 
@@ -140,11 +149,23 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Page<Vehicle> search(SearchRequest searchRequest) {
+    public Page<Vehicle> searchVehicles(SearchRequest searchRequest) {
 
-        SearchSpecification<Vehicle> searchSpecification = new SearchSpecification<>(searchRequest);
+        SearchJoinSpecification<Vehicle, Location> searchSpecification = new SearchJoinSpecification<>(searchRequest);
         Pageable pageable = SearchJoinSpecification.getPageable(searchRequest.getPage(), searchRequest.getSize());
-        return vehicleRepository.findAll(searchSpecification, pageable);
+
+        Specification<Booking> specification = BookingSpecification.getSpecification(searchRequest);
+        Page<Booking> bookings = bookingRepository.findAll(specification, pageable);
+
+        List<Vehicle> intersectedVehicles = vehicleRepository.findAll(searchSpecification, pageable).filter(vehicle -> {
+            for (Booking booking : bookings) {
+                if (booking.getVehicle().getId().equals(vehicle.getId()))
+                    return false;
+            }
+            return true;
+        }).stream().toList();
+
+        return new PageImpl<>(intersectedVehicles, pageable, intersectedVehicles.size());
     }
 
     @Override
@@ -192,8 +213,15 @@ public class VehicleServiceImpl implements VehicleService {
         vehicleRepository.changeStatusForVehicle(vehicleId, statusId);
     }
 
+    @Override
+    public Long getLocationId(Long vehicleId) throws VehicleNotFoundException {
+        return vehicleRepository.getLocationsIdByVehicleId(vehicleId);
+    }
 
     private String convertToEmptyTimePart(String date) {
+        if (date.contains("T"))
+            return date;
+
         return date + "T00:00:00";
     }
 

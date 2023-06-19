@@ -45,13 +45,13 @@ public class BookingRepositoryImpl {
         }
 
         LocalDateTime receiptDate;
-        LocalDateTime returnDate = LocalDateTime.parse(reservation.getReturnDate());
+        LocalDateTime returnDate = LocalDateTime.parse(convertDate(reservation.getReturnDate()));
         String date = reservation.getReceiptDate();
 
         if (Objects.isNull(date)) {
             receiptDate = LocalDateTime.now();
         } else {
-            String replacedDate = date.replace(' ', 'T');
+            String replacedDate = convertDate(date);
             receiptDate = LocalDateTime.parse(replacedDate);
         }
 
@@ -62,10 +62,10 @@ public class BookingRepositoryImpl {
 
 
         User user = entityManager.find(User.class, reservation.getUserID());
-
-        if (user == null) {
-            throw new UserNotFoundException(reservation.getUserID());
-        }
+//        TODO: uncomment when user service will be ready
+//        if (user == null) {
+//            throw new UserNotFoundException(reservation.getUserID());
+//        }
 
 
         String query = "SELECT b FROM BookingStateCode b WHERE b.bookingCode=:bookingCode";
@@ -129,11 +129,10 @@ public class BookingRepositoryImpl {
     private boolean isVehicleAvailableToRent(Long vehicleId,
                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
-        String query = "SELECT b FROM Booking b WHERE b.vehicle.id=:vehicleId " +
-                "AND b.bookingStateCode.bookingCode NOT IN ('CAN', 'RET') " +
-                "OR (:startDate BETWEEN b.receiptDate AND b.returnDate " +
-                "OR :endDate BETWEEN b.receiptDate AND b.returnDate)" +
-                "OR (:startDate < b.receiptDate AND :endDate > b.returnDate)";
+
+        String query = "SELECT DISTINCT v FROM Vehicle v " +
+        " WHERE v.id = :vehicleId AND  v.vehicleStatus.type='AVI' AND v.id NOT IN (SELECT b.vehicle.id FROM Booking b WHERE b.receiptDate <= :endDate AND b.returnDate >= :startDate " +
+                "AND b.bookingStateCode.bookingCode IN ('RES', 'REN'))";
 
 
         return entityManager.createQuery(query, Booking.class)
@@ -141,7 +140,12 @@ public class BookingRepositoryImpl {
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .getResultList()
-                .isEmpty();
+                .size() > 0;
     }
 
+    private String convertDate(String date) {
+        if(date.matches("^[1-9][0-9]{3}-[0-9]{2}-[0-9]{2}$")) return date.trim() + "T23:59:59";
+
+        return date.trim().replace(" ", "T");
+    }
 }
