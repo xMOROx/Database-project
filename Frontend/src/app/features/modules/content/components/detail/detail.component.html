@@ -2,183 +2,214 @@
 
 <main class="content">
 
-  <section class="content__main" [style]="'background-image: url(' + content?.['photoURL'] + ');'">
+    <section class="content__main" [style]="'background-image: url(' + content?.['photoURL'] + ');'">
 
-    <div class="content__container">
+        <div class="content__container">
 
-      <div class="content__info container">
+            <div class="content__info container">
 
-        <img src="{{content?.['photoURL']}}" data-src="{{content?.['photoURL']}}" data-loaded="true"
-            [alt]="content?.['brand'] ?? content?.['address']" class="container__image" appImgMissingDirective>
+                <img src="{{content?.['photoURL']}}" data-src="{{content?.['photoURL']}}" data-loaded="true"
+                     [alt]="content?.['brand'] ?? content?.['address']" class="container__image" appImgMissingDirective>
 
-        <div class="content__data">
-          <div *ngIf="user != undefined" class="content__data--reactions">
-            <div *ngIf="rating == undefined || rating == 0" class="rating unrated">
-              <mat-icon (click)="openRatingDialog()">star_outlined</mat-icon>
+                <div class="content__data">
+                    <h2 *ngIf="contentType === 'cars'">{{content?.['brand']}}
+                        ({{content?.['productionYear'] }})
+                    </h2>
+                    <h3 *ngIf="contentType === 'cars'">{{content?.['model']}}</h3>
+
+                    <h2 *ngIf="contentType === 'cars'">Registration</h2>
+                    <h3 *ngIf="contentType === 'cars'">{{content?.['registration']}}</h3>
+
+                    <h4 *ngIf="contentType === 'cars'">Description</h4>
+                    <p *ngIf="contentType === 'cars'">{{content?.['description']}}</p>
+
+                    <div *ngIf="contentType === 'cars'" class="content__dailyfee">
+                        <h4>DailyFee</h4>
+                        <p>{{content?.['dailyFee'] | currency:'EUR':'symbol':'1.2-2'}}</p>
+
+                    </div>
+
+                    <div *ngIf="contentType === 'locations'" class="content__location">
+                        <div>
+                            <h2>{{content?.['address']}}, {{content?.['postalCode']}} {{content?.['city']}}</h2>
+                        </div>
+                        <div>
+                            <h2> {{content?.['country']}}</h2>
+
+                        </div>
+                        <div>
+                            <span><mat-icon> email </mat-icon> <span>{{content?.['email']}}</span></span>
+                        </div>
+                        <div>
+                            <span><mat-icon> phone </mat-icon> <span>{{content?.['phoneNumber']}}</span> </span>
+                        </div>
+
+                        <div>
+                            <span>Opening hours: {{content?.['openingHours']}}</span>
+                            <span> | </span>
+                            <span>Closing hours: {{content?.['closingHours']}}</span>
+                        </div>
+                    </div>
+
+                    <button *ngIf="contentType === 'cars'" mat-raised-button color="primary" aria-label="Reserve"
+                            (click)="openDialog()"
+                            class="reserve-vehicle">
+                        <mat-icon>book</mat-icon>
+                        Reserve
+                    </button>
+                </div>
             </div>
-            <div *ngIf="rating != undefined && rating > 0" class="rating rated">
-              <mat-icon (click)="openRatingDialog()">star</mat-icon>
-            </div>
 
-          </div>
+        </div>
 
-          <h2 *ngIf="contentType === 'cars'">{{content?.['brand']}}
-            ({{content?.['vehicleParameters']?.['productionYear'] }})
-          </h2>
-          <h3  *ngIf="contentType === 'cars'">{{content?.['model']}}</h3>
+    </section>
 
-          <h2 *ngIf="contentType === 'cars'">Registration</h2>
-          <h3 *ngIf="contentType === 'cars'">{{content?.['registration']}}</h3>
+    <section class="content__data-mobile">
+        <h2 *ngIf="contentType === 'cars'">{{content?.['brand']}}
+            ({{content?.['productionYear'] }})
+        </h2>
+        <h3 *ngIf="contentType === 'cars'">{{content?.['model']}}</h3>
 
-          <h4 *ngIf="contentType === 'cars'">Description</h4>
-          <p *ngIf="contentType === 'cars'">{{content?.['vehicleParameters']?.['description']}}</p>
+        <h2 *ngIf="contentType === 'cars'">Registration</h2>
+        <h3 *ngIf="contentType === 'cars'">{{content?.['registration']}}</h3>
 
-          <div *ngIf="contentType === 'cars'" class="content__dailyfee">
+
+        <div *ngIf="contentType === 'cars'" class="content__runtime">
+            <h4 *ngIf="contentType === 'cars'">Description</h4>
+            <p *ngIf="contentType === 'cars'">{{content?.['description']}}</p>
+        </div>
+        <div *ngIf="contentType === 'cars'" class="content__dailyfee">
             <h4>DailyFee</h4>
             <p>{{content?.['dailyFee'] | currency:'EUR':'symbol':'1.2-2'}}</p>
-
-          </div>
-
-          <div *ngIf="contentType === 'locations'" class="content__seasons">
-            <div>
-              <h4>Seasons</h4>
-              <p>{{content?.['number_of_seasons']}}</p>
-            </div>
-            <div>
-              <h4>Episodes</h4>
-              <p>{{content?.['number_of_episodes']}}</p>
-            </div>
-          </div>
-
-          <button *ngIf="video" mat-raised-button color="primary" aria-label="Trailer" (click)="openDialog()"
-                  class="play-trailer">
-            <mat-icon>play_arrow</mat-icon>
-            Play Trailer
-          </button>
         </div>
-      </div>
 
-    </div>
+        <div *ngIf="contentType === 'locations'" class="content__seasons">
+            <div>
+                <h4>Seasons</h4>
+                <p>{{content?.['number_of_seasons']}}</p>
+            </div>
+            <div>
+                <h4>Episodes</h4>
+                <p>{{content?.['number_of_episodes']}}</p>
+            </div>
+        </div>
 
-  </section>
+        <button *ngIf="contentType === 'cars'" mat-raised-button color="primary" aria-label="Reserve"
+                (click)="openDialog()"
+                class="reserve-vehicle">
+            <mat-icon>book</mat-icon>
+            Reserve
+        </button>
+    </section>
 
-  <section class="content__data-mobile">
-    <div *ngIf="user != undefined" class="content__data--reactions">
-      <div *ngIf="rating == undefined || rating == 0" class="rating unrated">
-        <mat-icon (click)="openRatingDialog()">star_outlined</mat-icon>
-      </div>
-      <div *ngIf="rating != undefined && rating > 0" class="rating rated">
-        <mat-icon (click)="openRatingDialog()">star</mat-icon>
-      </div>
-    </div>
+    <section class="content__similar_or_recommended container">
 
-    <h2 *ngIf="contentType === 'cars'">{{content?.['brand']}}
-      ({{content?.['vehicleParameters']?.['productionYear'] }})
-    </h2>
-    <h3  *ngIf="contentType === 'cars'">{{content?.['model']}}</h3>
-
-    <h2 *ngIf="contentType === 'cars'">Registration</h2>
-    <h3 *ngIf="contentType === 'cars'">{{content?.['registration']}}</h3>
-
-
-    <div *ngIf="contentType === 'cars'" class="content__runtime">
-      <h4 *ngIf="contentType === 'cars'">Description</h4>
-      <p *ngIf="contentType === 'cars'">{{content?.['description']}}</p>
-    </div>
-    <div *ngIf="contentType === 'cars'" class="content__dailyfee">
-      <h4>DailyFee</h4>
-      <p>{{content?.['dailyFee'] | currency:'EUR':'symbol':'1.2-2'}}</p>
-    </div>
-
-    <div *ngIf="contentType === 'locations'" class="content__seasons">
-      <div>
-        <h4>Seasons</h4>
-        <p>{{content?.['number_of_seasons']}}</p>
-      </div>
-      <div>
-        <h4>Episodes</h4>
-        <p>{{content?.['number_of_episodes']}}</p>
-      </div>
-    </div>
-
-    <button *ngIf="video" mat-raised-button color="primary" aria-label="Trailer" (click)="openDialog()"
-            class="play-trailer">
-      <mat-icon>play_arrow</mat-icon>
-      Play Trailer
-    </button>
-  </section>
-
-  <section class="content__similar_or_recommended container">
-
-    <h2 *ngIf="contentType === 'cars'">Parameters</h2>
-      <mat-list>
-        <mat-list-item>
-          Body type: {{content?.['bodyType']}}
-        </mat-list-item>
-        <mat-list-item>
-          Fuel type: {{content?.['fuelType']}}
-        </mat-list-item>
-        <mat-list-item>
-          Power: {{content?.['power']}} kW
-        </mat-list-item>
-        <mat-list-item>
-          Gearbox type: {{content?.['gearbox']}}
-        </mat-list-item>
-        <mat-list-item>
-          Drive type: {{content?.['frontWheelDrive'] ? 'Front wheel drive' : 'Rear wheel drive'}}
-        </mat-list-item>
-        <mat-list-item>
-          Number of seats: {{content?.['seatsNumber']}}
-        </mat-list-item>
-        <mat-list-item>
-          Number of doors: {{content?.['doorsNumber']}}
-        </mat-list-item>
-        <mat-list-item>
-          {{content?.['metalic'] ? "Metallic ": ""}}Color of the car: {{content?.['color']}}
-        </mat-list-item>
-      </mat-list>
+        <h2 *ngIf="contentType === 'cars'">Parameters</h2>
+        <mat-list *ngIf="contentType === 'cars'">
+            <mat-list-item>
+                Body type: {{content?.['bodyType']}}
+            </mat-list-item>
+            <mat-list-item>
+                Fuel type: {{content?.['fuelType']}}
+            </mat-list-item>
+            <mat-list-item>
+                Power: {{content?.['power']}} kW
+            </mat-list-item>
+            <mat-list-item>
+                Gearbox type: {{content?.['gearbox']}}
+            </mat-list-item>
+            <mat-list-item>
+                Drive type: {{content?.['frontWheelDrive'] ? 'Front wheel drive' : 'Rear wheel drive'}}
+            </mat-list-item>
+            <mat-list-item>
+                Number of seats: {{content?.['seatsNumber']}}
+            </mat-list-item>
+            <mat-list-item>
+                Number of doors: {{content?.['doorsNumber']}}
+            </mat-list-item>
+            <mat-list-item>
+                {{content?.['metalic'] ? "Metallic " : ""}}Color of the car: {{content?.['color']}}
+            </mat-list-item>
+        </mat-list>
 
 
-  </section>
+    </section>
 
-  <section class="content__similar_or_recommended container">
+    <section class="content__similar_or_recommended container">
 
-    <h2>Recommended {{contentType}}</h2>
+        <h2>Recommended vehicles</h2>
 
-    <div class="content__similar_or_recommended--cards" *ngIf="recommendationContentList.length > 0; else noRecommendedMovies">
-      <div *ngFor="let content of recommendationContentList;">
-        <app-poster-card [model]="content" [isCar]="contentType === 'cars'"></app-poster-card>
-      </div>
-    </div>
+        <div class="content__similar_or_recommended--cards"
+             *ngIf="vehiclesForLocationContentList.results.length > 0; else noRecommendedVehicles">
+            <div *ngFor="let content of vehiclesForLocationContentList.results;">
+                <app-poster-card [model]="content" [isCar]="true"></app-poster-card>
+            </div>
+        </div>
 
-    <ng-template #noRecommendedMovies>
-      <div class="content__no-similar_or_recommended">
-        <mat-icon [inline]="true">sentiment_dissatisfied</mat-icon>
-        <span>No recommended {{contentType.slice(0, contentType.length - 1)}}</span>
-      </div>
-    </ng-template>
+        <ng-template #noRecommendedVehicles>
+            <div class="content__no-similar_or_recommended">
+                <mat-icon [inline]="true">sentiment_dissatisfied</mat-icon>
+                <span>No recommended vehicles</span>
+            </div>
+        </ng-template>
 
-  </section>
+    </section>
 </main>
 
 
 <ng-template #matTrailerDialog>
-  <div cdkDragBoundary=".cdk-overlay-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane"
-       style="background: black;">
-    <div class="dialog-title-container" cdkDragHandle>
-      <a href="javascript:void(0);" (click)="trailerDialog.closeAll()">
-        <mat-icon aria-label="cerrar dialogo cambiar imagen Cabecera">close</mat-icon>
-      </a>
-      <h2 matDialogTitle>Play Trailer</h2>
+    <div cdkDragBoundary=".cdk-overlay-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane"
+         class="reserve-container"
+         style="background: black;">
+        <div class="dialog-title-container" cdkDragHandle>
+            <a href="javascript:void(0);" (click)="trailerDialog.closeAll()">
+                <mat-icon aria-label="cerrar dialogo cambiar imagen Cabecera">close</mat-icon>
+            </a>
+            <h2 matDialogTitle>Booking reservation...</h2>
+        </div>
+
+        <mat-dialog-content class="header-content-dialog">
+            <mat-form-field>
+                <mat-label>Enter a rent date range</mat-label>
+                <mat-date-range-input [formGroup]="range" [rangePicker]="picker" [min]="minDate" [max]="maxDate">
+                    <input matStartDate formControlName="start" placeholder="Start date">
+                    <input matEndDate formControlName="end" placeholder="End date">
+                </mat-date-range-input>
+                <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker>
+                    <mat-date-range-picker-actions>
+                        <button mat-button matDateRangePickerCancel>Cancel</button>
+                        <button mat-button matDateRangePickerApply>Apply</button>
+                    </mat-date-range-picker-actions>
+                </mat-date-range-picker>
+                <button matSuffix mat-icon-button aria-label="Clear" *ngIf="range.value.end !== null && range.value.start !== null"
+                        (click)="clearReservationValues()">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <button matSuffix mat-icon-button aria-label="Reserve" class="reserve-container__book-button" (click)="reserveVehicle()" [disabled]="range.value.end === null || range.value.start === null" >
+                    <mat-icon>book</mat-icon>
+                </button>
+
+                <button *ngIf="range.value.end !== null && range.value.start !== null" matSuffix mat-icon-button aria-label="Calculate cost" (click)="calculateTotalCost()">
+                    <mat-icon>attach_money</mat-icon>
+                </button>
+
+                <mat-error *ngIf="range.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                <mat-error *ngIf="range.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                <mat-error *ngIf="range.hasError('matStartDateRequired')">Start date is required</mat-error>
+                <mat-error *ngIf="range.hasError('matEndDateRequired')">End date is required</mat-error>
+
+            </mat-form-field>
+            <div *ngIf="totalCost > 0" class="reserve__info">
+                <span>
+                    Total cost: {{totalCost | currency:'EUR':'symbol':'1.2-2'}}
+                </span>
+                <span>
+                    Number of days: {{numberOfDays}}
+                </span>
+            </div>
+        </mat-dialog-content>
+
     </div>
-
-    <mat-dialog-content class="header-content-dialog">
-
-      <div *ngIf="video" class="video-movie-main">
-        <iframe [src]="video['url']" allowfullscreen></iframe>
-      </div>
-
-    </mat-dialog-content>
-
-  </div>
 </ng-template>

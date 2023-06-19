@@ -1,9 +1,13 @@
 package org.agh.edu.pl.carrentalrestapi.controller;
 
 import jakarta.validation.Valid;
+import org.agh.edu.pl.carrentalrestapi.entity.Location;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
+import org.agh.edu.pl.carrentalrestapi.model.LocationModel;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
+import org.agh.edu.pl.carrentalrestapi.model.assembler.LocationModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleModelAssembler;
+import org.agh.edu.pl.carrentalrestapi.service.LocationService;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
@@ -20,9 +24,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = API_PATH.root + API_PATH.search)
 public class SearchController {
     private final VehicleService vehicleService;
+    private final LocationService locationService;
 
-    public SearchController(VehicleService vehicleService
+    public SearchController(VehicleService vehicleService,
+                            LocationService locationService
     ) {
+        this.locationService = locationService;
         this.vehicleService = vehicleService;
     }
 
@@ -34,6 +41,18 @@ public class SearchController {
 
         return new ResponseEntity<>(
                 VehicleModelAssembler.toVehicleModel(vehicles),
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping(path = API_PATH.locations)
+    @ResponseBody
+    public ResponseEntity<PagedModel<LocationModel>>
+    searchLocations(@RequestBody @Valid SearchRequest searchRequest) {
+        Page<Location> locations = locationService.searchLocations(searchRequest);
+
+        return new ResponseEntity<>(
+                LocationModelAssembler.toLocationModel(locations),
                 HttpStatus.OK
         );
     }
@@ -103,4 +122,5 @@ public class SearchController {
                 HttpStatus.OK
         );
     }
+
 }
