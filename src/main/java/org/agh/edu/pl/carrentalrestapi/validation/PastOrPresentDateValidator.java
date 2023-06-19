@@ -27,7 +27,7 @@ public class PastOrPresentDateValidator implements ConstraintValidator<PastOrPre
     }
 
     private String convertDate(String date) {
-        if(date.matches("^[1-9][0-9]{3}-[0-9]{2}-[0-9]{2}$")) return date.trim() + "T00:00:00";
+        if(date.matches("^[1-9][0-9]{3}-[0-9]{2}-[0-9]{2}$")) return date.trim() + "T23:59:59";
 
         return date.trim().replace(" ", "T");
     }

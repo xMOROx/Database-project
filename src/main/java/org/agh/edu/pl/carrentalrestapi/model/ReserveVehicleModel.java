@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @JsonRootName(value = "ReserveVehicle")
 @JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
-public class ReserveVehicleModel {
+public class  ReserveVehicleModel {
     @NotNull(message = "User ID is required")
     private Long userID;
 
@@ -33,7 +33,6 @@ public class ReserveVehicleModel {
     private Long locationID;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @PastOrPresentDate(message = "Receipt date must be in the past or present")
     private String receiptDate;
 
     @NotBlank(message = "Return date is required")

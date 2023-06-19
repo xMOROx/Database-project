@@ -213,6 +213,10 @@ public class VehicleServiceImpl implements VehicleService {
         vehicleRepository.changeStatusForVehicle(vehicleId, statusId);
     }
 
+    @Override
+    public Long getLocationId(Long vehicleId) throws VehicleNotFoundException {
+        return vehicleRepository.getLocationsIdByVehicleId(vehicleId);
+    }
 
     private String convertToEmptyTimePart(String date) {
         if (date.contains("T"))

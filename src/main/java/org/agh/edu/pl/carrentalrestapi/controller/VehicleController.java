@@ -168,6 +168,14 @@ public class VehicleController {
                 .ok()
                 .build();
     }
+
+    @GetMapping("/{vehicleId}/location")
+    @ResponseBody
+    public ResponseEntity<Long> getLocationId(@PathVariable("vehicleId") Long vehicleId) throws VehicleNotFoundException {
+        return ResponseEntity
+                .ok()
+                .body(vehicleService.getLocationId(vehicleId));
+    }
 }
 
 

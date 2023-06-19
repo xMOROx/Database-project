@@ -27,7 +27,12 @@ public class SearchSpecification<T> implements Specification<T> {
 
 
         for (FilterRequest filter : this.searchRequest.getFilters()) {
-            log.info("Filter: Key = {}; Operator = {}; Value = {}", filter.getKey(), filter.getOperator().toString().toUpperCase(), filter.getValue());
+            log.info("Filter: Key = {}; Operator = {}; Value = {} | ValueTo = {} | Values = {}",
+                    filter.getKey(),
+                    filter.getOperator().toString(),
+                    filter.getValue(),
+                    filter.getValueTo(),
+                    filter.getValues());
 
             predicate = filter
                     .getOperator()

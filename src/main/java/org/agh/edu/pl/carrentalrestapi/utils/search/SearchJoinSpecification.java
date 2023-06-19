@@ -27,7 +27,12 @@ public class SearchJoinSpecification<T, V> extends SearchSpecification<T> {
                 .equal(criteriaBuilder.literal(Boolean.TRUE), Boolean.TRUE);
 
         for (FilterRequest filter : this.searchRequest.getFilters()) {
-            log.info("Filter: Key = {}; Operator = {}; Value = {}", filter.getKey(), filter.getOperator().toString(), filter.getValue());
+            log.info("Filter: Key = {}; Operator = {}; Value = {} | ValueTo = {} | Values = {}",
+                    filter.getKey(),
+                    filter.getOperator().toString(),
+                    filter.getValue(),
+                    filter.getValueTo(),
+                    filter.getValues());
 
             if (checkIfJoinExists(filter.getKey())) {
                 String[] keys = filter.getKey().split("\\.");

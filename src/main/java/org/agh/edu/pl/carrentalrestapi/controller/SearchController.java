@@ -67,12 +67,6 @@ public class SearchController {
         Page<String> models = brand != null ?
                 vehicleService.getModelsForBrand(brand, pageable) : vehicleService.getModels(pageable);
 
-        var filtered = models.stream()
-                .filter(model -> !model.equals("null"))
-                .toList();
-
-        models = new PageImpl<>(filtered, pageable, filtered.size());
-
         return new ResponseEntity<>(
                 models,
                 HttpStatus.OK

@@ -120,21 +120,21 @@ public class BookingController {
         return ResponseEntity.ok(BookingModelAssembler.toBookingModel(bookingService.getBookingById(id)));
     }
 
-    @GetMapping(value = "/{id}/cancel")
+    @PostMapping(value = "/{id}/cancel")
     @ResponseBody
     public ResponseEntity<String> cancelBooking(@PathVariable Long id) throws BookingNotFoundException {
         bookingService.cancelBooking(id);
         return ResponseEntity.ok("Booking with id: " + id + " canceled");
     }
 
-    @GetMapping(value = "/{id}/rent")
+    @PostMapping(value = "/{id}/rent")
     @ResponseBody
     public ResponseEntity<String> rentBooking(@PathVariable Long id) throws BookingNotFoundException {
         bookingService.rentBooking(id);
         return ResponseEntity.ok("Booking with id: " + id + " rented");
     }
 
-    @GetMapping(value = "/{id}/return")
+    @PostMapping(value = "/{id}/return")
     @ResponseBody
     public ResponseEntity<String> returnBooking(@PathVariable Long id) throws BookingNotFoundException {
         bookingService.returnBooking(id);

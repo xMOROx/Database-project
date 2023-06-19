@@ -48,5 +48,6 @@ public interface VehicleService {
     void changeLocation(Long vehicleId, Long locationId) throws LocationNotFoundException, VehicleNotFoundException;
 
     void changeVehicleStatusToVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException;
+    Long getLocationId(Long vehicleId) throws VehicleNotFoundException;
 
 }

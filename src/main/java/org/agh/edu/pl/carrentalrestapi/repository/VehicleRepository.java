@@ -1,6 +1,7 @@
 package org.agh.edu.pl.carrentalrestapi.repository;
 
 import jakarta.transaction.Transactional;
+import org.agh.edu.pl.carrentalrestapi.entity.Location;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.exception.types.*;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleAddModel;
@@ -54,7 +55,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
     Page<String> findBodyTypes(Pageable pageable);
 
     @Transactional
-    @Query(value = "SELECT DISTINCT v.brand FROM Vehicle v", countQuery = "SELECT COUNT(DISTINCT v.brand) FROM Vehicle v")
+    @Query(value = "SELECT DISTINCT v.model FROM Vehicle v", countQuery = "SELECT COUNT(DISTINCT v.model) FROM Vehicle v")
     Page<String> findModels(Pageable pageable);
 
     @Transactional
@@ -71,5 +72,9 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
     void changeLocation(Long vehicleId, Long locationId) throws VehicleNotFoundException, LocationNotFoundException;
 
     void changeStatusForVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException;
+
+    @Query(value = "SELECT l.id FROM Vehicle v JOIN Location l ON(v.location.id=l.id) WHERE v.id=?1")
+    @Transactional
+    Long getLocationsIdByVehicleId(Long vehicleId) throws VehicleNotFoundException;
 
 }

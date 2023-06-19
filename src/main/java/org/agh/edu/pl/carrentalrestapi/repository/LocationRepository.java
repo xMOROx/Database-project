@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Repository("locationRepository")
 public interface LocationRepository extends JpaRepository<Location, Long> {
-    List<String> findCityList();
     @Query("SELECT l FROM Location l WHERE l.email = ?1")
     @Transactional
     Optional<Location> findByEmail(String email);
