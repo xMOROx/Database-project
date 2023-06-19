@@ -1,7 +1,6 @@
 package org.agh.edu.pl.carrentalrestapi.repository;
 
 import jakarta.transaction.Transactional;
-import org.agh.edu.pl.carrentalrestapi.entity.Location;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.exception.types.*;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleAddModel;

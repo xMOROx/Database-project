@@ -12,7 +12,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.agh.edu.pl.carrentalrestapi.validation.FutureDate;
-import org.agh.edu.pl.carrentalrestapi.validation.PastOrPresentDate;
 
 import java.math.BigDecimal;
 
@@ -22,7 +21,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @JsonRootName(value = "ReserveVehicle")
 @JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
-public class  ReserveVehicleModel {
+public class ReserveVehicleModel {
     @NotNull(message = "User ID is required")
     private Long userID;
 

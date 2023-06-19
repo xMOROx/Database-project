@@ -5,9 +5,7 @@ import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
 import org.agh.edu.pl.carrentalrestapi.exception.types.*;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleAddModel;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
-import org.agh.edu.pl.carrentalrestapi.model.assembler.LocationModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleModelAssembler;
-import org.agh.edu.pl.carrentalrestapi.service.LocationService;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
@@ -26,19 +24,13 @@ import java.util.stream.Stream;
 @RequestMapping(path = API_PATH.root + API_PATH.vehicles)
 public class VehicleController {
     private final VehicleService vehicleService;
-    private final LocationService locationService;
     private final VehicleModelAssembler vehicleModelAssembler;
-    private final LocationModelAssembler locationModelAssembler;
 
     public VehicleController(VehicleService vehicleService,
-                             LocationService locationService,
-                             VehicleModelAssembler vehicleModelAssembler,
-                             LocationModelAssembler locationModelAssembler) {
+                             VehicleModelAssembler vehicleModelAssembler) {
 
         this.vehicleService = vehicleService;
-        this.locationService = locationService;
         this.vehicleModelAssembler = vehicleModelAssembler;
-        this.locationModelAssembler = locationModelAssembler;
     }
 
     @GetMapping(path = "/{id}")
@@ -145,7 +137,7 @@ public class VehicleController {
     @PostMapping("/{vehicleId}/status")
     @ResponseBody
     public ResponseEntity<Void> changeVehicleStatus(@PathVariable("vehicleId") Long vehicleId,
-                                                 @RequestBody Long statusId)
+                                                    @RequestBody Long statusId)
             throws VehicleNotFoundException, StatusForVehicleNotFoundException {
 
         vehicleService.changeVehicleStatusToVehicle(vehicleId, statusId);
@@ -159,7 +151,7 @@ public class VehicleController {
     @PostMapping("/{vehicleId}/location")
     @ResponseBody
     public ResponseEntity<Void> changeLocation(@PathVariable("vehicleId") Long vehicleId,
-                                             @RequestBody Long locationId)
+                                               @RequestBody Long locationId)
             throws VehicleNotFoundException, LocationNotFoundException {
 
         vehicleService.changeLocation(vehicleId, locationId);
