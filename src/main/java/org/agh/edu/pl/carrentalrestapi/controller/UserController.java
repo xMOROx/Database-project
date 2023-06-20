@@ -235,4 +235,19 @@ public class UserController {
         return ResponseEntity.ok(
                 BookingModelAssembler.toBookingModel(bookingService.getUserBookingsRented(userId, pageable)));
     }
+
+    @GetMapping(value = "/{userId}"+ API_PATH.bookings + "/active")
+    @ResponseBody
+    public ResponseEntity<PagedModel<BookingModel>>
+    getActiveBookingsByUserId(@PathVariable Long userId,
+                              @RequestParam(value = "page", required = false) Integer page,
+                              @RequestParam(value = "size", required = false) Integer size)
+            throws UserNotFoundException {
+
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
+        Pageable pageable = PageableRequest.toPageable(pageableRequest);
+
+        return ResponseEntity.ok(
+                BookingModelAssembler.toBookingModel(bookingService.activeBookingsByUserId(userId, pageable)));
+    }
 }
