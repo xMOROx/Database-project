@@ -248,7 +248,7 @@ Default: page=0, size=20
 
 ## Examples
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/v1/search/vehicles/models?page=0&size=20&brand=BMW" 
     -H "accept: application/json"
 ```
@@ -284,7 +284,7 @@ curl -X GET "http://localhost:8080/api/v1/search/vehicles/models?page=0&size=20&
 }
 ```
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/v1/search/vehicles/models?page=0&size=20&brand=TOYOTA" 
     -H "accept: application/json"
 ```
@@ -322,7 +322,7 @@ curl -X GET "http://localhost:8080/api/v1/search/vehicles/models?page=0&size=20&
 }
 ```
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/v1/search/vehicles/models" 
     -H "accept: application/json"
 ```
@@ -361,7 +361,7 @@ curl -X GET "http://localhost:8080/api/v1/search/vehicles/models"
 }
 ```
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/v1/search/vehicles/brands" 
     -H "accept: application/json"
 ```
@@ -400,7 +400,7 @@ curl -X GET "http://localhost:8080/api/v1/search/vehicles/brands"
 }
 ```
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/v1/search/vehicles/colors" 
     -H "accept: application/json"
 ```
@@ -438,7 +438,7 @@ curl -X GET "http://localhost:8080/api/v1/search/vehicles/colors"
 }
 ```
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/v1/search/vehicles/body-types" 
     -H "accept: application/json"
 ```
@@ -477,7 +477,7 @@ curl -X GET "http://localhost:8080/api/v1/search/vehicles/body-types"
 }
 ```
 
-```HTTP
+```
 curl -X POST "http://localhost:8080/api/v1/search/vehicles" 
     -H "Content-Type: application/json" 
     -d 
@@ -557,7 +557,7 @@ curl -X POST "http://localhost:8080/api/v1/search/vehicles"
 }
 ```
 
-```HTTP
+```
 curl -X POST "http://localhost:8080/api/v1/search/vehicles" 
     -H "Content-Type: application/json" 
     -d 
@@ -623,7 +623,7 @@ curl -X POST "http://localhost:8080/api/v1/search/vehicles"
 }
 ```
 
-```HTTP
+```
 curl -X POST "http://localhost:8080/api/v1/search/vehicles" 
     -H "Content-Type: application/json" 
     -d 
