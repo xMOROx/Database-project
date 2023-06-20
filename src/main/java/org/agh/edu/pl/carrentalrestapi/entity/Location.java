@@ -76,16 +76,19 @@ public class Location  implements Serializable {
     @JsonProperty
     @Column(name = "opening_hours", columnDefinition = "varchar(20) not null")
     @NotBlank(message = "Opening hours is required")
-    @Size(min = 1, max = 20, message = "Opening hours must be between 1 and 20 characters long")
+    @Size(min = 5, max = 5, message = "Opening hours must 5 characters long")
+    @Pattern(regexp = "^([0-1][0-9]|2[0-3]):([0-5][0-9])$", message = "Opening hours should be valid. For example: 00:00")
     private String openingHours;
     @JsonProperty
     @Column(name = "closing_hours", columnDefinition = "varchar(20) not null")
     @NotBlank(message = "Closing hours is required")
-    @Size(min = 1, max = 20, message = "Closing hours must be between 1 and 20 characters long")
+    @Size(min = 5, max = 5, message = "Closing hours must be 5 characters long")
+    @Pattern(regexp = "^([0-1][0-9]|2[0-3]):([0-5][0-9])$", message = "Closing hours should be valid. For example: 00:00")
     private String closingHours;
     @JsonProperty
     @Column(name = "postal_code", columnDefinition = "varchar(15) not null", table = "Addresses")
     @NotBlank(message = "Postal code is required")
+    @Size(min = 6, max = 6, message = "Postal code must be 6 characters long")
     @Pattern(regexp = "^[0-9]{2}-[0-9]{3}$", message = "Postal code should be valid. For example: 00-000")
     private String postalCode;
 

@@ -137,19 +137,21 @@
 
     <section class="content__similar_or_recommended container">
 
-        <h2>Recommended vehicles</h2>
+        <h2 *ngIf="contentType === 'locations'">Vehicles to rent</h2>
+        <h2 *ngIf="contentType === 'cars'">Recommended vehicles to rent</h2>
+
 
         <div class="content__similar_or_recommended--cards"
-             *ngIf="vehiclesForLocationContentList.results.length > 0; else noRecommendedVehicles">
+             *ngIf="vehiclesForLocationContentList.results.length > 0; else noAvailableToRentVehicles">
             <div *ngFor="let content of vehiclesForLocationContentList.results;">
                 <app-poster-card [model]="content" [isCar]="true"></app-poster-card>
             </div>
         </div>
 
-        <ng-template #noRecommendedVehicles>
+        <ng-template #noAvailableToRentVehicles>
             <div class="content__no-similar_or_recommended">
                 <mat-icon [inline]="true">sentiment_dissatisfied</mat-icon>
-                <span>No recommended vehicles</span>
+                <span>No available to rent vehicles</span>
             </div>
         </ng-template>
 
