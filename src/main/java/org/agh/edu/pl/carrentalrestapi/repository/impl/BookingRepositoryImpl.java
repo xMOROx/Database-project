@@ -2,10 +2,7 @@ package org.agh.edu.pl.carrentalrestapi.repository.impl;
 
 import jakarta.persistence.EntityManager;
 import org.agh.edu.pl.carrentalrestapi.entity.*;
-import org.agh.edu.pl.carrentalrestapi.exception.types.BookingUnavailableVehicleException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.LocationNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.exception.types.*;
 import org.agh.edu.pl.carrentalrestapi.model.ReserveVehicleModel;
 import org.agh.edu.pl.carrentalrestapi.utils.enums.BookingStateCodeConstants;
 import org.agh.edu.pl.carrentalrestapi.utils.enums.VehicleStatuses;
@@ -62,10 +59,10 @@ public class BookingRepositoryImpl {
 
 
         User user = entityManager.find(User.class, reservation.getUserID());
-//        TODO: uncomment when user service will be ready
-//        if (user == null) {
-//            throw new UserNotFoundException(reservation.getUserID());
-//        }
+
+        if (user == null) {
+            throw new UserNotFoundException(reservation.getUserID());
+        }
 
 
         String query = "SELECT b FROM BookingStateCode b WHERE b.bookingCode=:bookingCode";
@@ -89,40 +86,94 @@ public class BookingRepositoryImpl {
         return booking.getId();
     }
 
-    @Transactional
     public void cancelBooking(Long bookingId) {
         Booking booking = entityManager.find(Booking.class, bookingId);
-        Vehicle vehicle = entityManager.find(Vehicle.class, booking.getVehicle().getId());
 
-        VehicleStatus availableStatus = entityManager.find(VehicleStatus.class, VehicleStatuses.AVI.toString());
-        BookingStateCode bookingStatusCancel = entityManager.find(BookingStateCode.class, BookingStateCodeConstants.CAN.toString());
-        vehicle.setVehicleStatus(availableStatus);
+        if (booking == null) {
+            throw new BookingNotFoundException(bookingId);
+        }
+
+        if (booking.getBookingStateCode().getBookingCode().equals(BookingStateCodeConstants.CAN.toString())) {
+            return;
+        }
+
+        if (booking.getBookingStateCode().getBookingCode().equals(BookingStateCodeConstants.RET.toString())) {
+            throw new BookingConflictException("Booking is returned and cannot be canceled");
+        }
+
+
+        String bookingStatusQuery = "SELECT b FROM BookingStateCode b WHERE b.bookingCode=:bookingCode";
+
+        BookingStateCode bookingStatusCancel = entityManager.createQuery(bookingStatusQuery, BookingStateCode.class)
+                .setParameter("bookingCode", BookingStateCodeConstants.CAN.toString())
+                .getSingleResult();
         booking.setBookingStateCode(bookingStatusCancel);
 
-        entityManager.persist(vehicle);
         entityManager.persist(booking);
     }
 
-    @Transactional
     public void bookingRent(Long bookingId) {
         Booking booking = entityManager.find(Booking.class, bookingId);
-        BookingStateCode bookingStatusRented = entityManager.find(BookingStateCode.class, BookingStateCodeConstants.REN.toString());
+
+        if (booking == null) {
+            throw new BookingNotFoundException(bookingId);
+        }
+
+        if (booking.getBookingStateCode().getBookingCode().equals(BookingStateCodeConstants.REN.toString())) {
+            return;
+        }
+
+        if (booking.getBookingStateCode().getBookingCode().equals(BookingStateCodeConstants.CAN.toString())) {
+            throw new BookingConflictException("Booking is canceled and cannot be rented");
+        }
+
+        if (booking.getBookingStateCode().getBookingCode().equals(BookingStateCodeConstants.RET.toString())) {
+            throw new BookingConflictException("Booking is returned and cannot be rented");
+        }
+
+
+        String query = "SELECT b FROM BookingStateCode b WHERE b.bookingCode=:bookingCode";
+
+        BookingStateCode bookingStatusRented = entityManager.createQuery(query, BookingStateCode.class)
+                .setParameter("bookingCode", BookingStateCodeConstants.REN.toString())
+                .getSingleResult();
+
         booking.setBookingStateCode(bookingStatusRented);
+
         entityManager.persist(booking);
     }
 
-    @Transactional
     public void bookingReturn(Long bookingId) {
         Booking booking = entityManager.find(Booking.class, bookingId);
-        Vehicle vehicle = entityManager.find(Vehicle.class, booking.getVehicle().getId());
 
-        VehicleStatus availableStatus = entityManager.find(VehicleStatus.class, VehicleStatuses.AVI.toString());
-        BookingStateCode bookingStatusReturn = entityManager.find(BookingStateCode.class, BookingStateCodeConstants.RET.toString());
+        if (booking == null) {
+            throw new BookingNotFoundException(bookingId);
+        }
 
-        vehicle.setVehicleStatus(availableStatus);
+        if (booking.getBookingStateCode().getBookingCode().equals(BookingStateCodeConstants.RET.toString())) {
+            return;
+        }
+
+        if(booking.getBookingStateCode().getBookingCode().equals(BookingStateCodeConstants.CAN.toString())) {
+            throw new BookingConflictException("Booking is canceled and cannot be returned");
+        }
+
+        if(booking.getBookingStateCode().getBookingCode().equals(BookingStateCodeConstants.REN.toString())) {
+            throw new BookingConflictException("Booking is already returned");
+        }
+
+        if(booking.getBookingStateCode().getBookingCode().equals(BookingStateCodeConstants.RES.toString())) {
+            throw new BookingConflictException("Booking is reserved and cannot be returned. Firstly rent it or cancel reservation.");
+        }
+
+        String bookingStatusQuery = "SELECT b FROM BookingStateCode b WHERE b.bookingCode=:bookingCode";
+
+        BookingStateCode bookingStatusReturn = entityManager.createQuery(bookingStatusQuery, BookingStateCode.class)
+                .setParameter("bookingCode", BookingStateCodeConstants.RET.toString())
+                .getSingleResult();
+
         booking.setBookingStateCode(bookingStatusReturn);
 
-        entityManager.persist(vehicle);
         entityManager.persist(booking);
     }
 

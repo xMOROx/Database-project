@@ -113,25 +113,37 @@ public class BookingController {
         return ResponseEntity.ok(BookingModelAssembler.toBookingModel(bookingService.getBookingById(id)));
     }
 
-    @PostMapping(value = "/{id}/cancel")
+    @PostMapping(value = "/cancel")
     @ResponseBody
-    public ResponseEntity<String> cancelBooking(@PathVariable Long id) throws BookingNotFoundException {
+    public ResponseEntity<String> cancelBooking(@RequestBody Long id) throws BookingNotFoundException {
         bookingService.cancelBooking(id);
         return ResponseEntity.ok("Booking with id: " + id + " canceled");
     }
 
-    @PostMapping(value = "/{id}/rent")
+    @PostMapping(value = "/rent")
     @ResponseBody
-    public ResponseEntity<String> rentBooking(@PathVariable Long id) throws BookingNotFoundException {
+    public ResponseEntity<String> rentBooking(@RequestBody Long id) throws BookingNotFoundException {
         bookingService.rentBooking(id);
         return ResponseEntity.ok("Booking with id: " + id + " rented");
     }
 
-    @PostMapping(value = "/{id}/return")
+    @PostMapping(value = "/return")
     @ResponseBody
-    public ResponseEntity<String> returnBooking(@PathVariable Long id) throws BookingNotFoundException {
+    public ResponseEntity<String> returnBooking(@RequestBody Long id) throws BookingNotFoundException {
         bookingService.returnBooking(id);
         return ResponseEntity.ok("Booking with id: " + id + " returned");
+    }
+
+    @GetMapping(value = "/active")
+    @ResponseBody
+    public ResponseEntity<PagedModel<BookingModel>> getActiveBookings(@RequestParam(value = "page", required = false) Integer page,
+                                                                      @RequestParam(value = "size", required = false) Integer size) {
+        PageableRequest pageableRequest = PageableRequest.of(page, size);
+        Pageable pageable = PageableRequest.toPageable(pageableRequest);
+
+        return ResponseEntity.ok(
+                BookingModelAssembler.toBookingModel(bookingService.activeBookings(pageable))
+        );
     }
 
     @PostMapping(value = "/cost")
