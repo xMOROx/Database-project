@@ -20,18 +20,19 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @Entity
 @Table(name = "Users")
 @JsonNaming(value = PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User implements Serializable {
+public class User implements Serializable, UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -57,11 +58,6 @@ public class User implements Serializable {
     @Size(min = 5, max = 255, message = "Email must be between 5 and 255 characters long")
     private String email;
 
-    @JsonProperty
-    @Column(name = "Login", columnDefinition = "varchar(60) NOT NULL")
-    @NotBlank(message = "Login is required")
-    @Size(min = 5, max = 60, message = "Login must be between 5 and 60 characters long")
-    private String login;
     @JsonProperty
     @Column(name = "Password", columnDefinition = "varchar(255) NOT NULL")
     @NotBlank(message = "Password is required")
@@ -100,7 +96,6 @@ public class User implements Serializable {
                 String firstName,
                 String surName,
                 String email,
-                String login,
                 String password,
                 String phoneNumber,
                 String pesel,
@@ -111,7 +106,6 @@ public class User implements Serializable {
         this.firstName = firstName;
         this.surName = surName;
         this.email = email;
-        this.login = login;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.pesel = pesel;
@@ -152,16 +146,38 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {
@@ -207,7 +223,6 @@ public class User implements Serializable {
                 ", firstName='" + firstName + '\'' +
                 ", surName='" + surName + '\'' +
                 ", email='" + email + '\'' +
-                ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", pesel='" + pesel + '\'' +

@@ -3,14 +3,16 @@ package org.agh.edu.pl.carrentalrestapi.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.agh.edu.pl.carrentalrestapi.entity.User;
 import org.agh.edu.pl.carrentalrestapi.entity.UserRole;
-import org.agh.edu.pl.carrentalrestapi.exception.*;
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserWithEmailExistsException;
-import org.agh.edu.pl.carrentalrestapi.exception.types.UserWithLoginExistsException;
+import org.agh.edu.pl.carrentalrestapi.model.UserModel;
 import org.agh.edu.pl.carrentalrestapi.repository.UserRepository;
 import org.agh.edu.pl.carrentalrestapi.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,14 +40,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long addUser(User user) throws UserWithEmailExistsException, UserWithLoginExistsException {
-        String login = user.getLogin();
+    public User getUserByEmail(String email) {
+        return userRepository.findUserByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+    }
+
+    @Override
+    public Long addUser(User user) throws UserWithEmailExistsException{
         String email = user.getEmail();
 
         if (userRepository.findUserByEmail(email).isPresent())
             throw new UserWithEmailExistsException(email);
-        if (userRepository.findUserByLogin(login).isPresent())
-            throw new UserWithLoginExistsException(login);
 
         User saved = userRepository.save(user);
 
@@ -69,7 +73,6 @@ public class UserServiceImpl implements UserService {
         toUpdate.setEmail(email);
         toUpdate.setFirstName(user.getFirstName());
         toUpdate.setSurName(user.getSurName());
-        toUpdate.setLogin(user.getLogin());
         toUpdate.setPesel(user.getPesel());
         toUpdate.setPhoneNumber(user.getPhoneNumber());
         User saved = userRepository.save(toUpdate);
@@ -90,9 +93,6 @@ public class UserServiceImpl implements UserService {
             toUpdate.setEmail(email);
         }
 
-        if (user.getLogin() != null) {
-            toUpdate.setLogin(user.getLogin());
-        }
         if (user.getFirstName() != null) {
             toUpdate.setFirstName(user.getFirstName());
         }
