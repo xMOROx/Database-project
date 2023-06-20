@@ -8,6 +8,8 @@ import org.agh.edu.pl.carrentalrestapi.exception.types.VehicleNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.repository.LocationRepository;
 import org.agh.edu.pl.carrentalrestapi.repository.VehicleRepository;
 import org.agh.edu.pl.carrentalrestapi.service.LocationService;
+import org.agh.edu.pl.carrentalrestapi.utils.search.SearchRequest;
+import org.agh.edu.pl.carrentalrestapi.utils.search.SearchSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -156,15 +158,15 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Location getLocationByVehicleId(Long vehicleId) throws LocationNotFoundException, VehicleNotFoundException {
-        this.vehicleRepository.findById(vehicleId).orElseThrow(() -> new VehicleNotFoundException(vehicleId));
-        return this.locationRepository
-                .findLocationByVehicleId(vehicleId)
-                .orElseThrow(() -> new LocationNotFoundException("Vehicle with id: " + vehicleId + " has no location"));
+    public Page<Location> getLocationsByCity(String city, Pageable pageable)  {
+        return locationRepository.findLocationsByCity(city, pageable);
     }
 
     @Override
-    public Page<Location> getLocationsByCity(String city, Pageable pageable)  {
-        return locationRepository.findLocationsByCity(city, pageable);
+    public Page<Location> searchLocations(SearchRequest searchRequest) {
+        SearchSpecification<Location> searchSpecification = new SearchSpecification<>(searchRequest);
+        Pageable pageable = SearchSpecification.getPageable(searchRequest.getPage(), searchRequest.getSize());
+
+        return locationRepository.findAll(searchSpecification, pageable);
     }
 }

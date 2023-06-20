@@ -1,6 +1,6 @@
 @import "../../../../../styles/variables.scss";
 
-.play-trailer {
+.reserve-vehicle {
   margin: 1% 0 1% 0;
 }
 
@@ -61,7 +61,7 @@
 
   }
 
-  &__seasons {
+  &__location {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -69,9 +69,22 @@
     max-width: 80%;
   }
 
-  &__seasons div {
-    min-width: 20%;
+  &__location div {
+    min-width: 100%;
     margin: 1%;
+
+    span {
+      font-size: 1.2em;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    mat-icon ~ span {
+      font-size: 1em;
+      font-weight: 400;
+      color: #fff;
+      margin-left: 10px;
+    }
   }
 
 
@@ -82,9 +95,23 @@
     justify-content: center;
     align-items: flex-start;
     min-width: 40%;
-    p {margin-top: 0;}
-    h3 {font-weight: 500; color: #fff; font-size: 1.1em; font-style: italic; opacity: 0.8; margin: 0;}
-    h4 {margin: 15px 0;}
+
+    p {
+      margin-top: 0;
+    }
+
+    h3 {
+      font-weight: 500;
+      color: #fff;
+      font-size: 1.1em;
+      font-style: italic;
+      opacity: 0.8;
+      margin: 0;
+    }
+
+    h4 {
+      margin: 15px 0;
+    }
 
     &--reactions {
       width: 15%;
@@ -105,18 +132,33 @@
     }
 
     & .rating {
-      &.unrated {color: #fff;}
-      &.rated  {color: #FFD700;}
+      &.unrated {
+        color: #fff;
+      }
+
+      &.rated {
+        color: #FFD700;
+      }
     }
 
     & .favorite {
-      &--checked {color: #df1a54;}
-      &--unchecked {color: #fff;}
+      &--checked {
+        color: #df1a54;
+      }
+
+      &--unchecked {
+        color: #fff;
+      }
     }
 
-    & .trash{
-      &--checked {color: #666666;}
-      &--unchecked {color: #fff;}
+    & .trash {
+      &--checked {
+        color: #666666;
+      }
+
+      &--unchecked {
+        color: #fff;
+      }
     }
 
     mat-icon:hover {
@@ -139,11 +181,22 @@
     @media (max-width: $breakpoint-xs) {
       display: none;
 
-      h2 {margin: 0; font-size: 1.25rem;}
-      h3 {margin-top: 10px}
-      h4 {margin: 10px 0;}
-      p {font-size: 0.9rem;}
-      button {width: 100%}
+      h2 {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+      h3 {
+        margin-top: 10px
+      }
+      h4 {
+        margin: 10px 0;
+      }
+      p {
+        font-size: 0.9rem;
+      }
+      button {
+        width: 100%
+      }
     }
 
   }
@@ -202,7 +255,9 @@
 
     // xs media query
     @media (max-width: $breakpoint-xs) {
-      h2 { text-align: center; }
+      h2 {
+        text-align: center;
+      }
 
       &--cards {
         justify-content: space-between;
@@ -228,30 +283,14 @@
   }
 
 }
+.reserve-container {
+  padding: 15px;
 
-.video-movie-main iframe{
-  background-color: #000;
-  border: 0;
-
-  width: 55vw;
-  height: 60vh;
-
-  // xs media query
-  @media (max-width: $breakpoint-xs) {
-    width: 80vw;
-    height: 35vh;
+  &__book-button:disabled {
+    cursor: not-allowed;
   }
 
-  // sm media query
-  @media (min-width: 576px) and (max-width: 767.98px) {
-    width: 80vw;
-    height: 40vh;
+  &__book-button {
+    cursor: pointer;
   }
-
-  // md media query
-  @media (min-width: 768px) and (max-width: 991.98px) {
-    width: 80vw;
-    height: 40vh;
-  }
-
 }

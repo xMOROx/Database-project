@@ -1,26 +1,215 @@
 <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
 
 <main class="contents container">
-  <h2>{{contentType | titlecase}} #{{filterType}}</h2>
+    <h2>{{contentType | titlecase}} #{{offerType}}</h2>
 
-  <div class="contents__container">
+    <div class="contents__container">
 
-    <mat-card class="contents__filter">
-      <button  mat-raised-button color="primary" aria-label="Set all filter" (click)="applyFilter('All')">All</button>
-      <button *ngIf="contentType === 'cars'" mat-raised-button color="primary" aria-label="Set best offer filter" (click)="applyFilter('Best offers')">Best offers</button>
-      <button *ngFor="let city of popularCities" mat-raised-button color="primary" aria-label="Set city filter" (click)="applyFilter(city)">{{city}}</button>
-    </mat-card>
+        <mat-card *ngIf="contentType === 'cars'" class="contents__wrapper">
+            <button mat-raised-button color="primary" aria-label="Set all vehicles" (click)="selectOffer('All')">All
+            </button>
+            <button mat-raised-button color="primary" aria-label="Set best offer vehicles"
+                    (click)="selectOffer('Best offers')">Best offers
+            </button>
+            <mat-expansion-panel class="" [expanded]="isExpanded">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <mat-icon>filter_list</mat-icon>
+                        <span>Filters</span>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        <span>Expand filters</span>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
 
-    <div class="contents__right-side">
-      <div class="contents__list">
-        <app-poster-card *ngFor="let content of results?.results" [model]="content" [isCar]="contentType === 'cars'">
-        </app-poster-card>
-      </div>
+                <div class="contents__container__inputs">
+                    <mat-form-field class="contents__container__inputs-min_range" floatLabel="auto">
+                        <mat-label>Min price</mat-label>
+                        <input matInput type="number" min="0" [formControl]="minPriceControl">
+                    </mat-form-field>
 
-      <mat-paginator [length]="totalResults" [pageSize]="20" (page)="changePage($event)">
-      </mat-paginator>
+                    <mat-form-field class="contents__container__inputs-max_range" floatLabel="auto">
+                        <mat-label>Max price</mat-label>
+                        <input matInput  type="number" [formControl]="maxPriceControl">
+                    </mat-form-field>
+                </div>
+
+                <div class="contents__container__inputs">
+                    <mat-form-field class="contents__container__inputs-min_range" floatLabel="auto">
+                        <mat-label>Min power</mat-label>
+                        <input matInput type="number" min="0" [formControl]="minPowerControl">
+                    </mat-form-field>
+
+                    <mat-form-field class="contents__container__inputs-max_range" floatLabel="auto">
+                        <mat-label>Max power</mat-label>
+                        <input matInput  type="number" [formControl]="maxPowerControl">
+                    </mat-form-field>
+                </div>
+
+                <div class="contents__container__inputs">
+                    <mat-form-field class="contents__container__inputs-min_range" floatLabel="auto">
+                        <mat-label>Min doors </mat-label>
+                        <input matInput type="number" min="0" [formControl]="minDoorsControl">
+                    </mat-form-field>
+
+                    <mat-form-field class="contents__container__inputs-max_range" floatLabel="auto">
+                        <mat-label>Max doors</mat-label>
+                        <input matInput type="number" [formControl]="maxDoorsControl">
+                    </mat-form-field>
+                </div>
+
+                <div class="contents__container__inputs">
+                    <mat-form-field class="contents__container__inputs-min_range" floatLabel="auto">
+                        <mat-label>Min seats</mat-label>
+                        <input matInput type="number" min="0" [formControl]="minSeatsControl">
+                    </mat-form-field>
+
+                    <mat-form-field class="contents__container__inputs-max_range" floatLabel="auto">
+                        <mat-label>Max seats</mat-label>
+                        <input matInput type="number" [formControl]="maxSeatsControl">
+                    </mat-form-field>
+                </div>
+
+                <div class="contents__container__inputs">
+                    <mat-form-field class="contents__container__inputs-min_range" floatLabel="auto">
+                        <mat-label>Min production year</mat-label>
+                        <input matInput type="number" min="0"
+                               [formControl]="minProductionYearControl">
+                    </mat-form-field>
+
+                    <mat-form-field class="contents__container__inputs-max_range" floatLabel="auto">
+                        <mat-label>Max production year</mat-label>
+                        <input matInput type="number"
+                               [formControl]="maxProductionYearControl">
+                    </mat-form-field>
+                </div>
+
+                <mat-form-field style="min-width: 100%">
+                    <mat-label>Enter a rent date range</mat-label>
+                    <mat-date-range-input [formGroup]="range" [rangePicker]="picker" [min]="minDate" [max]="maxDate">
+                        <input matStartDate formControlName="start" placeholder="Start date">
+                        <input matEndDate formControlName="end" placeholder="End date">
+                    </mat-date-range-input>
+                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker>
+                        <mat-date-range-picker-actions>
+                            <button mat-button matDateRangePickerCancel>Cancel</button>
+                            <button mat-button matDateRangePickerApply>Apply</button>
+                        </mat-date-range-picker-actions>
+                    </mat-date-range-picker>
+
+                    <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date
+                    </mat-error>
+                    <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                </mat-form-field>
+
+                <mat-select placeholder="Select a brand" [formControl]="brandsControl"
+                            class="contents__wrapper__select" multiple>
+                    <mat-select-trigger>
+                        {{brandsControl.value?.[0] || ''}}
+                        <span *ngIf="brandsControl.value?.length > 1" class="contents__wrapper__select-additional">
+                        (+{{brandsControl.value.length - 1}} {{brandsControl.value?.length === 2 ? 'other' : 'others'}})
+                    </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let brand of availableBrands" [value]="brand">{{brand}}</mat-option>
+                </mat-select>
+
+                <hr class="select__separator">
+                <mat-select placeholder="Select a model" [formControl]="modelsControl"
+                            class="contents__wrapper__select" multiple>
+                    <mat-select-trigger>
+                        {{modelsControl.value?.[0] || ''}}
+                        <span *ngIf="modelsControl.value?.length > 1" class="contents__wrapper__select-additional">
+                        (+{{modelsControl.value.length - 1}} {{modelsControl.value?.length === 2 ? 'other' : 'others'}})
+                    </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let model of availableModels" [value]="model">{{model}}</mat-option>
+                </mat-select>
+
+                <hr class="select__separator">
+                <mat-select placeholder="Select a color" [formControl]="colorsControl"
+                            class="contents__wrapper__select" multiple>
+                    <mat-select-trigger>
+                        {{colorsControl.value?.[0] || ''}}
+                        <span *ngIf="colorsControl.value?.length > 1" class="contents__wrapper__select-additional">
+                        (+{{colorsControl.value.length - 1}} {{colorsControl.value?.length === 2 ? 'other' : 'others'}})
+                    </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let color of availableColors" [value]="color">{{color}}</mat-option>
+                </mat-select>
+
+                <hr class="select__separator">
+                <mat-select placeholder="Select a body type" [formControl]="bodyTypesControl"
+                            class="contents__wrapper__select" multiple>
+                    <mat-select-trigger>
+                        {{bodyTypesControl.value?.[0] || ''}}
+                        <span *ngIf="bodyTypesControl.value?.length > 1" class="contents__wrapper__select-additional">
+                        (+{{bodyTypesControl.value.length - 1}} {{bodyTypesControl.value?.length === 2 ? 'other' : 'others'}}
+                            )
+                    </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let bodyType of availableBodyTypes" [value]="bodyType">{{bodyType}}</mat-option>
+                </mat-select>
+                <hr class="select__separator">
+
+                <mat-checkbox [checked]="isFrontWheelDrive"
+                              (change)="isFrontWheelDrive = !isFrontWheelDrive">Front wheel drive
+                </mat-checkbox>
+                <mat-checkbox [checked]="isMetallic" (change)="isMetallic = !isMetallic">Metallic color</mat-checkbox>
+
+                <div class="button-wrapper">
+                    <button mat-raised-button color="primary" class="contents__button-filter" aria-label="Reset filter"
+                            (click)="resetFilters()">Reset filter
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                    <button mat-raised-button color="primary" class="contents__button-filter" aria-label="Apply filter"
+                            (click)="applyFilters()">Apply filter
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                </div>
+
+            </mat-expansion-panel>
+        </mat-card>
+
+        <mat-card *ngIf="contentType === 'locations'" class="contents__wrapper">
+            <button mat-raised-button color="primary" aria-label="Set all locations"
+                    (click)="selectOffer('All')">All
+            </button>
+            <mat-select placeholder="Select a city" [formControl]="cityControl"
+                        class="contents__wrapper__select" multiple>
+                <mat-select-trigger>
+                    {{cityControl.value?.[0] || ''}}
+                    <span *ngIf="cityControl.value?.length > 1" class="contents__wrapper__select-additional">
+                        (+{{cityControl.value.length - 1}} {{cityControl.value?.length === 2 ? 'other' : 'others'}})
+                    </span>
+                </mat-select-trigger>
+                <mat-option *ngFor="let city of popularCities" [value]="city">{{city}}</mat-option>
+            </mat-select>
+
+            <div class="button-wrapper">
+                <button mat-raised-button color="primary" class="contents__button-filter" aria-label="Reset filter"
+                        (click)="resetFilters()">Reset filter
+                    <mat-icon>filter_list</mat-icon>
+                </button>
+                <button mat-raised-button color="primary" class="contents__button-filter" aria-label="Apply filter"
+                        (click)="applyFilters()">Apply filter
+                    <mat-icon>filter_list</mat-icon>
+                </button>
+            </div>
+        </mat-card>
+
+        <div class="contents__right-side">
+            <div class="contents__list">
+                <app-poster-card *ngFor="let content of results?.results" [model]="content"
+                                 [isCar]="contentType === 'cars'">
+                </app-poster-card>
+            </div>
+
+            <mat-paginator [length]="totalResults" [pageSize]="20" (page)="changePage($event)">
+            </mat-paginator>
+        </div>
+
     </div>
-
-  </div>
 
 </main>

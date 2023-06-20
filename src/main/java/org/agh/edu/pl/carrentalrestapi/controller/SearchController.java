@@ -1,15 +1,18 @@
 package org.agh.edu.pl.carrentalrestapi.controller;
 
 import jakarta.validation.Valid;
+import org.agh.edu.pl.carrentalrestapi.entity.Location;
 import org.agh.edu.pl.carrentalrestapi.entity.Vehicle;
+import org.agh.edu.pl.carrentalrestapi.model.LocationModel;
 import org.agh.edu.pl.carrentalrestapi.model.VehicleModel;
+import org.agh.edu.pl.carrentalrestapi.model.assembler.LocationModelAssembler;
 import org.agh.edu.pl.carrentalrestapi.model.assembler.VehicleModelAssembler;
+import org.agh.edu.pl.carrentalrestapi.service.LocationService;
 import org.agh.edu.pl.carrentalrestapi.service.VehicleService;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.agh.edu.pl.carrentalrestapi.utils.PageableRequest;
 import org.agh.edu.pl.carrentalrestapi.utils.search.SearchRequest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -21,9 +24,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = API_PATH.root + API_PATH.search)
 public class SearchController {
     private final VehicleService vehicleService;
+    private final LocationService locationService;
 
-    public SearchController(VehicleService vehicleService
+    public SearchController(VehicleService vehicleService,
+                            LocationService locationService
     ) {
+        this.locationService = locationService;
         this.vehicleService = vehicleService;
     }
 
@@ -31,10 +37,22 @@ public class SearchController {
     @ResponseBody
     public ResponseEntity<PagedModel<VehicleModel>>
     searchVehicles(@RequestBody @Valid SearchRequest searchRequest) {
-        Page<Vehicle> vehicles = vehicleService.search(searchRequest);
+        Page<Vehicle> vehicles = vehicleService.searchVehicles(searchRequest);
 
         return new ResponseEntity<>(
                 VehicleModelAssembler.toVehicleModel(vehicles),
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping(path = API_PATH.locations)
+    @ResponseBody
+    public ResponseEntity<PagedModel<LocationModel>>
+    searchLocations(@RequestBody @Valid SearchRequest searchRequest) {
+        Page<Location> locations = locationService.searchLocations(searchRequest);
+
+        return new ResponseEntity<>(
+                LocationModelAssembler.toLocationModel(locations),
                 HttpStatus.OK
         );
     }
@@ -66,12 +84,6 @@ public class SearchController {
 
         Page<String> models = brand != null ?
                 vehicleService.getModelsForBrand(brand, pageable) : vehicleService.getModels(pageable);
-
-        var filtered = models.stream()
-                .filter(model -> !model.equals("null"))
-                .toList();
-
-        models = new PageImpl<>(filtered, pageable, filtered.size());
 
         return new ResponseEntity<>(
                 models,
@@ -110,4 +122,5 @@ public class SearchController {
                 HttpStatus.OK
         );
     }
+
 }
