@@ -12,13 +12,14 @@ let endpoint: string = `${environment.backEnd}${apiVersion}/bookings`;
 })
 export class BookingsService {
 
-  constructor(private http: HttpClient, private auth: AuthService, private storage: StorageService) {
-  }
+    constructor(private http: HttpClient, private auth: AuthService, private storage: StorageService) {
+    }
 
     private httpOptions = {
         headers: new HttpHeaders({
             'Content-Type': 'application/json',
             "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + localStorage.getItem('access_token')
         })
     };
 

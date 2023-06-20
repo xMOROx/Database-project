@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import {StorageService} from "../../../../../authentication/services/storage.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
 import {LocationsService} from "../../../../services/locations.service";
+import {UserService} from "../../../../services/user.service";
 
 @Component({
   selector: 'app-content',
@@ -13,7 +14,8 @@ import {LocationsService} from "../../../../services/locations.service";
 })
 export class ContentComponent implements OnInit {
   public contentType: string = "";
-  public content: Array<PaginationModel> = [];
+  // @ts-ignore
+  public content: PaginationModel = {page: 0, results: undefined, total_pages: 0, total_results: 0};
   public totalResults: any;
   public filterType: string = 'all';
   private userId: any;
@@ -22,19 +24,35 @@ export class ContentComponent implements OnInit {
               private storage: StorageService,
               private auth: AuthService,
               private locationService: LocationsService,
-              private router: Router) {
+              private router: Router,
+              private userService: UserService) {
     this.contentType = this.router.url.split('/')[2];
   }
 
   ngOnInit() {
     this.userId = this.storage.getUser().id;
-    if (this.contentType === 'cars') {
+    if (this.contentType === 'bookings') {
+      this.userService.getBookingsForUser(this.userId).subscribe((res: any) => {
+        console.log(res);
+        this.content.results = res._embedded.Bookings;
+        this.content.page = res.page.number;
+        this.content.total_pages = res.page.totalPages;
+        this.content.total_results = res.page.totalElements;
+        this.totalResults = res.page.totalElements;
+      });
     } else if (this.contentType === 'locations') {
     }
   }
 
   public changePage(event: any) {
-    if (this.contentType === 'cars') {
+    if (this.contentType === 'bookings') {
+      this.userService.getBookingsForUser(this.userId).subscribe((res: any) => {
+        this.content.results = res._embedded.Vehicles;
+        this.content.page = res.page.number;
+        this.content.total_pages = res.page.totalPages;
+        this.content.total_results = res.page.totalElements;
+        this.totalResults = res.page.totalElements;
+      });
     } else if (this.contentType === "locations") {
     }
   }
@@ -45,7 +63,14 @@ export class ContentComponent implements OnInit {
 
   public applyFilter(filter: string) {
     this.filterType = filter;
-    if (this.contentType.toLowerCase() === 'cars') {
+    if (this.contentType.toLowerCase() === 'bookings') {
+      this.userService.getBookingsForUser(this.userId).subscribe((res: any) => {
+        this.content.results = res._embedded.Vehicles;
+        this.content.page = res.page.number;
+        this.content.total_pages = res.page.totalPages;
+        this.content.total_results = res.page.totalElements;
+        this.totalResults = res.page.totalElements;
+      });
     } else if (this.contentType.toLowerCase() === "locations") {
     }
   }

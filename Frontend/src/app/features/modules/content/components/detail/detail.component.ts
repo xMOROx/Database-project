@@ -117,7 +117,7 @@ export class DetailComponent implements OnInit {
                 const data = {
                     VehicleID: this.content?.['id'],
                     LocationID:locationID,
-                    UserID: 1, //TODO: change to user id
+                    UserID: this.storage.getUser().id,
                     ReceiptDate: this.convertDateToString(this.range.value.start),
                     ReturnDate: this.convertDateToString(this.range.value.end),
                     TotalCost: this.totalCost,
