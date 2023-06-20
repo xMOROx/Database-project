@@ -287,6 +287,7 @@ export class ContentComponent implements OnInit {
             this.parseModels();
             this.parseColors();
             this.parseBodyTypes();
+            this.searchCity();
             this.dateRequest();
             return;
         } else {
@@ -547,6 +548,18 @@ export class ContentComponent implements OnInit {
 
         return date.getFullYear() + '-' + month + '-' + day;
     }
+
+    private searchCity() {
+        if (this.cityControl.value) {
+            this.searchRequest.Filters.push({
+                Key: "location.city",
+                Operator: Operator.EQUALS,
+                FieldType: FieldType.STRING,
+                Value: this.cityControl.value
+            });
+        }
+    }
+
 
     private parseCity() {
         if (this.cityControl.value) {
