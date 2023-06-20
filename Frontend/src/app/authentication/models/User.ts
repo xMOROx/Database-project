@@ -1,14 +1,15 @@
 export interface User {
-  id?: number;
-  email: String;
-  password?: String;
-  first_name?: String;
-  last_name?: String;
-  roles?: Roles;
+  Id?: number;
+  Email: String;
+  Password?: String;
+  FirstName?: String;
+  SurName?: String;
+  Roles?: Roles;
+  Pesel?: String;
 };
 
 interface Roles {
-  admin?: boolean;
-  user?: boolean;
-  staff?: boolean;
+  Admin?: boolean;
+  User?: boolean;
+  Staff?: boolean;
 }

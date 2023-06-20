@@ -5,8 +5,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { PageNotFoundComponent } from './core/components/page-not-found/page-not-found.component';
 import { ReactiveFormsModule } from "@angular/forms";
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
-import { AuthInterceptor } from "./authentication/helpers/auth.interceptor";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FooterComponent } from './core/components/footer/footer.component';
 import { NavBarComponent } from './core/components/nav-bar/nav-bar.component';
@@ -42,11 +41,6 @@ import {AdminService} from "./features/services/admin.service";
     HttpClientModule,
   ],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    },
     HttpClient,
     CarsService,
     AdminService

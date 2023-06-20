@@ -146,6 +146,7 @@ export class ContentComponent implements OnInit {
 
     public getAllCars(page: number) {
         this.carsService.getVehicles(page).subscribe((res: any) => {
+            console.log(res);
             this.results.results = res._embedded.Vehicles;
             this.results.page = res.page.number;
             this.results.total_pages = res.page.totalPages;

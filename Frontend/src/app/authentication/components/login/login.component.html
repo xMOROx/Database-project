@@ -6,30 +6,30 @@
     <div class="form-group">
       <mat-icon>email</mat-icon>
       <mat-form-field>
-        <input matInput placeholder="Email" formControlName="email" required type="email" />
+        <input matInput placeholder="Email" formControlName="Email" required type="email" />
       </mat-form-field>
     </div>
     <div class="form-group">
       <mat-icon>lock</mat-icon>
       <mat-form-field>
-        <input matInput placeholder="Password" formControlName="password" required type="password" />
+        <input matInput placeholder="Password" formControlName="Password" required type="password" />
       </mat-form-field>
     </div>
     <button mat-raised-button type="submit" class="btn btn-block btn-primary">Sign in</button>
     <div class="error__container" *ngIf="
-      (signInForm.controls['email'].hasError('required') && signInForm.controls['email'].dirty) ||
-      (signInForm.controls['password'].hasError('required') && signInForm.controls['password'].dirty) ||
-      signInForm.controls['email'].hasError('incorrect')
+      (signInForm.controls['Email'].hasError('required') && signInForm.controls['Email'].dirty) ||
+      (signInForm.controls['Password'].hasError('required') && signInForm.controls['Password'].dirty) ||
+      signInForm.controls['Email'].hasError('incorrect')
     ">
-      <mat-error *ngIf="signInForm.controls['email'].hasError('required') && signInForm.controls['email'].dirty">
+      <mat-error *ngIf="signInForm.controls['Email'].hasError('required') && signInForm.controls['Email'].dirty">
         <mat-icon>error</mat-icon>
         Email is required
       </mat-error>
-      <mat-error *ngIf="signInForm.controls['password'].hasError('required') && signInForm.controls['password'].dirty">
+      <mat-error *ngIf="signInForm.controls['Password'].hasError('required') && signInForm.controls['Password'].dirty">
         <mat-icon>error</mat-icon>
         Password is required
       </mat-error>
-      <mat-error *ngIf="signInForm.controls['email'].hasError('incorrect')">
+      <mat-error *ngIf="signInForm.controls['Email'].hasError('incorrect')">
         <mat-icon>error</mat-icon>
         Email is invalid
       </mat-error>

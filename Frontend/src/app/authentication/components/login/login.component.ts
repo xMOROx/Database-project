@@ -20,18 +20,18 @@ export class LoginComponent implements OnInit {
     public dialogRef: MatDialogRef<LoginComponent>
   ) {
     this.signInForm = this.fb.group({
-      email: [''],
-      password: [''],
+      Email: [''],
+      Password: [''],
     });
   }
 
   ngOnInit(): void { }
   public signIn(): void {
-    if (this.validateService.validateEmail(this.signInForm.value.email)) {
+    if (this.validateService.validateEmail(this.signInForm.value.Email)) {
       this.authService.signIn(this.signInForm.value);
       this.dialogRef.close();
     } else {
-      this.signInForm.controls['email'].setErrors({ 'incorrect': true });
+      this.signInForm.controls['Email'].setErrors({ 'incorrect': true });
     }
   }
 }

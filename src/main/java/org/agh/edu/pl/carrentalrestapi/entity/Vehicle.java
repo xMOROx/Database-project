@@ -94,8 +94,8 @@ public class Vehicle implements Serializable {
 
     @JsonProperty()
     @Column(name = "Doors_Number", columnDefinition = "INT NOT NULL")
-    @Min(value = 3, message = "Doors number must be between 1 and 5")
-    @Max(value = 5, message = "Doors number must be between 1 and 5")
+    @Min(value = 3, message = "Doors number must be between 3 and 5")
+    @Max(value = 5, message = "Doors number must be between 3 and 5")
     private Integer doorsNumber;
 
     @JsonProperty()

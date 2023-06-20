@@ -16,12 +16,7 @@ export class ProfileComponent implements OnInit {
 
   private editDialog!: MatDialogRef<EditProfileComponent>;
   private changePasswordDialog!: MatDialogRef<ChangePasswordComponent>;
-  public currentUser: User = {
-    email: '',
-    first_name: '',
-    last_name: '',
-    password: '',
-  };
+  public currentUser: any;
   constructor(
     public authService: AuthService,
     private storageService: StorageService,
@@ -31,7 +26,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.storageService.getUser();
-
   }
 
   public openEditDialog() {
