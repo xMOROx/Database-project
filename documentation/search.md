@@ -477,7 +477,7 @@ curl -X GET "http://localhost:8080/api/v1/search/vehicles/body-types"
 }
 ```
 
-```JSON
+```HTTP
 curl -X POST "http://localhost:8080/api/v1/search/vehicles" 
     -H "Content-Type: application/json" 
     -d 
@@ -557,7 +557,7 @@ curl -X POST "http://localhost:8080/api/v1/search/vehicles"
 }
 ```
 
-```JSON
+```HTTP
 curl -X POST "http://localhost:8080/api/v1/search/vehicles" 
     -H "Content-Type: application/json" 
     -d 
@@ -623,7 +623,7 @@ curl -X POST "http://localhost:8080/api/v1/search/vehicles"
 }
 ```
 
-```JSON
+```HTTP
 curl -X POST "http://localhost:8080/api/v1/search/vehicles" 
     -H "Content-Type: application/json" 
     -d 
