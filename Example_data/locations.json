@@ -1,0 +1,48 @@
+{
+    "Locations": [
+        {
+            "Country": "Poland",
+            "City": "Kraków",
+            "Address": "Kawiory 43",
+            "Email": "kraków@gmail.com",
+            "PhoneNumber": "+48 123456789",
+            "OpeningHours": "21:15",
+            "ClosingHours": "10:05",
+            "PostalCode": "97-688",
+            "PhotoURL": "https://thumbs.rynekpierwotny.pl/3e79b87d:Fsc4GRv3H7CbQE68KlSTegaivQg/1500x0/filters:format(jpg)/kaviory-41_hgHXJLp.jpg"
+        },
+        {
+            "Country": "Niemcy",
+            "City": "Berlin",
+            "Address": "Alexanderplatz 1",
+            "Email": "berlin@gmail.com",
+            "PhoneNumber": "+49 987654321",
+            "OpeningHours": "09:00",
+            "ClosingHours": "18:00",
+            "PostalCode": "10-178",
+            "PhotoURL": "https://ocdn.eu/pulscms-transforms/1/_Ilk9kpTURBXy8wNTc0ZDJhOWNhNTg0MTVmNmNmYTRlYmRjMGU2NzI0NC5qcGeTlQMBzGrNA-fNAjGTCaZjYzU1NTAGkwXNBLDNAnbeAAGhMAE/berlin-miasto-po-drodze-fot-shutterstock.jpg"
+        },
+        {
+            "Country": "Francja",
+            "City": "Paryż",
+            "Address": "Rue de Rivoli 123",
+            "Email": "paris@gmail.com",
+            "PhoneNumber": "+33 987654321",
+            "OpeningHours": "08:30",
+            "ClosingHours": "19:00",
+            "PostalCode": "75-001",
+            "PhotoURL": "https://dcontent.inviacdn.net/shared/img/web-830/2020/6/12/m0/966731.jpg"
+        },
+        {
+            "Country": "Włochy",
+            "City": "Rzym",
+            "Address": "Via del Corso 45",
+            "Email": "rome@gmail.com",
+            "PhoneNumber": "+39 987654321",
+            "OpeningHours": "10:00",
+            "ClosingHours": "20:00",
+            "PostalCode": "00-186",
+            "PhotoURL": "https://noclegiupolakow.pl/wp-content/uploads/2020/08/wizytowka-top10-rzym-noclegi-u-polakow.jpg"
+        }
+    ]
+}
