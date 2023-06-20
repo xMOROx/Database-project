@@ -35,6 +35,8 @@ public interface BookingService {
     Page<Booking> getUserBookingsReserved(Long userId, Pageable pageable) throws UserNotFoundException;
 
     Page<Booking> getUserBookingsRented(Long userId, Pageable pageable) throws UserNotFoundException;
+    Page<Booking> activeBookings(Pageable pageable);
+    Page<Booking> activeBookingsByUserId(Long userId, Pageable pageable) throws UserNotFoundException;
 
     Map<String, BigDecimal> countCost(Long bookingId ) throws BookingNotFoundException, VehicleNotFoundException;
 }

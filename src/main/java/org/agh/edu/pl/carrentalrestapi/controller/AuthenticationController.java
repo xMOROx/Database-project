@@ -48,9 +48,11 @@ public class AuthenticationController {
         );
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+
         if (userDetails != null) {
             return ResponseEntity.ok(jwtUtils.generateToken(userDetails));
         }
+
         return ResponseEntity.badRequest().build();
     }
 }

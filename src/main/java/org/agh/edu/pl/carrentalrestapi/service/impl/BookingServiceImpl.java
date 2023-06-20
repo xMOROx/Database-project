@@ -141,6 +141,16 @@ public class BookingServiceImpl implements BookingService {
         return Collections.singletonMap("totalCost", totalCost);
     }
 
+    @Override
+    public Page<Booking> activeBookings(Pageable pageable) {
+        return bookingRepository.findActiveBookings(pageable);
+    }
+
+    @Override
+    public Page<Booking> activeBookingsByUserId(Long userId, Pageable pageable) throws UserNotFoundException {
+        return bookingRepository.findActiveBookingsByUserId(userId, pageable);
+    }
+
     private void checkIfUserExists(Long userId) throws UserNotFoundException {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException(userId);

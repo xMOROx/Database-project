@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.orm.jpa.JpaSystemException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -97,6 +98,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             VehicleWithRegistrationExistsException.class,
             ParameterNotNullException.class,
             StatusWithGivenNameAlreadyExistsException.class,
+            UserWithEmailExistsException.class,
+            BookingConflictException.class
     })
     public final ResponseEntity<ErrorDetails> handleConflictException(RuntimeException ex, WebRequest request) {
         Map<String, String> messages = new HashMap<>();
@@ -143,5 +146,24 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(
                 errorDetails,
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(
+            BadCredentialsException.class
+    )
+    public final ResponseEntity<ErrorDetails> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
+        Map<String, String> messages = new HashMap<>();
+        messages.put("message", "Bad credentials");
+        messages.put("hint", "Check if email and password are correct");
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                messages,
+                request.getDescription(false),
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED.value());
+
+        return new ResponseEntity<>(
+                errorDetails,
+                HttpStatus.UNAUTHORIZED);
     }
 }

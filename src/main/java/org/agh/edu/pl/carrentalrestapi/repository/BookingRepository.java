@@ -38,4 +38,16 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
             countQuery = "SELECT count(b) FROM Booking b WHERE b.user.id=:userId")
     Page<Booking> findByUserId(Long userId, Pageable pageRequest);
 
+    @Query(value = "SELECT b FROM Booking b WHERE b.bookingStateCode.bookingCode='REN' " +
+            "AND b.returnDate >= CURRENT_DATE",
+            countQuery = "SELECT count(b) FROM Booking b WHERE b.bookingStateCode.bookingCode='REN' " +
+                    "AND b.returnDate >= CURRENT_DATE")
+    Page<Booking> findActiveBookings(Pageable pageRequest);
+
+    @Query(value = "SELECT b FROM Booking b WHERE b.bookingStateCode.bookingCode='REN' " +
+            "AND b.returnDate >= CURRENT_DATE AND b.user.id=:userId",
+            countQuery = "SELECT count(b) FROM Booking b WHERE b.bookingStateCode.bookingCode='REN' " +
+                    "AND b.returnDate >= CURRENT_DATE AND b.user.id=:userId")
+    Page<Booking> findActiveBookingsByUserId(Long userId, Pageable pageRequest);
+
 }
