@@ -1,4 +1,4 @@
-package org.agh.edu.pl.carrentalrestapi.config;
+package org.agh.edu.pl.carrentalrestapi.config.security;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
