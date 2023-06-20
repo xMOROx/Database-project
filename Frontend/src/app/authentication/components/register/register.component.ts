@@ -21,10 +21,12 @@ export class RegisterComponent implements OnInit {
     public dialogRef: MatDialogRef<RegisterComponent>
   ) {
     this.signupForm = this.fb.group({
-      email: [''],
-      password: [''],
-      last_name: [''],
-      first_name: ['']
+      Email: [''],
+      Password: [''],
+      SurName: [''],
+      FirstName: [''],
+      Pesel: [''],
+      PhoneNumber: ['']
     })
   }
 
@@ -32,13 +34,13 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void { }
 
   public registerUser(): void {
-    if(!this.validateService.validatePassword(this.signupForm.value.password)) {
-      this.signupForm.controls['password'].setErrors({ 'incorrect': true });
+    if(!this.validateService.validatePassword(this.signupForm.value.Password)) {
+      this.signupForm.controls['Password'].setErrors({ 'incorrect': true });
       return;
     }
 
-    if (!this.validateService.validateEmail(this.signupForm.value.email)) {
-      this.signupForm.controls['email'].setErrors({ 'incorrect': true });
+    if (!this.validateService.validateEmail(this.signupForm.value.Email)) {
+      this.signupForm.controls['Email'].setErrors({ 'incorrect': true });
       return;
     }
 
@@ -63,7 +65,7 @@ export class RegisterComponent implements OnInit {
 
   public handleError(error: HttpErrorResponse): any {
     if (error.status === 409) {
-      this.signupForm.controls['email'].setErrors({ 'conflict': true });
+      this.signupForm.controls['Email'].setErrors({ 'conflict': true });
     }
   }
 

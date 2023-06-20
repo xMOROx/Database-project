@@ -7,6 +7,7 @@ import org.agh.edu.pl.carrentalrestapi.entity.UserRole;
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserWithEmailExistsException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserNotFoundException;
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserRoleNotFoundException;
+import org.agh.edu.pl.carrentalrestapi.model.AuthenticationRequest;
 import org.agh.edu.pl.carrentalrestapi.model.BookingModel;
 import org.agh.edu.pl.carrentalrestapi.model.UserModel;
 import org.agh.edu.pl.carrentalrestapi.model.UserRoleModel;
@@ -25,7 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -59,6 +59,17 @@ public class UserController {
         this.bookingService = bookingService;
         this.userModelAssembler = userModelAssembler;
 
+    }
+
+    @PostMapping(path = "/details")
+    @ResponseBody
+    public ResponseEntity<UserModel> getUserByEmail(@RequestBody AuthenticationRequest body) throws UserNotFoundException {
+        User user = userService.getUserByEmail(body.getEmail());
+
+        return Stream.of(user).map(userModelAssembler::toModel)
+                .map(ResponseEntity::ok)
+                .findFirst()
+                .get();
     }
 
     @GetMapping(path = "/{id}")

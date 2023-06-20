@@ -3,12 +3,12 @@ package org.agh.edu.pl.carrentalrestapi.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONObject;
 import org.agh.edu.pl.carrentalrestapi.config.security.jwt.JwtUtils;
 import org.agh.edu.pl.carrentalrestapi.entity.User;
 import org.agh.edu.pl.carrentalrestapi.exception.types.UserWithEmailExistsException;
 import org.agh.edu.pl.carrentalrestapi.model.AuthenticationRequest;
 import org.agh.edu.pl.carrentalrestapi.service.UserService;
-import org.agh.edu.pl.carrentalrestapi.service.impl.UserServiceImpl;
 import org.agh.edu.pl.carrentalrestapi.utils.API_PATH;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +40,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity<String> login(
-            @RequestBody AuthenticationRequest request
-            ) {
+    public ResponseEntity<JSONObject> login(@RequestBody AuthenticationRequest request) {
         authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
@@ -50,7 +48,12 @@ public class AuthenticationController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
 
         if (userDetails != null) {
-            return ResponseEntity.ok(jwtUtils.generateToken(userDetails));
+            JSONObject json = new JSONObject();
+            json.put("access", jwtUtils.generateToken(userDetails));
+            return new ResponseEntity<>(
+                    json,
+                    HttpStatus.OK
+            );
         }
 
         return ResponseEntity.badRequest().build();

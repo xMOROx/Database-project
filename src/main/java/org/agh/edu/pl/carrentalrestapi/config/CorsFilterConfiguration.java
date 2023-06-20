@@ -17,11 +17,11 @@ public class CorsFilterConfiguration {
     private final CorsFilterProperties corsFilterProperties;
 
     @Bean("corsFilter")
-    public FilterRegistrationBean<CorsFilter> corsFilter() {
+    public CorsFilter corsFilter() {
         final CorsConfiguration config = buildCorsConfiguration();
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        return new FilterRegistrationBean<>(new CorsFilter(source));
+        return new CorsFilter(source);
     }
 
     private CorsConfiguration buildCorsConfiguration() {

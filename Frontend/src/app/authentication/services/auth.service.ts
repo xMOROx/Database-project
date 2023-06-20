@@ -34,12 +34,12 @@ export class AuthService {
   }
 
   public singUp(user: User): Observable<any> {
-    let url = `${this.endpoint}/register-user`;
+    let url = `${this.endpoint}/register`;
     return this.http.post<any>(url, user);
   }
 
   public signIn(user: User): any {
-    return this.http.post<any>(`${this.endpoint}/signin`, user)
+    return this.http.post<any>(`${this.endpoint}/login`, user)
       .subscribe(
         {
           next: (res: any) => {
@@ -47,11 +47,11 @@ export class AuthService {
               alert("Invalid credentials");
               return;
             }
+
             let decode_token = this.tokenService.getDecodedAccessToken(res.access);
+            this.tokenService.createToken(res.access);
 
-            this.tokenService.createToken(res.access, res.refresh);
-
-            this.getUserProfile(decode_token.user_id).subscribe((res) => {
+            this.getUserProfile(decode_token.sub).subscribe((res) => {
               this.storageService.saveUser(res);
               this.isAuth.next(true);
               this.router.navigate(['dashboard/' + res.id]);
@@ -66,19 +66,18 @@ export class AuthService {
   }
 
 
-  public getUserProfile(id: any): Observable<any> {
-    let api = `${this.endpoint}/users/${id}`;
+  public getUserProfile(email: any): Observable<any> {
+    let api = `${environment.backEnd}api/v1/users/details`;
 
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      "Authorization": "Bearer " + localStorage.getItem('access_token')
+      Authorization: "Bearer " + localStorage.getItem('access_token')
     });
 
     this.httpOptions = {
       headers: headers
     };
-
-    return this.http.get(api, this.httpOptions).pipe(
+    return this.http.post(api, {Email: email}, this.httpOptions).pipe(
       map((res: any) => {
         return this.parseRoles(res) || {}
       }),
