@@ -4,24 +4,24 @@
 
 ```JSON
 {
-    "id": integer,
+    "id": "integer",
     "Registration": "string",
     "Brand": "string",
     "Model": "string",
     "PhotoURL": "string",
     "BodyType": "string",
     "FuelType": "string",
-    "Power": integer,
+    "Power": "integer",
     "Gearbox": "string",
-    "SeatsNumber": integer,
-    "DoorsNumber": integer,
+    "SeatsNumber": "integer",
+    "DoorsNumber": "integer",
     "Color": "string",
-    "Metallic": boolean,
+    "Metallic": "boolean",
     "Description": "string",
-    "DailyFee": double,
-    "BestOffer": boolean,
-    "FrontWheelDrive": boolean,
-    "ProductionYear": integer,
+    "DailyFee": "double",
+    "BestOffer": "boolean",
+    "FrontWheelDrive": "boolean",
+    "ProductionYear": "integer",
 }
 ```
 
@@ -209,7 +209,7 @@ RequestBody:
 
 ## Examples
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/v1/vehicles"
     -H "accept: application/json"
 ```
@@ -272,7 +272,7 @@ curl -X GET "http://localhost:8080/api/v1/vehicles"
 }
 ```
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/v1/vehicles/1" 
     -H "accept: application/json"
 ```
@@ -309,7 +309,7 @@ curl -X GET "http://localhost:8080/api/v1/vehicles/1"
 }
 ```
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/v1/vehicles/{id}/location"
     -H "accept: application/json"
 ```
@@ -318,7 +318,7 @@ curl -X GET "http://localhost:8080/api/v1/vehicles/{id}/location"
     1
 ```
 
-```JSON
+```
 curl -X POST "http://localhost:8080/api/v1/vehicles"
    -H "Content-Type: application/json"
    -d 

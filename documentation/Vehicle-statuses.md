@@ -14,7 +14,7 @@ GET /api/vehicles/statuses/{id}
 
 ## Examples
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/vehicles/statuses?page=0&size=20" 
      -H "accept: application/json"
 ```
@@ -44,7 +44,7 @@ curl -X GET "http://localhost:8080/api/vehicles/statuses?page=0&size=20"
 }
 ```
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/vehicles/statuses/1" 
      -H "accept: application/json"
 ```

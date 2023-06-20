@@ -111,13 +111,13 @@ enum SortDirection {
             "Operator": [
                 "EQUALS",
                 "NOT_EQUALS",
-                "GREATER_THAN", - if fieldType is not "boolean" or "char"
-                "GREATER_THAN_OR_EQUALS", - if fieldType is not     "boolean" or "char"
-                "LESS_THAN", - if fieldType is not "boolean" or "char"
-                "LESS_THAN_OR_EQUALS", - if fieldType is not "boolean" or "char"
+                "GREATER_THAN", - 'if fieldType is not "boolean" or "char"'
+                "GREATER_THAN_OR_EQUALS", - 'if fieldType is not     "boolean" or "char"'
+                "LESS_THAN", - 'if fieldType is not "boolean" or "char"'
+                "LESS_THAN_OR_EQUALS", - 'if fieldType is not "boolean" or "char"'
                 "LIKE",
                 "NOT_LIKE",
-                "BETWEEN" - if fieldType is not "boolean" or "char" and "ValueTo" is provided
+                "BETWEEN" - 'if fieldType is not "boolean" or "char" and "ValueTo" is provided'
             ]
         }
       }
@@ -125,7 +125,7 @@ enum SortDirection {
         "required": false,
         "neededIf": {
             "Operator": [
-                "BETWEEN" - if fieldType is not "boolean" or "char" and "Value" is provided
+                "BETWEEN" - 'if fieldType is not "boolean" or "char" and "Value" is provided'
             ]
         }
       }

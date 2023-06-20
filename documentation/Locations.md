@@ -4,7 +4,7 @@
 
 ```JSON
 {
-    "id": integer,
+    "id": "integer",
     "Country": "string",
     "City": "string",
     "Address": "string",
@@ -114,7 +114,7 @@ Default: page=0, size=20
 
 ## Examples
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/v1/locations?page=0&size=20" 
     -H "accept: application/json"
 ```
@@ -172,7 +172,7 @@ curl -X GET "http://localhost:8080/api/v1/locations?page=0&size=20"
 }
 ```
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/v1/locations/1" 
     -H "accept: application/json"
 ```
@@ -191,7 +191,7 @@ curl -X GET "http://localhost:8080/api/v1/locations/1"
 }
 ```
 
-```JSON
+```
 curl -X POST "http://localhost:8080/api/v1/locations" 
     -H "Content-Type: application/json" 
     -d '
@@ -213,7 +213,7 @@ curl -X POST "http://localhost:8080/api/v1/locations"
     201 - Created
 ```
 
-```HTTP
+```
 curl -X GET 
 "http://localhost:8080/api/v1/locations/cities?page=0&size=20" 
     -H "accept: application/json"
@@ -254,7 +254,7 @@ curl -X GET
 }
 ```
 
-```HTTP
+```
 curl -X GET "http://localhost:8080/api/v1/locations/cities/Warszawa?page=0&size=20" 
     -H "accept: application/json"
 ```
@@ -302,4 +302,3 @@ curl -X GET "http://localhost:8080/api/v1/locations/cities/Warszawa?page=0&size=
     }
 }
 ```
-
