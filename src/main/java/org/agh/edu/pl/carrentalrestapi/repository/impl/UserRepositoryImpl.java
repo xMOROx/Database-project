@@ -30,28 +30,17 @@ public class UserRepositoryImpl {
     public UserRepositoryImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-    @Transactional
-    public Optional<User> findUserByLogin(String login) {
-        TypedQuery<User> query = entityManager
-                .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.userRoles WHERE u.login = :login", User.class);
 
-        TypedQuery<User> userTypedQuery = query
-                .setParameter("login", login);
-
-        User user = userTypedQuery
-                .getSingleResult();
-        return Optional.ofNullable(user);
-    }
     @Transactional
     public Optional<User> findUserByEmail(String email) {
         TypedQuery<User> query = entityManager
-                .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.userRoles WHERE u.email = :email", User.class);
+                .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.userRoles WHERE u.email = '" + email + "'", User.class);
 
-        TypedQuery<User> userTypedQuery = query.setParameter("email", email);
+        if (query.getResultList().isEmpty()) {
+            return Optional.empty();
+        }
 
-        User user = userTypedQuery
-                .getSingleResult();
-        return Optional.ofNullable(user);
+        return Optional.ofNullable(query.getSingleResult());
     }
 
     @Transactional

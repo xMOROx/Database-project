@@ -26,7 +26,6 @@ public class UserModelAssembler extends RepresentationModelAssemblerSupport<User
                 .firstName(user.getFirstName())
                 .surName(user.getSurName())
                 .email(user.getEmail())
-                .login(user.getLogin())
                 .phoneNumber(user.getPhoneNumber())
                 .pesel(user.getPesel()).build();
     }

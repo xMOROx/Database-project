@@ -2,6 +2,7 @@ package org.agh.edu.pl.carrentalrestapi.service;
 
 import org.agh.edu.pl.carrentalrestapi.entity.User;
 import org.agh.edu.pl.carrentalrestapi.entity.UserRole;
+import org.agh.edu.pl.carrentalrestapi.model.UserModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,6 +12,7 @@ public interface UserService {
 
     Page<User> getAll(Pageable pageable);
     User getById(Long id);
+    User getUserByEmail(String email);
     Long addUser(User user);
     Long fullUpdate(Long id, User user);
     Long partialUpdate(Long id, User user);

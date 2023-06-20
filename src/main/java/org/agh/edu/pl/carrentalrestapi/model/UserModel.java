@@ -23,7 +23,6 @@ public class UserModel extends RepresentationModel<UserModel> {
     private String firstName;
     private String surName;
     private String email;
-    private String login;
     private String phoneNumber;
     private String pesel;
 }
