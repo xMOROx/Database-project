@@ -20,10 +20,13 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
 
     Long addVehicle(VehicleAddModel vehicle) throws VehicleWithRegistrationExistsException, LocationNotFoundException,
             StatusForVehicleNotFoundException, EquipmentNotFoundException;
+    @Query(value = "SELECT DISTINCT v FROM Vehicle v INNER JOIN VehicleStatus vs ON v.vehicleStatus.id  =  vs.id WHERE vs.type = 'AVI' ORDER BY v.brand ASC, v.model ASC",
+            countQuery = "SELECT COUNT(DISTINCT v) FROM Vehicle v INNER JOIN VehicleStatus vs ON v.vehicleStatus.id  =  vs.id WHERE vs.type = 'AVI'")
+    Page<Vehicle> findAllAvailableVehicles(Pageable pageable);
 
     @Transactional
-    @Query(value = "SELECT DISTINCT v FROM Vehicle v LEFT JOIN FETCH v.equipment WHERE v.bestOffer = true ORDER BY v.brand ASC, v.model ASC",
-            countQuery = "SELECT COUNT(v) FROM Vehicle v WHERE v.bestOffer = true")
+    @Query(value = "SELECT DISTINCT v FROM Vehicle v LEFT JOIN FETCH v.equipment INNER JOIN VehicleStatus vs ON v.vehicleStatus.id  =  vs.id WHERE v.bestOffer = true AND vs.type = 'AVI' ORDER BY v.brand ASC, v.model ASC",
+            countQuery = "SELECT COUNT(DISTINCT v) FROM Vehicle v LEFT JOIN v.equipment INNER JOIN VehicleStatus vs ON v.vehicleStatus.id  =  vs.id WHERE v.bestOffer = true AND vs.type = 'AVI'")
     Page<Vehicle> findBestOffer(Pageable pageable);
 
     @Transactional

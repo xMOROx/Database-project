@@ -127,7 +127,7 @@ export class DetailComponent implements OnInit {
                         next: () => {
                             alert('Vehicle reserved successfully!');
                             this.dialog.closeAll();
-                            this.router.navigate(['/bookings']);
+                            this.router.navigate(['/dashboard/bookings']);
                         },
                         error: (err: any) => {
                             this.dialog.closeAll();

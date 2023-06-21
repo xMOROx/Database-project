@@ -32,7 +32,7 @@ public class BookingRepositoryImpl {
         }
 
         if (!vehicle.getVehicleStatus().getType().equals(VehicleStatuses.AVI.toString())) {
-            throw new BookingUnavailableVehicleException(vehicleID);
+            throw new BookingUnavailableVehicleException("Vehicle is not available to rent");
         }
 
         Location location = entityManager.find(Location.class, reservation.getLocationID());
