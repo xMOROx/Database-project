@@ -51,7 +51,7 @@
                         </div>
                     </div>
 
-                    <button *ngIf="contentType === 'cars'" mat-raised-button color="primary" aria-label="Reserve"
+                    <button *ngIf="contentType === 'cars' && user != undefined" mat-raised-button color="primary" aria-label="Reserve"
                             (click)="openDialog()"
                             class="reserve-vehicle">
                         <mat-icon>book</mat-icon>

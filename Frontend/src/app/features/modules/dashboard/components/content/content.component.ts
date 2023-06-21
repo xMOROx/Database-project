@@ -1,10 +1,11 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {PaginationModel} from "../../../content/models/pagination.model";
 import {CarsService} from "../../../../services/cars.service";
 import {Router} from "@angular/router";
 import {StorageService} from "../../../../../authentication/services/storage.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
 import {LocationsService} from "../../../../services/locations.service";
+import {UserService} from "../../../../services/user.service";
 
 @Component({
   selector: 'app-content',
@@ -13,7 +14,7 @@ import {LocationsService} from "../../../../services/locations.service";
 })
 export class ContentComponent implements OnInit {
   public contentType: string = "";
-  public content: Array<PaginationModel> = [];
+  public content?: any;
   public totalResults: any;
   public filterType: string = 'all';
   private userId: any;
@@ -22,19 +23,28 @@ export class ContentComponent implements OnInit {
               private storage: StorageService,
               private auth: AuthService,
               private locationService: LocationsService,
-              private router: Router) {
+              private router: Router,
+              private userService: UserService) {
     this.contentType = this.router.url.split('/')[2];
   }
 
   ngOnInit() {
     this.userId = this.storage.getUser().id;
-    if (this.contentType === 'cars') {
+    if (this.contentType === 'bookings') {
+      this.userService.getBookingsForUser(this.userId).subscribe((res: any) => {
+        this.content = res;
+        this.totalResults = res.page.totalElements;
+      });
     } else if (this.contentType === 'locations') {
     }
   }
 
   public changePage(event: any) {
-    if (this.contentType === 'cars') {
+    if (this.contentType === 'bookings') {
+      this.userService.getBookingsForUser(this.userId).subscribe((res: any) => {
+        this.content = res;
+        this.totalResults = res.page.totalElements;
+      });
     } else if (this.contentType === "locations") {
     }
   }
@@ -45,10 +55,13 @@ export class ContentComponent implements OnInit {
 
   public applyFilter(filter: string) {
     this.filterType = filter;
-    if (this.contentType.toLowerCase() === 'cars') {
+    if (this.contentType.toLowerCase() === 'bookings') {
+      this.userService.getBookingsForUser(this.userId).subscribe((res: any) => {
+        this.content = res;
+        this.totalResults = res.page.totalElements;
+      });
     } else if (this.contentType.toLowerCase() === "locations") {
     }
   }
-
 
 }

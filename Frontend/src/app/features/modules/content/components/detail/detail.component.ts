@@ -113,11 +113,10 @@ export class DetailComponent implements OnInit {
         this.route.params.subscribe(params => {
             const id = params['id'];
             this.carsService.getLocationForVehicle(id).pipe(take(1)).subscribe((locationID: number) => {
-
                 const data = {
                     VehicleID: this.content?.['id'],
                     LocationID:locationID,
-                    UserID: this.user?.['Id'],
+                    UserID: this.storage.getUser().id,
                     ReceiptDate: this.convertDateToString(this.range.value.start),
                     ReturnDate: this.convertDateToString(this.range.value.end),
                     TotalCost: this.totalCost,

@@ -105,8 +105,13 @@
                 </mat-form-field>
 
                 <mat-form-field style="min-width: 100%">
-                    <input matInput placeholder="Enter a city" [formControl]="cityControl">
+                    <input matInput placeholder="Enter a city" [formControl]="cityControl" [matAutocomplete]="auto">
                 </mat-form-field>
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let city of filteredCities | async" [value]="city">
+                        {{city}}
+                    </mat-option>
+                </mat-autocomplete>
 
                 <mat-select placeholder="Select a brand" [formControl]="brandsControl"
                             class="contents__wrapper__select" multiple>
