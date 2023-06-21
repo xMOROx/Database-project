@@ -26,4 +26,8 @@ export class BookingsService {
     public reserveVehicle(data: any): any {
         return this.http.post(`${endpoint}/reserve`, data, this.httpOptions);
     }
+
+    public cancelBooking(id: any): any {
+        return this.http.post(`${endpoint}/cancel`, id, this.httpOptions);
+    }
 }

@@ -14,8 +14,7 @@ import {UserService} from "../../../../services/user.service";
 })
 export class ContentComponent implements OnInit {
   public contentType: string = "";
-  // @ts-ignore
-  public content: PaginationModel = {page: 0, results: undefined, total_pages: 0, total_results: 0};
+  public content?: any;
   public totalResults: any;
   public filterType: string = 'all';
   private userId: any;
@@ -33,11 +32,12 @@ export class ContentComponent implements OnInit {
     this.userId = this.storage.getUser().id;
     if (this.contentType === 'bookings') {
       this.userService.getBookingsForUser(this.userId).subscribe((res: any) => {
-        console.log(res);
-        this.content.results = res._embedded.Bookings;
-        this.content.page = res.page.number;
-        this.content.total_pages = res.page.totalPages;
-        this.content.total_results = res.page.totalElements;
+        this.content = res;
+        console.log(this.content);
+        // this.content.results = res._embedded.Bookings;
+        // this.content.page = res.page.number;
+        // this.content.total_pages = res.page.totalPages;
+        // this.content.total_results = res.page.totalElements;
         this.totalResults = res.page.totalElements;
       });
     } else if (this.contentType === 'locations') {
@@ -47,10 +47,13 @@ export class ContentComponent implements OnInit {
   public changePage(event: any) {
     if (this.contentType === 'bookings') {
       this.userService.getBookingsForUser(this.userId).subscribe((res: any) => {
-        this.content.results = res._embedded.Vehicles;
-        this.content.page = res.page.number;
-        this.content.total_pages = res.page.totalPages;
-        this.content.total_results = res.page.totalElements;
+        this.content = res;
+        console.log(this.content);
+        // this.content.results = res._embedded.Bookings;
+        // console.log(this.content.__embedded.Bookings);
+        // this.content.page = res.page.number;
+        // this.content.total_pages = res.page.totalPages;
+        // this.content.total_results = res.page.totalElements;
         this.totalResults = res.page.totalElements;
       });
     } else if (this.contentType === "locations") {
@@ -65,15 +68,17 @@ export class ContentComponent implements OnInit {
     this.filterType = filter;
     if (this.contentType.toLowerCase() === 'bookings') {
       this.userService.getBookingsForUser(this.userId).subscribe((res: any) => {
-        this.content.results = res._embedded.Vehicles;
-        this.content.page = res.page.number;
-        this.content.total_pages = res.page.totalPages;
-        this.content.total_results = res.page.totalElements;
+        this.content = res;
+        console.log(this.content);
+        // this.content.results = res._embedded.Bookings;
+        // console.log(this.content.__embedded.Bookings);
+        // this.content.page = res.page.number;
+        // this.content.total_pages = res.page.totalPages;
+        // this.content.total_results = res.page.totalElements;
         this.totalResults = res.page.totalElements;
       });
     } else if (this.contentType.toLowerCase() === "locations") {
     }
   }
-
 
 }

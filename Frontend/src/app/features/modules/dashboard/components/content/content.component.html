@@ -11,11 +11,11 @@
 
     <div class="contents__right-side" [ngClass]="'contents__right-side-normal-view'">
       <div class="contents__list">
-        <app-poster-card *ngFor="let content of content.results" [model]="content" [isCar]="contentType === 'cars'">
+        <app-poster-card *ngFor="let booking of content._embedded.Bookings" [model]="booking" [isCar]="contentType">
         </app-poster-card>
       </div>
 
-      <mat-paginator [length]="content.total_results" [pageSize]="20" (page)="changePage($event)">
+      <mat-paginator [length]="totalResults" [pageSize]="20" (page)="changePage($event)">
       </mat-paginator>
     </div>
 
