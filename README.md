@@ -23,4 +23,5 @@ Aplikacja do wypożyczania samochodów
 [Documentation](https://github.com/xMOROx/Database-project/tree/main/documentation)
 
 ## Diagram of database
+
 ![Diagram](https://github.com/xMOROx/Database-project/blob/main/documentation/diagram.png)
