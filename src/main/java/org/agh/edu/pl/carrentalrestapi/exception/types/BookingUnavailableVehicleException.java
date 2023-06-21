@@ -8,4 +8,8 @@ public class BookingUnavailableVehicleException extends RuntimeException {
     public BookingUnavailableVehicleException(Long id) {
         super("Vehicle with given id: " + id + " is already booked in this time period");
     }
+
+    public BookingUnavailableVehicleException(String message) {
+        super(message);
+    }
 }
