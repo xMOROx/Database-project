@@ -135,11 +135,9 @@
 
     </section>
 
-    <section class="content__similar_or_recommended container">
+    <section class="content__similar_or_recommended container" *ngIf="contentType === 'locations'">
 
         <h2 *ngIf="contentType === 'locations'">Vehicles to rent</h2>
-        <h2 *ngIf="contentType === 'cars'">Recommended vehicles to rent</h2>
-
 
         <div class="content__similar_or_recommended--cards"
              *ngIf="vehiclesForLocationContentList.results.length > 0; else noAvailableToRentVehicles">
