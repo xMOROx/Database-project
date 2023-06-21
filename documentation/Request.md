@@ -1,6 +1,8 @@
 ## Zapytania
 
-### Sprawdzanie czy możliwe jest wynajęcie samochodu w danym terminie
+### Bookings repository
+
+#### Sprawdzanie czy możliwe jest wynajęcie samochodu w danym terminie
 
 - Funkcja
 
@@ -59,10 +61,9 @@
               and b2_0.booking_code in('RES','REN'))
   ```
 
-## Zapytanie SQL wygenerowane gdy powiedzie się rezerwacja
+#### Zapytania SQL wygenerowane gdy powiedzie się rezerwacja
 
 - **Wyszukanie pojazdu - zapytanie stworzone przez Hibernate**
-  &NewLine;
   Nie jest wymagane pisanie własnego zapytania JPQL ponieważ JPA dostarcza podstawowe operację wyszukiwanie przez dynamiczne generowanie zapytań.
   W tym wypadku wykorzystujemy EntityManager.find() który zwraca obiekt o podanym identyfikatorze lub null jeśli nie istnieje.
   &NewLine;
@@ -206,4 +207,128 @@
             (?, ?, ?, ?, ?, ?, ?)
     ```
 
-`?` - w zapytaniu to parametry które zastępowane są przez wartości otrzymane z endpointa `POST /api/v1/bookings/reserve`.
+    `?` - w zapytaniu to parametry które zastępowane są przez wartości otrzymane z endpointa `POST /api/v1/bookings/reserve`.
+
+#### Zapytania SQL wygenerowane podczas wyszukiwania aktywnych rezerwacji (wynajmu) dla użytkownika
+
+- **Kod i zapytania**
+  
+  - **Kod**
+  
+  ```JAVA
+    @Query(value = "SELECT b FROM Booking b WHERE b.bookingStateCode.bookingCode='REN' " +
+            "AND b.returnDate >= CURRENT_DATE AND b.user.id=:userId",
+            countQuery = "SELECT count(b) FROM Booking b WHERE b.bookingStateCode.bookingCode='REN' " +
+                    "AND b.returnDate >= CURRENT_DATE AND b.user.id=:userId")
+    Page<Booking> findActiveBookingsByUserId(Long userId, Pageable pageRequest);
+  ```
+
+  - **Zapytania JPQL**
+  
+    Faktyczne zapytanie które wyszukuje aktywnych rezerwacji.
+
+    &NewLine;
+    &NewLine;
+
+    ```SQL
+    SELECT b FROM Booking b WHERE b.bookingStateCode.bookingCode='REN' " +
+            "AND b.returnDate >= CURRENT_DATE AND b.user.id=:userId
+    ```
+
+    Zapytanie pomocnicznego liczącego ilość aktywnych rezerwacji.
+    Wymagane dla **`Pageable`**.
+
+    &NewLine;
+    &NewLine;
+
+    ```SQL
+    SELECT count(b) FROM Booking b WHERE b.bookingStateCode.bookingCode='REN' " +
+                    "AND b.returnDate >= CURRENT_DATE AND b.user.id=:userId
+    ```
+
+  - **Zapytanie wygenerowane przez Hibernate**
+
+    ```SQL
+    select
+        b1_0.id,
+        b1_0.booking_state_codeid,
+        b1_0.locationid,
+        b1_0.receipt_date,
+        b1_0.return_date,
+        b1_0.total_cost,
+        b1_0.userid,
+        b1_0.vehicleid 
+    from
+        bookings b1_0 
+    join
+        booking_state_codes b2_0 
+            on b2_0.id=b1_0.booking_state_codeid 
+    where
+        b2_0.booking_code='REN' 
+        and b1_0.return_date>=convert(date,getdate()) 
+        and b1_0.userid=? 
+    order by
+        (select
+            1) offset ? rows fetch first ? rows only
+    ```
+
+    Pojawiające się zapytanie **`offset ? rows fetch first ? rows only`** jest wymagane przez **`Pageable`** i **`?`** są zastępowane przez wartości otrzymane z endpointa **`GET /api/v1/users/{id}/bookings/active?page={page}&size={size}`**.
+
+#### Zapytania SQL wygenerowane podczas wyszukiwania rezerwacji (wynajmu)  po ich statusie dla użytkownika
+
+- **Kod i zapytania**
+  
+  - **Kod**
+
+  ```JAVA
+    @Query(value = "SELECT b FROM Booking b WHERE b.bookingStateCode.bookingCode=:bookingStateCode AND b.user.id=:userId",
+            countQuery = "SELECT count(b) FROM Booking b WHERE b.bookingStateCode.bookingCode=:bookingStateCode AND b.user.id=:userId")
+    @Transactional
+    Page<Booking> findByUserIdAndBookingStateCode(Long userId, String bookingStateCode, Pageable pageable);
+  ```
+
+  - **Zapytania JPQL**
+  
+    Faktyczne zapytanie które wyszukuje rezerwacje.
+
+    &NewLine;
+    &NewLine;
+
+    ```SQL
+    SELECT b FROM Booking b WHERE b.bookingStateCode.bookingCode=:bookingStateCode AND b.user.id=:userId
+    ```
+
+    Zapytanie pomocnicznego liczącego ilość rezerwacji.
+    Wymagane dla **`Pageable`**.
+
+    &NewLine;
+    &NewLine;
+
+    ```SQL
+    SELECT count(b) FROM Booking b WHERE b.bookingStateCode.bookingCode=:bookingStateCode AND b.user.id=:userId
+    ```
+
+  - **Zapytanie wygenerowane przez Hibernate**
+
+    ```SQL
+     select
+        b1_0.id,
+        b1_0.booking_state_codeid,
+        b1_0.locationid,
+        b1_0.receipt_date,
+        b1_0.return_date,
+        b1_0.total_cost,
+        b1_0.userid,
+        b1_0.vehicleid 
+    from
+        bookings b1_0 
+    join
+        booking_state_codes b2_0 
+            on b2_0.id=b1_0.booking_state_codeid 
+    where
+        b2_0.booking_code=? 
+        and b1_0.userid=? 
+    order by
+        (select
+            1) offset ? rows fetch first ? rows only
+     ```
