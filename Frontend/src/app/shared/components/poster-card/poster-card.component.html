@@ -1,20 +1,32 @@
 <div class="poster">
-
-  <a [routerLink]="isCar ? '/cars/' + model.id : '/locations/' + model.id"
+  <mat-icon *ngIf="isCar === 'bookings' && model.bookingStateCode.bookingCode != 'CAN'" class="cancelButton" color="primary" (click)="cancelBooking()">
+    cancel
+  </mat-icon>
+  <a *ngIf="isCar === true" [routerLink]="'/cars/' + model.id"
     [title]="'Go to ' + model.brand">
     <img class="poster__image" loading="lazy"
       [src]="model['photoURL']"  [alt]="model.brand" appImageMissing>
   </a>
-
+  <a *ngIf="isCar != true && isCar != 'bookings'" [routerLink]="'/locations/' + model.id"
+     [title]="'Go to ' + model.brand">
+    <img class="poster__image" loading="lazy"
+         [src]="model['photoURL']"  [alt]="model.brand" appImageMissing>
+  </a>
+  <img *ngIf="isCar === 'bookings'" class="poster__image2" loading="lazy"
+       [src]="model.vehicle['photoURL']"  [alt]="model.vehicle.brand" appImageMissing>
   <div class="poster__content">
-    <a *ngIf="isCar" [routerLink]="'/cars/' + model.id"
+    <a *ngIf="isCar === true" [routerLink]="'/cars/' + model.id"
       [title]="model.brand" class="poster__title colored-hover">
       {{model.brand | titlecase}} {{model.model | lowercase}}
     </a>
-    <p *ngIf="isCar">
+    <a *ngIf="isCar === 'bookings'" [routerLink]="'/cars/' + model.vehicle.id"
+       [title]="model.vehicle.brand" class="poster__title colored-hover">
+      {{model.vehicle.brand | titlecase}} {{model.vehicle.model | lowercase}}
+    </a>
+    <p *ngIf="isCar === true">
       {{model.dailyFee | currency:'EUR':'symbol':'1.2-2'}} / day
     </p>
-    <a *ngIf="!isCar" [routerLink]="'/locations/' + model.id"
+    <a *ngIf="isCar != 'cars' && isCar != 'bookings'" [routerLink]="'/locations/' + model.id"
       [title]="model.address" class="poster__title colored-hover">
       {{model.address | titlecase}} {{model.postalCode | lowercase}}
     </a>
@@ -24,6 +36,16 @@
       <br>
       <span class="poster__subtitle">Closing hours: </span>
       {{model.closingHours}}
+    </p>
+    <p *ngIf="isCar === 'bookings'">
+      {{model.bookingStateCode.bookingCode}}
+    </p>
+    <p *ngIf="isCar === 'bookings'">
+      <span class="poster__subtitle">Start date: </span>
+      {{model.receiptDate | date:'yyyy-MM-dd'}}
+      <br>
+      <span class="poster__subtitle">End date: </span>
+      {{model.returnDate | date:'yyyy-MM-dd'}}
     </p>
   </div>
 

@@ -8,6 +8,8 @@ import {LocationsService} from "../../services/locations.service";
 import {SearchRequest} from "./models/SearchRequest.model";
 import {Operator} from "./enums/Operator";
 import {FieldType} from "./enums/FieldType";
+import {Observable, startWith} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
     selector: 'app-content',
@@ -76,6 +78,7 @@ export class ContentComponent implements OnInit {
 
     public isLoading: boolean = true;
     public totalResults: any;
+    public filteredCities!: Observable<string[]>;
 
     constructor(
         private carsService: CarsService,
@@ -89,6 +92,13 @@ export class ContentComponent implements OnInit {
         if (this.contentType === 'cars') {
             this.getCars(0);
             this.loadValuesForSearch();
+            this.locationsService.getCities().subscribe((res: any) => {
+                this.popularCities = res.content;
+                this.filteredCities = this.cityControl.valueChanges.pipe(
+                    startWith(''),
+                    map(value => this._filter(value || '')),
+                );
+            });
 
         } else {
             this.getLocations(0);
@@ -96,6 +106,12 @@ export class ContentComponent implements OnInit {
                 this.popularCities = res.content;
             });
         }
+    }
+
+    private _filter(value: string): string[] {
+        const filterValue = value.toLowerCase();
+
+        return this.popularCities.filter((option: string) => option.toLowerCase().includes(filterValue));
     }
 
     public getCars(page: number) {
