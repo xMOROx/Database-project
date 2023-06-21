@@ -4,7 +4,9 @@
 
 #### Sprawdzanie czy możliwe jest wynajęcie samochodu w danym terminie
 
-- Funkcja
+- **Endpoint** `POST /api/v1/bookings/reserve`
+
+- **Funkcja**
 
   ```JAVA
       private boolean isVehicleAvailableToRent(Long vehicleId,
@@ -26,7 +28,7 @@
       }
   ```
 
-- Zapytanie JPQL
+- **Zapytanie JPQL**
 
   ```SQL
   SELECT DISTINCT v.id FROM Vehicle v
@@ -35,7 +37,7 @@
                   AND b.bookingStateCode.bookingCode IN ('RES', 'REN'))
   ```
 
-- Zapytanie SQL wygenerowane przez Hibernate
+- **Zapytanie SQL wygenerowane przez Hibernate**
 
   ```SQL
       select
@@ -62,6 +64,8 @@
   ```
 
 #### Zapytania SQL wygenerowane gdy powiedzie się rezerwacja
+
+- **Endpoint** `POST /api/v1/bookings/reserve`
 
 - **Wyszukanie pojazdu - zapytanie stworzone przez Hibernate**
   Nie jest wymagane pisanie własnego zapytania JPQL ponieważ JPA dostarcza podstawowe operację wyszukiwanie przez dynamiczne generowanie zapytań.
@@ -211,17 +215,19 @@
 
 #### Zapytania SQL wygenerowane podczas wyszukiwania aktywnych rezerwacji (wynajmu) dla użytkownika
 
+- **Endpoint** `GET /api/v1/users/{id}/bookings/active`
+
 - **Kod i zapytania**
   
   - **Kod**
   
-  ```JAVA
-    @Query(value = "SELECT b FROM Booking b WHERE b.bookingStateCode.bookingCode='REN' " +
-            "AND b.returnDate >= CURRENT_DATE AND b.user.id=:userId",
-            countQuery = "SELECT count(b) FROM Booking b WHERE b.bookingStateCode.bookingCode='REN' " +
-                    "AND b.returnDate >= CURRENT_DATE AND b.user.id=:userId")
-    Page<Booking> findActiveBookingsByUserId(Long userId, Pageable pageRequest);
-  ```
+    ```JAVA
+      @Query(value = "SELECT b FROM Booking b WHERE b.bookingStateCode.bookingCode='REN' " +
+              "AND b.returnDate >= CURRENT_DATE AND b.user.id=:userId",
+              countQuery = "SELECT count(b) FROM Booking b WHERE b.bookingStateCode.bookingCode='REN' " +
+                      "AND b.returnDate >= CURRENT_DATE AND b.user.id=:userId")
+      Page<Booking> findActiveBookingsByUserId(Long userId, Pageable pageRequest);
+    ```
 
   - **Zapytania JPQL**
   
@@ -277,15 +283,20 @@
 #### Zapytania SQL wygenerowane podczas wyszukiwania rezerwacji (wynajmu)  po ich statusie dla użytkownika
 
 - **Kod i zapytania**
+
+  - **Endpoints**
+
+    - `GET /api/v1/users/1/bookings/reserved`
+    - `GET /api/v1/users/1/bookings/rented`
   
   - **Kod**
 
-  ```JAVA
-    @Query(value = "SELECT b FROM Booking b WHERE b.bookingStateCode.bookingCode=:bookingStateCode AND b.user.id=:userId",
-            countQuery = "SELECT count(b) FROM Booking b WHERE b.bookingStateCode.bookingCode=:bookingStateCode AND b.user.id=:userId")
-    @Transactional
-    Page<Booking> findByUserIdAndBookingStateCode(Long userId, String bookingStateCode, Pageable pageable);
-  ```
+    ```JAVA
+      @Query(value = "SELECT b FROM Booking b WHERE b.bookingStateCode.bookingCode=:bookingStateCode AND b.user.id=:userId",
+              countQuery = "SELECT count(b) FROM Booking b WHERE b.bookingStateCode.bookingCode=:bookingStateCode AND b.user.id=:userId")
+      @Transactional
+      Page<Booking> findByUserIdAndBookingStateCode(Long userId, String bookingStateCode, Pageable pageable);
+    ```
 
   - **Zapytania JPQL**
   
@@ -332,3 +343,10 @@
         (select
             1) offset ? rows fetch first ? rows only
      ```
+
+### UserRole repository
+<!-- TODO: implement -->
+### Vehicle repository
+<!-- TODO: implmenet -->
+### Search requests - Vehicle Repository, Location Repository i Booking Repository
+<!-- TODO: implmenet -->
