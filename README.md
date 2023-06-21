@@ -19,4 +19,8 @@ Aplikacja do wypożyczania samochodów
 - Database: MS SQL
 
 ## Documentation
+
 [Documentation](https://github.com/xMOROx/Database-project/tree/main/documentation)
+
+## Diagram of database
+![Diagram](https://github.com/xMOROx/Database-project/blob/main/documentation/diagram.png)
