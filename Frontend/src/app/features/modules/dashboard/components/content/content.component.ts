@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {PaginationModel} from "../../../content/models/pagination.model";
 import {CarsService} from "../../../../services/cars.service";
 import {Router} from "@angular/router";
@@ -33,11 +33,6 @@ export class ContentComponent implements OnInit {
     if (this.contentType === 'bookings') {
       this.userService.getBookingsForUser(this.userId).subscribe((res: any) => {
         this.content = res;
-        console.log(this.content);
-        // this.content.results = res._embedded.Bookings;
-        // this.content.page = res.page.number;
-        // this.content.total_pages = res.page.totalPages;
-        // this.content.total_results = res.page.totalElements;
         this.totalResults = res.page.totalElements;
       });
     } else if (this.contentType === 'locations') {
@@ -48,12 +43,6 @@ export class ContentComponent implements OnInit {
     if (this.contentType === 'bookings') {
       this.userService.getBookingsForUser(this.userId).subscribe((res: any) => {
         this.content = res;
-        console.log(this.content);
-        // this.content.results = res._embedded.Bookings;
-        // console.log(this.content.__embedded.Bookings);
-        // this.content.page = res.page.number;
-        // this.content.total_pages = res.page.totalPages;
-        // this.content.total_results = res.page.totalElements;
         this.totalResults = res.page.totalElements;
       });
     } else if (this.contentType === "locations") {
@@ -69,12 +58,6 @@ export class ContentComponent implements OnInit {
     if (this.contentType.toLowerCase() === 'bookings') {
       this.userService.getBookingsForUser(this.userId).subscribe((res: any) => {
         this.content = res;
-        console.log(this.content);
-        // this.content.results = res._embedded.Bookings;
-        // console.log(this.content.__embedded.Bookings);
-        // this.content.page = res.page.number;
-        // this.content.total_pages = res.page.totalPages;
-        // this.content.total_results = res.page.totalElements;
         this.totalResults = res.page.totalElements;
       });
     } else if (this.contentType.toLowerCase() === "locations") {
