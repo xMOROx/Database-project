@@ -20,6 +20,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
 
     Long addVehicle(VehicleAddModel vehicle) throws VehicleWithRegistrationExistsException, LocationNotFoundException,
             StatusForVehicleNotFoundException, EquipmentNotFoundException;
+    @Transactional
     @Query(value = "SELECT DISTINCT v FROM Vehicle v INNER JOIN VehicleStatus vs ON v.vehicleStatus.id  =  vs.id WHERE vs.type = 'AVI' ORDER BY v.brand ASC, v.model ASC",
             countQuery = "SELECT COUNT(DISTINCT v) FROM Vehicle v INNER JOIN VehicleStatus vs ON v.vehicleStatus.id  =  vs.id WHERE vs.type = 'AVI'")
     Page<Vehicle> findAllAvailableVehicles(Pageable pageable);
@@ -74,9 +75,8 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
     void changeLocation(Long vehicleId, Long locationId) throws VehicleNotFoundException, LocationNotFoundException;
 
     void changeStatusForVehicle(Long vehicleId, Long statusId) throws VehicleNotFoundException, StatusForVehicleNotFoundException;
-
-    @Query(value = "SELECT l.id FROM Vehicle v JOIN Location l ON(v.location.id=l.id) WHERE v.id=?1")
     @Transactional
+    @Query(value = "SELECT l.id FROM Vehicle v JOIN Location l ON(v.location.id=l.id) WHERE v.id=?1")
     Long getLocationsIdByVehicleId(Long vehicleId) throws VehicleNotFoundException;
 
 }

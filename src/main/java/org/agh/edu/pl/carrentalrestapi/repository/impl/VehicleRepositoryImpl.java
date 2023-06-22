@@ -68,12 +68,10 @@ public class VehicleRepositoryImpl {
 
         location.getVehicles().add(vehicleToAdd);
 
-
         entityManager.persist(vehicleToAdd);
 
         return vehicleToAdd.getId();
     }
-
 
 
     @Transactional

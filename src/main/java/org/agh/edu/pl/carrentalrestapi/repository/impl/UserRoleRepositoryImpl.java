@@ -32,6 +32,8 @@ public class UserRoleRepositoryImpl {
         TypedQuery<Long> countQuery = entityManager.createQuery("SELECT COUNT(ur) FROM UserRole ur WHERE ur.id NOT IN " +
                 "(SELECT ur.id FROM UserRole ur JOIN ur.users u WHERE u.id = :id)", Long.class);
 
+        countQuery.setParameter("id", id);
+
         return new PageImpl<>(typedQuery.getResultList(), pageable, countQuery.getSingleResult());
     }
 
