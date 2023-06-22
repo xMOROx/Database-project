@@ -720,37 +720,39 @@
   
 ### Łączenie filtrów wyszukiwania
 
-  - **Kod**
-    ```java
-      Predicate predicate = criteriaBuilder
-                      .equal(criteriaBuilder.literal(Boolean.TRUE), Boolean.TRUE);
-      
-              for (FilterRequest filter : this.searchRequest.getFilters()) {
-                  log.info("Filter: Key = {}; Operator = {}; Value = {} | ValueTo = {} | Values = {}",
-                          filter.getKey(),
-                          filter.getOperator().toString(),
-                          filter.getValue(),
-                          filter.getValueTo(),
-                          filter.getValues());
-      
-                  if (checkIfJoinExists(filter.getKey())) {
-                      String[] keys = filter.getKey().split("\\.");
-                      Join<T, V> join = root.join(keys[0]);
-      
-                      predicate = filter
-                              .getOperator()
-                              .build(join, criteriaBuilder, filter, predicate);
-                  } else {
-                      predicate = filter
-                              .getOperator()
-                              .build(root, criteriaBuilder, filter, predicate);
-                  }
+- **Kod**
+
+  ```java
+  Predicate predicate = criteriaBuilder
+                  .equal(criteriaBuilder.literal(Boolean.TRUE), Boolean.TRUE);
+  
+          for (FilterRequest filter : this.searchRequest.getFilters()) {
+              log.info("Filter: Key = {}; Operator = {}; Value = {} | ValueTo = {} | Values = {}",
+                      filter.getKey(),
+                      filter.getOperator().toString(),
+                      filter.getValue(),
+                      filter.getValueTo(),
+                      filter.getValues());
+  
+              if (checkIfJoinExists(filter.getKey())) {
+                  String[] keys = filter.getKey().split("\\.");
+                  Join<T, V> join = root.join(keys[0]);
+  
+                  predicate = filter
+                          .getOperator()
+                          .build(join, criteriaBuilder, filter, predicate);
+              } else {
+                  predicate = filter
+                          .getOperator()
+                          .build(root, criteriaBuilder, filter, predicate);
               }
-    ```
+          }
+  ```
 
 ### Łączenie opcji sortowania
 
 - **Kod**
+
   ```java
   List<Order> orders = new ArrayList<>();
   
@@ -776,6 +778,7 @@
 
 - **Endpoint** `POST /api/v1/search/vehicles`
   - **Request body**
+
     ```json
     {
       "Filters": [
@@ -807,7 +810,9 @@
       "EndDate": "2023-06-29"
     }
     ```
+
   - **Zapytanie wygenerowane przez Hibernate**
+
     ```sql
     select
         v1_0.id,
@@ -847,11 +852,15 @@
               and 1=? 
           order by
               (select
-                  0) offset ? rows fetch first ? rows only
+                  1) offset ? rows fetch first ? rows only
     ```
+
 ### Sortowanie pojazdów
+
 - **Endpoint** `POST /api/v1/search/vehicles`
+
   - **Request body**
+
     ```json
     {
       "Filters": [],
@@ -871,7 +880,9 @@
       "EndDate": "2023-06-29"
     }
     ```
+
   - **Zapytanie wygenerowane przez Hibernate**
+
     ```sql
     select
         v1_0.id,
@@ -902,5 +913,3 @@
         v1_0.brand asc,
         v1_0.model desc offset ? rows fetch first ? rows only
     ```
-
-[//]: # (TODO: Implement)

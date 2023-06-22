@@ -1,4 +1,5 @@
-## ADDRESSES
+## Tables
+### Addresses
 
 ```SQL
 create table addresses
@@ -10,7 +11,7 @@ create table addresses
 )
 ```
 
-## APP_USERS_ROLES
+### App_Users_Roles
 
 ```SQL
 create table app_users_roles
@@ -21,7 +22,7 @@ create table app_users_roles
 )
 ```
 
-## BOOKING_STATE_CODES
+### Booking_State_Codes
 
 ```SQL
 create table booking_state_codes
@@ -33,7 +34,7 @@ create table booking_state_codes
 )
 ```
 
-## BOOKINGS
+### Bookings
 
 ```SQL
 create table bookings
@@ -50,7 +51,7 @@ create table bookings
 )
 ```
 
-## CHANGES_BOOKINGS
+### Changes_Bookings
 
 ```SQL
 create table changes_bookings
@@ -63,7 +64,7 @@ create table changes_bookings
 )
 ```
 
-## CITIES
+### Cities
 
 ```SQL
 create table cities
@@ -74,7 +75,7 @@ create table cities
 )
 ```
 
-## COMMENTS
+### Comments
 
 ```SQL
 create table comments
@@ -90,7 +91,7 @@ create table comments
 )
 ```
 
-## COUNTRIES
+### Countries
 
 ```SQL
 create table countries
@@ -101,7 +102,7 @@ create table countries
 )
 ```
 
-## EQUIPMENT_SET
+### Equipment_Set
 
 ```SQL
 create table equipment_set
@@ -112,7 +113,7 @@ create table equipment_set
 )
 ```
 
-## EQUIPMENTS
+### Equipments
 
 ```SQL
 create table equipments
@@ -124,7 +125,7 @@ create table equipments
 )
 ```
 
-## LOCATIONS
+### Locations
 
 ```SQL
 create table locations
@@ -139,7 +140,7 @@ create table locations
 )
 ```
 
-## STARS
+### Stars
 
 ```SQL
 create table stars
@@ -151,7 +152,7 @@ create table stars
 )
 ```
 
-## USER_ROLES
+### User_Roles
 
 ```SQL
 create table user_roles
@@ -162,7 +163,7 @@ create table user_roles
 )
 ```
 
-## USERS
+### Users
 
 ```SQL
 create table users
@@ -178,7 +179,7 @@ create table users
 )
 ```
 
-## VEHICLE_STATUS
+### Vehicle_Status
 
 ```SQL
 create table vehicle_status
@@ -190,7 +191,7 @@ create table vehicle_status
 )
 ```
 
-## VEHICLES
+### Vehicles
 
 ```SQL
 create table vehicles
@@ -219,7 +220,7 @@ create table vehicles
 )
 ```
 
-## CONSTRAINTS
+### Constraints - Foreign Keys
 
 ```SQL
 alter table addresses
