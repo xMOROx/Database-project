@@ -181,8 +181,9 @@ public class BookingRepositoryImpl {
                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
 
-        String query = "SELECT DISTINCT v FROM Vehicle v " +
-        " WHERE v.id = :vehicleId AND  v.vehicleStatus.type='AVI' AND v.id NOT IN (SELECT b.vehicle.id FROM Booking b WHERE b.receiptDate <= :endDate AND b.returnDate >= :startDate " +
+        String query = "SELECT DISTINCT v.id FROM Vehicle v " +
+                "WHERE v.id = :vehicleId AND  v.vehicleStatus.type='AVI'" +
+                "AND v.id NOT IN (SELECT b.vehicle.id FROM Booking b WHERE b.receiptDate <= :endDate AND b.returnDate >= :startDate " +
                 "AND b.bookingStateCode.bookingCode IN ('RES', 'REN'))";
 
 

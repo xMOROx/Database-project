@@ -1,5 +1,6 @@
 ## ADDRESSES
-```
+
+```SQL
 create table addresses
 (
     address     varchar(100) not null,
@@ -10,7 +11,8 @@ create table addresses
 ```
 
 ## APP_USERS_ROLES
-```
+
+```SQL
 create table app_users_roles
 (
     userid      bigint not null,
@@ -20,7 +22,8 @@ create table app_users_roles
 ```
 
 ## BOOKING_STATE_CODES
-```
+
+```SQL
 create table booking_state_codes
 (
     id           bigint identity not null,
@@ -31,7 +34,8 @@ create table booking_state_codes
 ```
 
 ## BOOKINGS
-```
+
+```SQL
 create table bookings
 (
     id                   bigint identity not null,
@@ -47,7 +51,8 @@ create table bookings
 ```
 
 ## CHANGES_BOOKINGS
-```
+
+```SQL
 create table changes_bookings
 (
     id          bigint identity not null,
@@ -59,7 +64,8 @@ create table changes_bookings
 ```
 
 ## CITIES
-```
+
+```SQL
 create table cities
 (
     city varchar(100) not null,
@@ -69,7 +75,8 @@ create table cities
 ```
 
 ## COMMENTS
-```
+
+```SQL
 create table comments
 (
     id                bigint identity not null,
@@ -84,7 +91,8 @@ create table comments
 ```
 
 ## COUNTRIES
-```
+
+```SQL
 create table countries
 (
     country varchar(100) not null,
@@ -94,7 +102,8 @@ create table countries
 ```
 
 ## EQUIPMENT_SET
-```
+
+```SQL
 create table equipment_set
 (
     vehicleid   bigint not null,
@@ -104,7 +113,8 @@ create table equipment_set
 ```
 
 ## EQUIPMENTS
-```
+
+```SQL
 create table equipments
 (
     id             bigint identity not null,
@@ -115,7 +125,8 @@ create table equipments
 ```
 
 ## LOCATIONS
-```
+
+```SQL
 create table locations
 (
     id            bigint identity not null,
@@ -129,7 +140,8 @@ create table locations
 ```
 
 ## STARS
-```
+
+```SQL
 create table stars
 (
     id        bigint identity not null,
@@ -140,7 +152,8 @@ create table stars
 ```
 
 ## USER_ROLES
-```
+
+```SQL
 create table user_roles
 (
     id   bigint identity not null,
@@ -150,7 +163,8 @@ create table user_roles
 ```
 
 ## USERS
-```
+
+```SQL
 create table users
 (
     id           bigint identity not null,
@@ -165,7 +179,8 @@ create table users
 ```
 
 ## VEHICLE_STATUS
-```
+
+```SQL
 create table vehicle_status
 (
     id          bigint identity not null,
@@ -176,7 +191,8 @@ create table vehicle_status
 ```
 
 ## VEHICLES
-```
+
+```SQL
 create table vehicles
 (
     id                bigint identity not null,
@@ -204,7 +220,8 @@ create table vehicles
 ```
 
 ## CONSTRAINTS
-```
+
+```SQL
 alter table addresses
     add constraint FKhn2hysrhumqexwokc5t8bhc0c
         foreign key (id)
