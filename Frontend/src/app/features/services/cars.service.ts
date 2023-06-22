@@ -60,6 +60,7 @@ export class CarsService {
     }
 
     public searchVehicles(searchRequest: SearchRequest): Observable<any> {
+        console.log(searchRequest);
         return this.http.post(`${search}`, searchRequest, this.httpOptions);
     }
 }
