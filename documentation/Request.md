@@ -718,5 +718,189 @@
               v1_0.model asc
       ```
   
-### Search requests - Vehicle Repository, Location Repository i Booking Repository
-<!-- TODO: implmenet -->
+### Łączenie filtrów wyszukiwania
+
+  - **Kod**
+    ```java
+      Predicate predicate = criteriaBuilder
+                      .equal(criteriaBuilder.literal(Boolean.TRUE), Boolean.TRUE);
+      
+              for (FilterRequest filter : this.searchRequest.getFilters()) {
+                  log.info("Filter: Key = {}; Operator = {}; Value = {} | ValueTo = {} | Values = {}",
+                          filter.getKey(),
+                          filter.getOperator().toString(),
+                          filter.getValue(),
+                          filter.getValueTo(),
+                          filter.getValues());
+      
+                  if (checkIfJoinExists(filter.getKey())) {
+                      String[] keys = filter.getKey().split("\\.");
+                      Join<T, V> join = root.join(keys[0]);
+      
+                      predicate = filter
+                              .getOperator()
+                              .build(join, criteriaBuilder, filter, predicate);
+                  } else {
+                      predicate = filter
+                              .getOperator()
+                              .build(root, criteriaBuilder, filter, predicate);
+                  }
+              }
+    ```
+
+### Łączenie opcji sortowania
+
+- **Kod**
+  ```java
+  List<Order> orders = new ArrayList<>();
+  
+          for (SortRequest sort : this.searchRequest.getSorts()) {
+              log.info("Sort: {} {}", sort.getKey(), sort.getDirection().toString());
+  
+              if (checkIfJoinExists(sort.getKey())) {
+                  String[] keys = sort.getKey().split("\\.");
+                  Join<T, V> join = root.join(keys[0]);
+  
+                  orders.add(sort
+                          .getDirection()
+                          .buildOrder(join, criteriaBuilder, sort));
+              } else {
+                  orders.add(sort
+                          .getDirection()
+                          .buildOrder(root, criteriaBuilder, sort));
+              }
+          }
+  ```
+
+### Wyszukiwanie pojazdów z użyciem filtrów
+
+- **Endpoint** `POST /api/v1/search/vehicles`
+  - **Request body**
+    ```json
+    {
+      "Filters": [
+          {
+              "Key": "dailyFee",
+              "Operator": "BETWEEN",
+              "FieldType": "DOUBLE",
+              "Value": 50,
+              "ValueTo": 100
+          },
+          {
+              "Key": "doorsNumber",
+              "Operator": "BETWEEN",
+              "FieldType": "DOUBLE",
+              "Value": 2,
+              "ValueTo": 5
+          },
+          {
+              "Key": "location.city",
+              "Operator": "EQUALS",
+              "FieldType": "STRING",
+              "Value": "Kraków"
+          }
+      ],
+      "Sorts": [],
+      "Page": 0,
+      "Size": 20,
+      "StartDate": "2023-06-22",
+      "EndDate": "2023-06-29"
+    }
+    ```
+  - **Zapytanie wygenerowane przez Hibernate**
+    ```sql
+    select
+        v1_0.id,
+          v1_0.best_offer,
+          v1_0.body_type,
+          v1_0.brand,
+          v1_0.color,
+          v1_0.daily_fee,
+          v1_0.description,
+          v1_0.doors_number,
+          v1_0.front_wheel_drive,
+          v1_0.fuel_type,
+          v1_0.gearbox,
+          v1_0.locationid,
+          v1_0.metalic,
+          v1_0.model,
+          v1_0.photourl,
+          v1_0.power,
+          v1_0.production_year,
+          v1_0.registration,
+          v1_0.seats_number,
+          v1_0.vehicle_statusid 
+      from
+          vehicles v1_0 
+      join
+          (locations l1_0 
+      left join
+          cities l1_1 
+              on l1_0.id=l1_1.id) 
+                  on l1_0.id=v1_0.locationid 
+          where
+              l1_1.city=? 
+              and v1_0.doors_number<=? 
+              and v1_0.doors_number>=? 
+              and v1_0.daily_fee<=? 
+              and v1_0.daily_fee>=? 
+              and 1=? 
+          order by
+              (select
+                  0) offset ? rows fetch first ? rows only
+    ```
+### Sortowanie pojazdów
+- **Endpoint** `POST /api/v1/search/vehicles`
+  - **Request body**
+    ```json
+    {
+      "Filters": [],
+      "Sorts": [
+        {
+          "Key": "brand",
+          "Direction": "ASC"
+        },
+        {
+          "Key": "model",
+          "Direction": "DESC"
+        }
+      ],
+      "Page": 0,
+      "Size": 20,
+      "StartDate": "2023-06-22",
+      "EndDate": "2023-06-29"
+    }
+    ```
+  - **Zapytanie wygenerowane przez Hibernate**
+    ```sql
+    select
+        v1_0.id,
+        v1_0.best_offer,
+        v1_0.body_type,
+        v1_0.brand,
+        v1_0.color,
+        v1_0.daily_fee,
+        v1_0.description,
+        v1_0.doors_number,
+        v1_0.front_wheel_drive,
+        v1_0.fuel_type,
+        v1_0.gearbox,
+        v1_0.locationid,
+        v1_0.metalic,
+        v1_0.model,
+        v1_0.photourl,
+        v1_0.power,
+        v1_0.production_year,
+        v1_0.registration,
+        v1_0.seats_number,
+        v1_0.vehicle_statusid 
+    from
+        vehicles v1_0 
+    where
+        1=? 
+    order by
+        v1_0.brand asc,
+        v1_0.model desc offset ? rows fetch first ? rows only
+    ```
+
+[//]: # (TODO: Implement)
